@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="JMediaInspector.jnlp">
+  <information>
+    <title>JMediaInspector</title>
+    <vendor>Welle Charlotte</vendor>
+    <description>Sample JavaFX 2.0 application.</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="JMediaInspector.jar" size="16712" download="eager" />
+    <jar href="libs/JMetadata.jar" size="5200023" download="eager" />
+    <jar href="libs/commons-codec-1.10.jar" size="284184" download="eager" />
+    <jar href="libs/commons-io-2.4.jar" size="185140" download="eager" />
+    <jar href="libs/commons-lang3-3.3.2.jar" size="412740" download="eager" />
+    <jar href="libs/org.eclipse.jdt.annotation_2.0.0.v20140415-1436.jar" size="17625" download="eager" />
+    <jar href="libs/sqlite-jdbc-3.8.11.2.jar" size="5575351" download="eager" />
+  </resources>
+  <jfx:javafx-desc  width="1280" height="768" main-class="jmediainspector.JMediaInspector"  name="JMediaInspector" />
+  <update check="background"/>
+</jnlp>

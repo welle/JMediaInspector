@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
+	<classpathentry kind="lib" path="libs/commons-codec-1.10.jar"/>
+	<classpathentry kind="lib" path="libs/commons-io-2.4.jar"/>
+	<classpathentry kind="lib" path="libs/commons-lang3-3.3.2.jar"/>
+	<classpathentry kind="lib" path="libs/JMetadata.jar"/>
+	<classpathentry kind="lib" path="libs/org.eclipse.jdt.annotation_2.0.0.v20140415-1436.jar"/>
+	<classpathentry kind="lib" path="libs/sqlite-jdbc-3.8.11.2.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="annotationpath" value="/JMediaInspector/externalAnnotations"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
