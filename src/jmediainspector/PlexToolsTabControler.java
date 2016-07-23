@@ -4,7 +4,6 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -24,33 +23,32 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import javafx.beans.value.ChangeListener;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import javafx.concurrent.Worker.State;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Hyperlink;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.BoxBlur;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.stage.Window;
 import jmediainspector.constants.DevConstants;
 import jmediainspector.constants.PlexConstants;
+import jmediainspector.helpers.DialogsHelper;
 import jmediainspector.helpers.FileChooserHelper;
+import jmediainspector.services.CopyPlexDBService;
 
 /**
  * Controler for the Plex tools tab.
@@ -92,48 +90,27 @@ public class PlexToolsTabControler extends AnchorPane {
             // first copy db file as it can be used and so it is locked
             try {
                 final File target = File.createTempFile("plex", ".db");
-                final Service<Void> service = new Service<Void>() {
-                    @Override
-                    protected Task<Void> createTask() {
-                        return new Task<Void>() {
-                            @Override
-                            protected Void call() throws InterruptedException {
-                                updateMessage("Processing Plex database file");
-                                final long fileLength = file.length();
+                final CopyPlexDBService service = new CopyPlexDBService(file, target);
 
-                                updateProgress(0, (int) fileLength);
-                                try {
-                                    final FileInputStream fis = new FileInputStream(file);
-                                    final FileOutputStream fos = new FileOutputStream(target);
+                final Stage stage = (Stage) this.anchorPaneRoot.getScene().getWindow();
+                assert stage != null;
+                final Dialog<String> progressDialog = DialogsHelper.createProgressCopyDBPlexDialog(service, stage);
+                final Effect parentEffect = new BoxBlur();
 
-                                    final byte[] buf = new byte[2048];
-                                    int size = 0;
-                                    int flag = 0;
-                                    while ((size = fis.read(buf)) != -1) {
-                                        fos.write(buf, 0, size);
-                                        flag += size;
-                                        updateProgress(flag, (int) fileLength);
-                                    }
-
-                                    fis.close();
-                                    fos.close();
-
-                                } catch (final IOException e) {
-                                    LOGGER.logp(Level.SEVERE, "PlexToolsTabControler.clickPlexDBButton(...).new Service() {...}.createTask().new Task() {...}", "call", e.getMessage(), e);
-                                }
-
-                                updateMessage("Found all.");
-                                return null;
-                            }
-                        };
+                JMediaInspector.getPrimaryStage().getScene().getRoot().setEffect(parentEffect);
+                service.stateProperty().addListener((ChangeListener<State>) (observable, oldValue, newValue) -> {
+                    if (newValue == State.CANCELLED || newValue == State.FAILED || newValue == State.SUCCEEDED) {
+                        final Window window = progressDialog.getDialogPane().getScene().getWindow();
+                        window.hide();
+                        JMediaInspector.getPrimaryStage().getScene().getRoot().setEffect(null);
                     }
-                };
-
-                final Stage progressDialog = createProgressDialog(service, (Stage) this.anchorPaneRoot.getScene().getWindow());
-
+                });
                 progressDialog.show();
                 service.reset();
                 service.setOnSucceeded(e -> {
+                    final Window window = progressDialog.getDialogPane().getScene().getWindow();
+                    window.hide();
+                    JMediaInspector.getPrimaryStage().getScene().getRoot().setEffect(null);
                     if (DevConstants.DEBUG) {
                         System.err.println("[PlexToolsTabControler] clickPlexDBButton - copied " + file + " to " + target);
                     }
@@ -152,11 +129,6 @@ public class PlexToolsTabControler extends AnchorPane {
 
                         alert.showAndWait();
                     }
-                });
-                service.setOnCancelled(e -> {
-                    this.plexFileDB = null;
-                    this.copiedPlexFileDB = null;
-                    this.selectedPlexDBText.setText(null);
                 });
                 service.start();
 
@@ -458,31 +430,4 @@ public class PlexToolsTabControler extends AnchorPane {
         return result;
     }
 
-    private Stage createProgressDialog(final Service<Void> service, final Stage owner) {
-        final Stage stage = new Stage();
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.initStyle(StageStyle.UNDECORATED);
-
-        stage.initOwner(owner);
-        final BorderPane root = new BorderPane();
-        root.getStyleClass().add(".my-borderpane");
-        final ProgressBar indicator = new ProgressBar();
-        // have the indicator display the progress of the service:
-        indicator.progressProperty().bind(service.progressProperty());
-        // hide the stage when the service stops running:
-        service.stateProperty().addListener((ChangeListener<State>) (observable, oldValue, newValue) -> {
-            if (newValue == State.CANCELLED || newValue == State.FAILED
-                    || newValue == State.SUCCEEDED) {
-                stage.hide();
-            }
-        });
-        root.setCenter(indicator);
-        final Text text = new Text("Importing Plex Database");
-        text.setStyle("-fx-font-weight: bold; -fx-fill: #FFFFFF; -fx-underline: true;");
-        root.setTop(text);
-        final Scene scene = new Scene(root, 200, 100);
-        scene.getStylesheets().add(getClass().getClassLoader().getResource("jmediainspector/application.css").toExternalForm());
-        stage.setScene(scene);
-        return stage;
-    }
 }

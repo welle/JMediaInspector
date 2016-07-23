@@ -28,7 +28,7 @@ public class JMediaInspector extends Application {
 
     private @NonNull final static Logger LOGGER = Logger.getLogger(JMediaInspector.class.getName());
 
-    private Stage primaryStage;
+    private static Stage primaryStage;
     private AnchorPane rootLayout;
     @FXML
     private final PlexToolsTabControler plexToolsTabPage = new PlexToolsTabControler();
@@ -45,12 +45,21 @@ public class JMediaInspector extends Application {
         launch(args);
     }
 
+    /**
+     * Get primary stage.
+     *
+     * @return primary stage
+     */
+    static public Stage getPrimaryStage() {
+        return JMediaInspector.primaryStage;
+    }
+
     @Override
     public void start(final Stage primaryStageInitial) {
-        this.primaryStage = primaryStageInitial;
-        this.primaryStage.setTitle("JMediaChecker");
-        this.primaryStage.initStyle(StageStyle.UNDECORATED);
-        this.primaryStage.initStyle(StageStyle.TRANSPARENT);
+        JMediaInspector.primaryStage = primaryStageInitial;
+        JMediaInspector.primaryStage.setTitle("JMediaChecker");
+        JMediaInspector.primaryStage.initStyle(StageStyle.UNDECORATED);
+        JMediaInspector.primaryStage.initStyle(StageStyle.TRANSPARENT);
         initRootLayout();
         this.menuBar = this.rootLayout.lookup("#menuBarMainApp");
 
@@ -73,8 +82,8 @@ public class JMediaInspector extends Application {
             // Show the scene containing the root layout.
             final Scene scene = new Scene(this.rootLayout);
             scene.getStylesheets().add(getClass().getClassLoader().getResource("jmediainspector/application.css").toExternalForm());
-            this.primaryStage.setScene(scene);
-            this.primaryStage.show();
+            JMediaInspector.primaryStage.setScene(scene);
+            JMediaInspector.primaryStage.show();
         } catch (final IOException e) {
             LOGGER.logp(Level.SEVERE, "JMediaInspector", "initRootLayout", e.getMessage(), e);
         }

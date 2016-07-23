@@ -1,0 +1,76 @@
+package jmediainspector.helpers;
+
+import java.io.File;
+
+import org.eclipse.jdt.annotation.NonNull;
+
+import javafx.concurrent.Service;
+import javafx.geometry.HPos;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
+/**
+ * Dialogs helper.
+ *
+ * @author Cha
+ */
+public final class DialogsHelper {
+
+    /**
+     * Get process copy plex dbd dialog.
+     *
+     * @param service
+     * @param owner
+     * @return process copy plex dbd dialog
+     */
+    @NonNull
+    public static Dialog<String> createProgressCopyDBPlexDialog(@NonNull final Service<File> service, @NonNull final Stage owner) {
+        final Dialog<String> dialog = new Dialog<>();
+        dialog.initModality(Modality.WINDOW_MODAL);
+        dialog.initStyle(StageStyle.UNDECORATED);
+
+        dialog.initOwner(owner);
+
+        final DialogPane dialogPane = dialog.getDialogPane();
+        final ProgressBar indicator = new ProgressBar();
+        indicator.setMinWidth(200);
+        // have the indicator display the progress of the service:
+        indicator.progressProperty().bind(service.progressProperty());
+
+        // Create content
+        final GridPane grid = new GridPane();
+        grid.setHgap(2);
+        grid.setVgap(3);
+        grid.setMaxWidth(Double.MAX_VALUE);
+
+        // Do layout
+        Text text = new Text("Importing Plex Database");
+        text.setStyle("-fx-font-weight: bold; -fx-fill: #FFFFFF; -fx-underline: true;");
+        grid.add(text, 0, 0);
+
+        dialog.setTitle("Importing Plex Database");
+
+        grid.add(indicator, 0, 1);
+        text = new Text("Processing import, please wait.");
+        text.setStyle("-fx-font-style: italic; -fx-fill: #FFFFFF; -fx-text-alignment: center;");
+
+        indicator.setMaxWidth(Double.MAX_VALUE);
+        GridPane.setHgrow(indicator, Priority.ALWAYS);
+        GridPane.setFillWidth(text, Boolean.TRUE);
+
+        grid.add(text, 0, 2);
+        GridPane.setHalignment(text, HPos.CENTER);
+        dialogPane.setContent(grid);
+
+        dialogPane.getStylesheets().add(DialogsHelper.class.getClassLoader().getResource("jmediainspector/application.css").toExternalForm());
+        return dialog;
+    }
+
+}

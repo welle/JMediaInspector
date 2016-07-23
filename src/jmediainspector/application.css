@@ -172,11 +172,14 @@
     -fx-border-radius: 10;
 }
 
-.my-borderpane  {
+.dialog-pane  {
     -fx-border-color: #FFFFFF;
     -fx-border-width: 2px;
-    -fx-padding: 5;
     -fx-border-radius: 10;
+    -fx-padding: 20;
+    -fx-alignment: center;
+    -fx-font-size: 14;
+    -fx-effect: dropshadow(three-pass-box, derive(cadetblue, -20%), 10, 0, 4, 4); 
 }
 
 .text-flow {
