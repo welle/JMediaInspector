@@ -172,6 +172,13 @@
     -fx-border-radius: 10;
 }
 
+.my-borderpane  {
+    -fx-border-color: #FFFFFF;
+    -fx-border-width: 2px;
+    -fx-padding: 5;
+    -fx-border-radius: 10;
+}
+
 .text-flow {
     -fx-fill: #FFFFFF;
 }
