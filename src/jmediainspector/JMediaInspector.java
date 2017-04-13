@@ -16,6 +16,10 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import jmediainspector.constants.ApplicationConstants;
+import jmediainspector.controllers.PlexToolsTabControler;
+import jmediainspector.helpers.ConfigurationHelper;
+import jmediainspector.helpers.DialogsHelper;
 import jmediainspector.helpers.EffectUtilities;
 import jmediainspector.helpers.ResizeHelper;
 
@@ -34,6 +38,9 @@ public class JMediaInspector extends Application {
     private final PlexToolsTabControler plexToolsTabPage = new PlexToolsTabControler();
 
     private Node menuBar;
+
+    @NonNull
+    private final ConfigurationHelper configurationHelper = new ConfigurationHelper();
 
     /**
      * Main.
@@ -57,7 +64,7 @@ public class JMediaInspector extends Application {
     @Override
     public void start(final Stage primaryStageInitial) {
         JMediaInspector.primaryStage = primaryStageInitial;
-        JMediaInspector.primaryStage.setTitle("JMediaChecker");
+        JMediaInspector.primaryStage.setTitle(ApplicationConstants.TITLE);
         JMediaInspector.primaryStage.initStyle(StageStyle.UNDECORATED);
         JMediaInspector.primaryStage.initStyle(StageStyle.TRANSPARENT);
         initRootLayout();
@@ -81,7 +88,7 @@ public class JMediaInspector extends Application {
 
             // Show the scene containing the root layout.
             final Scene scene = new Scene(this.rootLayout);
-            scene.getStylesheets().add(getClass().getClassLoader().getResource("jmediainspector/application.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getClassLoader().getResource(ApplicationConstants.CSS_FILE).toExternalForm());
             JMediaInspector.primaryStage.setScene(scene);
             JMediaInspector.primaryStage.show();
         } catch (final IOException e) {
@@ -93,13 +100,28 @@ public class JMediaInspector extends Application {
     private static class ResourceWrapper extends ListResourceBundle {
         @Override
         protected Object[][] getContents() {
-            System.err.println("[JMediaInspector.ResourceWrapper] getContents - ");
             return new Object[0][];
         }
     }
 
+    /**
+     * Handle the close menu item.
+     *
+     * @param event
+     */
     public void handleClose(final ActionEvent event) {
         System.exit(0);
+    }
+
+    /**
+     * Handle the "New Configuration" item menu.
+     */
+    public void handleNewConfiguration(final ActionEvent event) {
+        try {
+            DialogsHelper.createConfigurationsDialog(primaryStage, this.configurationHelper);
+        } catch (final IOException e) {
+            LOGGER.logp(Level.SEVERE, "JMediaInspector", "handleNewConfiguration", e.getMessage(), e);
+        }
     }
 
 }

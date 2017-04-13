@@ -1,4 +1,4 @@
-package jmediainspector;
+package jmediainspector.controllers;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -44,6 +44,7 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import jmediainspector.JMediaInspector;
 import jmediainspector.constants.DevConstants;
 import jmediainspector.constants.PlexConstants;
 import jmediainspector.helpers.DialogsHelper;

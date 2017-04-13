@@ -4,9 +4,16 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.stage.Stage;
 
-/** Various utilities for applying different effects to nodes. */
+/**
+ * Various utilities for applying different effects to nodes.
+ */
 public class EffectUtilities {
-    /** makes a stage draggable using a given node */
+    /**
+     * makes a stage draggable using a given node
+     * 
+     * @param stage
+     * @param byNode
+     */
     public static void makeDraggable(final Stage stage, final Node byNode) {
         final Delta dragDelta = new Delta();
         byNode.setOnMousePressed(mouseEvent -> {

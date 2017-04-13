@@ -1,20 +1,26 @@
 package jmediainspector.helpers;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.eclipse.jdt.annotation.NonNull;
 
 import javafx.concurrent.Service;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
+import javafx.scene.Scene;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import jmediainspector.constants.ApplicationConstants;
+import jmediainspector.controllers.ConfigurationsDialogController;
 
 /**
  * Dialogs helper.
@@ -24,11 +30,11 @@ import javafx.stage.StageStyle;
 public final class DialogsHelper {
 
     /**
-     * Get process copy plex dbd dialog.
+     * Get process copy plex db dialog.
      *
      * @param service
      * @param owner
-     * @return process copy plex dbd dialog
+     * @return process copy plex db dialog
      */
     @NonNull
     public static Dialog<String> createProgressCopyDBPlexDialog(@NonNull final Service<File> service, @NonNull final Stage owner) {
@@ -69,8 +75,42 @@ public final class DialogsHelper {
         GridPane.setHalignment(text, HPos.CENTER);
         dialogPane.setContent(grid);
 
-        dialogPane.getStylesheets().add(DialogsHelper.class.getClassLoader().getResource("jmediainspector/application.css").toExternalForm());
+        dialogPane.getStylesheets().add(DialogsHelper.class.getClassLoader().getResource(ApplicationConstants.CSS_FILE).toExternalForm());
         return dialog;
     }
 
+    /**
+     * Get process configurations dialog.
+     *
+     * @param owner stage owner
+     * @param configurationHelper
+     * @throws IOException
+     */
+    public static void createConfigurationsDialog(@NonNull final Stage owner, @NonNull final ConfigurationHelper configurationHelper) throws IOException {
+        final Stage manageConfigurationsStage = new Stage();
+        // Load root layout from fxml file.
+        final FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(DialogsHelper.class.getClassLoader().getResource("jmediainspector/fxml/ConfigurationsDialog.fxml"));
+        final AnchorPane rootLayout = (AnchorPane) loader.load();
+        manageConfigurationsStage.setTitle(ApplicationConstants.TITLE);
+        manageConfigurationsStage.initStyle(StageStyle.UNDECORATED);
+        manageConfigurationsStage.initStyle(StageStyle.TRANSPARENT);
+        manageConfigurationsStage.initModality(Modality.APPLICATION_MODAL);
+        manageConfigurationsStage.initOwner(owner);
+
+        final Scene scene = new Scene(rootLayout);
+        scene.getStylesheets().add(DialogsHelper.class.getClassLoader().getResource(ApplicationConstants.CSS_FILE).toExternalForm());
+
+        final ConfigurationsDialogController controller = (ConfigurationsDialogController) loader.getController();
+        controller.setStage(owner, configurationHelper);
+
+        controller.finished().addListener((obs, wasPrompted, isNowFinished) -> {
+            if (isNowFinished.booleanValue()) {
+                manageConfigurationsStage.hide();
+            }
+        });
+
+        manageConfigurationsStage.setScene(scene);
+        manageConfigurationsStage.showAndWait();
+    }
 }
