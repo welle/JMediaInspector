@@ -25,6 +25,10 @@ import jmediainspector.config.ObjectFactory;
  *
  * @author cha
  */
+/**
+ * @author charlottew
+ *
+ */
 public final class ConfigurationHelper {
 
     private @NonNull final static Logger LOGGER = Logger.getLogger(ConfigurationHelper.class.getName());
@@ -133,5 +137,14 @@ public final class ConfigurationHelper {
      */
     public Paths getNewPaths() {
         return this.factoryConfig.createConfigurationsConfigurationPaths();
+    }
+
+    /**
+     * Delete the current configuration.
+     */
+    public void deleteCurrentConfiguration() {
+        if (this.selectedConfiguration != null) {
+            this.configurations.getConfiguration().remove(this.selectedConfiguration);
+        }
     }
 }

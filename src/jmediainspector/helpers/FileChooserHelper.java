@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
 /**
@@ -26,6 +27,20 @@ public final class FileChooserHelper {
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Plex database file", "*.db"), new FileChooser.ExtensionFilter("All Files", "*.*"));
 
         return fileChooser;
+    }
+
+    /**
+     * Get directory chooser.
+     *
+     * @return directory chooser
+     */
+    @NonNull
+    public static DirectoryChooser getDirectoryChooser() {
+        final DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Select a directory");
+        directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+
+        return directoryChooser;
     }
 
     /**

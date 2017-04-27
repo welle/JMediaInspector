@@ -10,7 +10,7 @@
               <xs:element name="paths">
                 <xs:complexType>
                   <xs:sequence>
-                    <xs:element type="xs:string" name="path"/>
+                    <xs:element type="xs:anyURI" name="path" maxOccurs="unbounded" minOccurs="0"/>
                   </xs:sequence>
                 </xs:complexType>
               </xs:element>
