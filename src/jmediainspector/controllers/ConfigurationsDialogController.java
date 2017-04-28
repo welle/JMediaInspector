@@ -8,9 +8,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.adapter.JavaBeanBooleanProperty;
+import javafx.beans.property.adapter.JavaBeanBooleanPropertyBuilder;
 import javafx.beans.property.adapter.JavaBeanStringProperty;
 import javafx.beans.property.adapter.JavaBeanStringPropertyBuilder;
 import javafx.collections.FXCollections;
@@ -22,6 +25,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -34,6 +38,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
@@ -78,14 +83,19 @@ public class ConfigurationsDialogController extends AnchorPane {
     @FXML
     private Button deleteConfigButton;
     @FXML
+    private Button selectPlexDBButton;
+    @FXML
+    private CheckBox defaultConfiguration;
+    @FXML
     private ListView<String> configurationPathListView;
     private Stage primaryStageInitial;
-    private Configuration selectedConfiguration;
+    private Configuration currentConfiguration;
     @NonNull
     private final List<String> tempNewLineList = new ArrayList<>();
     private final List<String> tempDelLineList = new ArrayList<>();
     private JavaBeanStringProperty configurationNameProperty;
     private JavaBeanStringProperty plexDBFileTextFieldProperty;
+    private JavaBeanBooleanProperty defaultConfigurationProperty;
 
     /**
      * Set the stage.
@@ -106,16 +116,20 @@ public class ConfigurationsDialogController extends AnchorPane {
         });
 
         ResizeHelper.addResizeListener(primaryStageInitial);
-        refreshConfigurationList();
+        refreshConfigurationList(null);
         setSelectedConfiguration();
     }
 
-    private void refreshConfigurationList() {
+    private void refreshConfigurationList(@Nullable final Configuration configuration) {
         this.configurationsList.getItems().clear();
         final List<Configuration> configurationsItemList = this.configurationHelper.getConfigurations().getConfiguration();
         if (configurationsItemList != null && !configurationsItemList.isEmpty()) {
             this.configurationsList.getItems().addAll(configurationsItemList);
-            this.configurationsList.setValue(this.configurationHelper.getSelectedConfiguration());
+            if (configuration == null) {
+                this.configurationsList.setValue(this.configurationHelper.getSelectedConfiguration());
+            } else {
+                this.configurationsList.setValue(configuration);
+            }
         }
     }
 
@@ -144,11 +158,17 @@ public class ConfigurationsDialogController extends AnchorPane {
                 }
                 this.plexDBFileTextFieldProperty = JavaBeanStringPropertyBuilder.create().bean(currentSelectedConfiguration).name("file").build();
                 this.plexDBFileTextField.textProperty().bindBidirectional(this.plexDBFileTextFieldProperty);
+
+                if (this.defaultConfigurationProperty != null) {
+                    this.defaultConfiguration.selectedProperty().unbindBidirectional(this.defaultConfigurationProperty);
+                }
+                this.defaultConfigurationProperty = JavaBeanBooleanPropertyBuilder.create().bean(currentSelectedConfiguration).name("selected").build();
+                this.defaultConfiguration.selectedProperty().bindBidirectional(this.defaultConfigurationProperty);
             } catch (final NoSuchMethodException e) {
                 LOGGER.logp(Level.SEVERE, "ConfigurationsDialogController", "setSelectedConfiguration", e.getMessage(), e);
             }
 
-            this.selectedConfiguration = currentSelectedConfiguration;
+            this.currentConfiguration = currentSelectedConfiguration;
             this.tempNewLineList.clear();
             refreshConfigurationPaths();
         }
@@ -166,7 +186,7 @@ public class ConfigurationsDialogController extends AnchorPane {
     }
 
     private void refreshConfigurationPaths() {
-        final List<String> list = new ArrayList<>(this.selectedConfiguration.getPaths().getPath());
+        final List<String> list = new ArrayList<>(this.currentConfiguration.getPaths().getPath());
         list.addAll(this.tempNewLineList);
         list.removeAll(this.tempDelLineList);
         final ObservableList<String> observableList = FXCollections.observableArrayList(list);
@@ -269,12 +289,12 @@ public class ConfigurationsDialogController extends AnchorPane {
             return;
         }
 
-        this.selectedConfiguration.getPaths().getPath().clear();
+        this.currentConfiguration.getPaths().getPath().clear();
         // fill with items in configuration items list
-        this.selectedConfiguration.getPaths().getPath().addAll(this.configurationPathListView.getItems());
+        this.currentConfiguration.getPaths().getPath().addAll(this.configurationPathListView.getItems());
 
         this.configurationHelper.saveConfig();
-        refreshConfigurationList();
+        refreshConfigurationList(this.currentConfiguration);
 
         switchToEditable(false);
     }
@@ -299,6 +319,8 @@ public class ConfigurationsDialogController extends AnchorPane {
         this.configurationsList.setDisable(isEditable);
         this.newConfigButton.setDisable(isEditable);
         this.deleteConfigButton.setDisable(isEditable);
+        this.defaultConfiguration.setDisable(!isEditable);
+        this.selectPlexDBButton.setDisable(!isEditable);
     }
 
     @FXML
@@ -315,13 +337,50 @@ public class ConfigurationsDialogController extends AnchorPane {
         final Optional<ButtonType> result = alert.showAndWait();
         result.ifPresent(button -> {
             if (button == ButtonType.OK) {
-                this.configurationHelper.deleteCurrentConfiguration();
-                this.configurationsList.getItems().remove(this.configurationsList.getSelectionModel());
-                // refresh configuration list
-                refreshConfigurationList();
-                setSelectedConfiguration();
+                final Configuration selectedItem = this.currentConfiguration;
+                if (selectedItem != null) {
+                    this.configurationHelper.deleteCurrentConfiguration(selectedItem);
+                    this.configurationsList.getItems().remove(this.configurationsList.getSelectionModel());
+                    // refresh configuration list
+                    refreshConfigurationList(null);
+                    setSelectedConfiguration();
+                }
             }
         });
     }
 
+    @FXML
+    private void addConfigButton() {
+        final Configuration newConfiguration = this.configurationHelper.addNewConfiguration();
+        refreshConfigurationList(newConfiguration);
+        switchToEditable(true);
+        this.configurationName.requestFocus();
+    }
+
+    @FXML
+    private void changeSelectedConfiguration() {
+        if (this.defaultConfiguration.isSelected()) {
+            this.configurationHelper.setSelectedConfiguration(this.currentConfiguration);
+        }
+    }
+
+    @FXML
+    private void handleSelectPlexDBButton() {
+        final FileChooser fileChooser = FileChooserHelper.getPlexDBFileChooser();
+        File file = null;
+        try {
+            final File initialDir = new File(this.plexDBFileTextField.getText());
+            if (initialDir.getParentFile() != null) {
+                fileChooser.setInitialDirectory(initialDir.getParentFile());
+            }
+            file = fileChooser.showOpenDialog(this.primaryStageInitial.getScene().getWindow());
+        } catch (final IllegalArgumentException e) {
+            fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+            file = fileChooser.showOpenDialog(this.primaryStageInitial.getScene().getWindow());
+        }
+
+        if (file != null) {
+            this.plexDBFileTextField.setText(file.getAbsolutePath());
+        }
+    }
 }

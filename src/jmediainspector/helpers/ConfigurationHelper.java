@@ -141,10 +141,26 @@ public final class ConfigurationHelper {
 
     /**
      * Delete the current configuration.
+     *
+     * @param configuration configuration to be deleted
      */
-    public void deleteCurrentConfiguration() {
-        if (this.selectedConfiguration != null) {
-            this.configurations.getConfiguration().remove(this.selectedConfiguration);
-        }
+    public void deleteCurrentConfiguration(@NonNull final Configuration configuration) {
+        this.configurations.getConfiguration().remove(configuration);
+    }
+
+    /**
+     * Add a new configuration.
+     *
+     * @return new configuration created
+     */
+    @NonNull
+    public Configuration addNewConfiguration() {
+        final Configuration newConfiguration = this.factoryConfig.createConfigurationsConfiguration();
+        final Paths newPaths = this.factoryConfig.createConfigurationsConfigurationPaths();
+        newConfiguration.setPaths(newPaths);
+        this.configurations.getConfiguration().add(newConfiguration);
+
+        assert newConfiguration != null;
+        return newConfiguration;
     }
 }
