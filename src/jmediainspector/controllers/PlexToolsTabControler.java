@@ -28,7 +28,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
@@ -106,16 +105,6 @@ public class PlexToolsTabControler extends AnchorPane implements ConfigurationsL
         setSelectedConfiguration();
     }
 
-    private class ConfigurationListCell extends ListCell<Configuration> {
-        @Override
-        protected void updateItem(final Configuration item, final boolean empty) {
-            super.updateItem(item, empty);
-            if (item != null) {
-                setText(item.getName());
-            }
-        }
-    }
-
     private void refreshConfigurationList() {
         this.configurationsList.getItems().clear();
         final List<Configuration> configurationsItemList = this.configurationHelper.getConfigurations().getConfiguration();
@@ -177,10 +166,7 @@ public class PlexToolsTabControler extends AnchorPane implements ConfigurationsL
                         this.plexFileDB = file;
                     } else {
                         this.copiedPlexFileDB = null;
-                        final Alert alert = new Alert(AlertType.ERROR);
-                        alert.setTitle("Error");
-                        alert.setHeaderText(null);
-                        alert.setContentText("This is not a Plex database file.");
+                        final Alert alert = DialogsHelper.getAlert(JMediaInspector.getPrimaryStage(), Alert.AlertType.ERROR, "This is not a Plex database file.");
 
                         alert.showAndWait();
                     }
@@ -191,10 +177,7 @@ public class PlexToolsTabControler extends AnchorPane implements ConfigurationsL
                 this.loadConfigButton.setDisable(true);
             } catch (final IOException e) {
                 LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "handleLoadConfigButton", e.getMessage(), e);
-                final Alert alert = new Alert(AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText("This is not a Plex database file.");
+                final Alert alert = DialogsHelper.getAlert(JMediaInspector.getPrimaryStage(), Alert.AlertType.ERROR, "This is not a Plex database file.");
 
                 alert.showAndWait();
                 // failed! enable load button
@@ -251,10 +234,7 @@ public class PlexToolsTabControler extends AnchorPane implements ConfigurationsL
         final FileChooser fileChooser = FileChooserHelper.getMediaFileChooser();
         final List<File> files = fileChooser.showOpenMultipleDialog(this.anchorPaneRoot.getScene().getWindow());
         if (files == null) {
-            final Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText("No file selected!");
+            final Alert alert = DialogsHelper.getAlert(JMediaInspector.getPrimaryStage(), Alert.AlertType.ERROR, "No file selected!");
 
             alert.showAndWait();
         } else {
@@ -266,11 +246,7 @@ public class PlexToolsTabControler extends AnchorPane implements ConfigurationsL
     private File getCurrentCopiedPlexDBFile() throws NoSuchFileException {
         final File currentPlexFileDB = this.copiedPlexFileDB;
         if (currentPlexFileDB == null) {
-            final Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Missing Plex database file!");
-
+            final Alert alert = DialogsHelper.getAlert(JMediaInspector.getPrimaryStage(), Alert.AlertType.ERROR, "Missing Plex database file!");
             alert.showAndWait();
 
             throw new NoSuchFileException("Missing Plex database file!");
@@ -283,11 +259,7 @@ public class PlexToolsTabControler extends AnchorPane implements ConfigurationsL
     private File getCurrentPlexDBFile() throws NoSuchFileException {
         final File currentPlexFileDB = this.plexFileDB;
         if (currentPlexFileDB == null) {
-            final Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Missing Plex database file!");
-
+            final Alert alert = DialogsHelper.getAlert(JMediaInspector.getPrimaryStage(), Alert.AlertType.ERROR, "Missing Plex database file!");
             alert.showAndWait();
 
             throw new NoSuchFileException("Missing Plex database file!");
@@ -301,11 +273,7 @@ public class PlexToolsTabControler extends AnchorPane implements ConfigurationsL
         final File currentPlexFileDB = getCurrentPlexDBFile();
         final File parentFile = currentPlexFileDB.getParentFile().getParentFile().getParentFile();
         if (parentFile == null) {
-            final Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Can not determine Plex source folder!");
-
+            final Alert alert = DialogsHelper.getAlert(JMediaInspector.getPrimaryStage(), Alert.AlertType.ERROR, "Can not determine Plex source folder!");
             alert.showAndWait();
 
             throw new NoSuchFileException("Can not determine Plex source folder!");
@@ -332,11 +300,7 @@ public class PlexToolsTabControler extends AnchorPane implements ConfigurationsL
             }
         } catch (final Exception e) {
             LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "searchMissingMediaButton", e.getMessage(), e);
-            final Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Can not open Plex database file!");
-
+            final Alert alert = DialogsHelper.getAlert(JMediaInspector.getPrimaryStage(), Alert.AlertType.ERROR, "Can not open Plex database file!");
             alert.showAndWait();
         } finally {
             try {

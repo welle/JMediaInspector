@@ -57,11 +57,9 @@ public final class CopyPlexDBService extends Service<File> {
 
                     fis.close();
                     fos.close();
-
                 } catch (final IOException e) {
                     LOGGER.logp(Level.SEVERE, "PlexToolsTabControler.clickPlexDBButton(...).new Service() {...}.createTask().new Task() {...}", "call", e.getMessage(), e);
                 }
-
                 updateMessage("Found all.");
                 return CopyPlexDBService.this.targetFile;
             }

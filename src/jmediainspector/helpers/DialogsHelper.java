@@ -9,6 +9,7 @@ import javafx.concurrent.Service;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.ProgressBar;
@@ -89,7 +90,7 @@ public final class DialogsHelper {
         final Stage manageConfigurationsStage = new Stage();
         // Load root layout from fxml file.
         final FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(DialogsHelper.class.getClassLoader().getResource("jmediainspector/fxml/ConfigurationsDialog.fxml"));
+        loader.setLocation(DialogsHelper.class.getClassLoader().getResource("fxml/ConfigurationsDialog.fxml"));
         final AnchorPane rootLayout = (AnchorPane) loader.load();
         manageConfigurationsStage.setTitle(ApplicationConstants.TITLE);
         manageConfigurationsStage.initStyle(StageStyle.UNDECORATED);
@@ -111,5 +112,27 @@ public final class DialogsHelper {
 
         manageConfigurationsStage.setScene(scene);
         manageConfigurationsStage.showAndWait();
+    }
+
+    /**
+     * Get alert dialog.
+     *
+     * @param stage initial stage
+     * @param alertType alert type
+     * @param contentText dialog box text
+     * @return Alert dialog
+     */
+    public static Alert getAlert(@NonNull final Stage stage, final Alert.AlertType alertType, final String contentText) {
+        final Alert alert = new Alert(alertType);
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.initStyle(StageStyle.TRANSPARENT);
+        alert.setTitle(null);
+        alert.setHeaderText(null);
+        alert.setContentText(contentText);
+        final DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(DialogsHelper.class.getClassLoader().getResource(ApplicationConstants.CSS_FILE).toExternalForm());
+        alert.initOwner(stage);
+
+        return alert;
     }
 }

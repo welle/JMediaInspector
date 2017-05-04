@@ -18,34 +18,25 @@ import javafx.beans.property.adapter.JavaBeanStringProperty;
 import javafx.beans.property.adapter.JavaBeanStringPropertyBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import jmediainspector.config.Configurations.Configuration;
-import jmediainspector.constants.ApplicationConstants;
 import jmediainspector.context.Context;
 import jmediainspector.helpers.ConfigurationHelper;
+import jmediainspector.helpers.DialogsHelper;
 import jmediainspector.helpers.FileChooserHelper;
 import jmediainspector.helpers.ResizeHelper;
 
@@ -222,63 +213,6 @@ public class ConfigurationsDialogController extends AnchorPane {
         return this.finished;
     }
 
-    private class ConfigurationListCell extends ListCell<Configuration> {
-        @Override
-        protected void updateItem(final Configuration item, final boolean empty) {
-            super.updateItem(item, empty);
-            if (item != null) {
-                setText(item.getName());
-            }
-        }
-    }
-
-    private class ConfigurationPathListCell extends ListCell<String> {
-        @NonNull
-        private final HBox hbox = new HBox();
-        @NonNull
-        private final Label label = new Label("(empty)");
-        @NonNull
-        private final Pane pane = new Pane();
-        @NonNull
-        private final Button deleteButton = new Button("Delete");
-        @NonNull
-        private final ListView<String> listView;
-
-        public ConfigurationPathListCell(@NonNull final ListView<String> listView) {
-            super();
-            this.listView = listView;
-            this.hbox.getChildren().addAll(this.label, this.pane, this.deleteButton);
-            HBox.setHgrow(this.pane, Priority.ALWAYS);
-        }
-
-        @Override
-        protected void updateItem(final String item, final boolean empty) {
-            super.updateItem(item, empty);
-            setText(null); // No text in label of super class
-            if (empty) {
-                setGraphic(null);
-            } else {
-                String toDisplay = item;
-                if (toDisplay == null) {
-                    toDisplay = "<null>";
-                } else {
-                    if (toDisplay.length() > 95) {
-                        toDisplay = toDisplay.substring(0, 95) + "...";
-                    }
-                }
-                this.label.setText(toDisplay);
-                setGraphic(this.hbox);
-            }
-            this.deleteButton.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(final ActionEvent event) {
-                    // delete current item
-                    ConfigurationPathListCell.this.listView.getItems().remove(item);
-                }
-            });
-        }
-    }
-
     @FXML
     private void handleEditButton() {
         switchToEditable(true);
@@ -289,11 +223,7 @@ public class ConfigurationsDialogController extends AnchorPane {
         // Check if name is not empty
         final Configuration currentConfig = this.configurationsList.getValue();
         if (currentConfig.getName() == null || "".equals(currentConfig.getName().trim())) {
-            final Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Configuration name can not be empty!");
-
+            final Alert alert = DialogsHelper.getAlert(this.primaryStageInitial, Alert.AlertType.ERROR, "Configuration name can not be empty!");
             alert.showAndWait();
             return;
         }
@@ -334,15 +264,7 @@ public class ConfigurationsDialogController extends AnchorPane {
 
     @FXML
     private void deleteConfiguration() {
-        final Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.initStyle(StageStyle.UNDECORATED);
-        alert.initStyle(StageStyle.TRANSPARENT);
-        alert.setTitle(null);
-        alert.setHeaderText(null);
-        alert.setContentText("Deleting is definitive! Continue ?");
-        final DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(getClass().getClassLoader().getResource(ApplicationConstants.CSS_FILE).toExternalForm());
-        alert.initOwner(this.primaryStageInitial);
+        final Alert alert = DialogsHelper.getAlert(this.primaryStageInitial, Alert.AlertType.CONFIRMATION, "Deleting is definitive! Continue ?");
         final Optional<ButtonType> result = alert.showAndWait();
         result.ifPresent(button -> {
             if (button == ButtonType.OK) {

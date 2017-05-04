@@ -112,12 +112,12 @@ public class JMediaInspector extends Application {
     /**
      * Handle the "New Configuration" item menu.
      */
-    public void handleNewConfiguration(final ActionEvent event) {
+    @FXML
+    public void handleNewConfiguration() {
         try {
             DialogsHelper.createConfigurationsDialog(JMediaInspector.primaryStage);
         } catch (final IOException e) {
             LOGGER.logp(Level.SEVERE, "JMediaInspector", "handleNewConfiguration", e.getMessage(), e);
         }
     }
-
 }

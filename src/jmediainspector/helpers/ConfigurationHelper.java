@@ -34,8 +34,6 @@ import jmediainspector.listeners.ConfigurationsListener;
  */
 public final class ConfigurationHelper {
 
-    private final static ConfigurationHelper INSTANCE = new ConfigurationHelper();
-
     private @NonNull final static Logger LOGGER = Logger.getLogger(ConfigurationHelper.class.getName());
 
     private Configurations configurations;
@@ -43,7 +41,7 @@ public final class ConfigurationHelper {
     @NonNull
     private final ObjectFactory factoryConfig = new ObjectFactory();
     @NonNull
-    private final File configFile = new File(System.getProperty("user.home") + "/jmediainspector.xml");;
+    private final File configFile = new File(System.getProperty("user.home") + "/jmediainspector.xml");
     @Nullable
     private Configuration selectedConfiguration;
     @NonNull

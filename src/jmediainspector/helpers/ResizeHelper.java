@@ -10,8 +10,18 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
+/**
+ * Resize helper for the main window.
+ *
+ * @author charlottew
+ */
 public class ResizeHelper {
 
+    /**
+     * Add a listener.
+     *
+     * @param stage listener
+     */
     public static void addResizeListener(final Stage stage) {
         final ResizeListener resizeListener = new ResizeListener(stage);
         stage.getScene().addEventHandler(MouseEvent.MOUSE_MOVED, resizeListener);
@@ -25,6 +35,12 @@ public class ResizeHelper {
         }
     }
 
+    /**
+     * Add listener.
+     *
+     * @param node
+     * @param listener
+     */
     public static void addListenerDeeply(final Node node, final EventHandler<MouseEvent> listener) {
         node.addEventHandler(MouseEvent.MOUSE_MOVED, listener);
         node.addEventHandler(MouseEvent.MOUSE_PRESSED, listener);
@@ -40,7 +56,7 @@ public class ResizeHelper {
         }
     }
 
-    static class ResizeListener implements EventHandler<MouseEvent> {
+    private static class ResizeListener implements EventHandler<MouseEvent> {
         private final Stage stage;
         private Cursor cursorEvent = Cursor.DEFAULT;
         private final int border = 4;
