@@ -27,11 +27,13 @@ public final class PlexConstants {
          */
         TV_SHOWS(2, "TV Shows");
 
-        private @NonNull final String directoryName;
-        private final int value;
+        @NonNull
+        private final String directoryName;
+        @NonNull
+        private final Integer value;
 
         private SECTION_TYPE(final int value, @NonNull final String directoryName) {
-            this.value = value;
+            this.value = Integer.valueOf(value);
             this.directoryName = directoryName;
         }
 
@@ -42,7 +44,7 @@ public final class PlexConstants {
          * @return related section type
          */
         @Nullable
-        public static SECTION_TYPE getSectionType(final int sectionTypeValue) {
+        public static SECTION_TYPE getSectionType(@Nullable final Integer sectionTypeValue) {
             SECTION_TYPE result = null;
             for (final SECTION_TYPE sectionType : values()) {
                 if (sectionType.value == sectionTypeValue) {

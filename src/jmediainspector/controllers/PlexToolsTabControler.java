@@ -22,6 +22,10 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
+import aka.plexdb.bean.LibrarySectionsEntity;
+import aka.plexdb.bean.MediaItemsEntity;
+import aka.plexdb.bean.MediaPartsEntity;
+import aka.plexdb.bean.MetadataItemsEntity;
 import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Worker.State;
 import javafx.event.ActionEvent;
@@ -52,6 +56,7 @@ import jmediainspector.constants.DevConstants;
 import jmediainspector.constants.PlexConstants;
 import jmediainspector.context.Context;
 import jmediainspector.helpers.ConfigurationHelper;
+import jmediainspector.helpers.database.PlexDBHelper;
 import jmediainspector.helpers.dialogs.DialogsHelper;
 import jmediainspector.helpers.dialogs.FileChooserHelper;
 import jmediainspector.listeners.ConfigurationsListener;
@@ -283,36 +288,20 @@ public class PlexToolsTabControler extends AnchorPane implements ConfigurationsL
     }
 
     private void processFileInformationSearch(@NonNull final List<File> files) {
-        Connection connection = null;
         try {
-            connection = getPlexDatabaseConnection();
             this.resultArea.getChildren().clear();
             for (final File file : files) {
-                final Statement stmt = connection.createStatement();
-                final String query = "Select T1.file, T4.section_type, T3.* from media_parts as T1 inner join media_items as T2 on (T1.media_item_id == T2.id) inner join metadata_items as T3 on (T2.metadata_item_id == T3.id) inner join library_sections as T4 on (T3.library_section_id = T4.id) where lower(T1.file) =\"" + file.getAbsolutePath().toLowerCase() + "\"";
-                if (DevConstants.DEBUG) {
-                    System.err.println("[PlexToolsTabControler] processFileInformationSearch - QUERY= " + query);
-                }
-                final ResultSet rs = stmt.executeQuery(query);
-                processResultFileInformationSearch(rs, file);
-                rs.close();
-                stmt.close();
+                final List<@NonNull MediaPartsEntity> mediaItemsList = PlexDBHelper.getMediaParts(file);
+                processResultFileInformationSearch(mediaItemsList, file);
             }
         } catch (final Exception e) {
             LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "searchMissingMediaButton", e.getMessage(), e);
             final Alert alert = DialogsHelper.getAlert(JMediaInspector.getPrimaryStage(), Alert.AlertType.ERROR, "Can not open Plex database file!");
             alert.showAndWait();
-        } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (final SQLException e) {
-                LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "processFileInformationSearch", e.getMessage(), e);
-            }
         }
     }
 
+    @NonNull
     private Connection getPlexDatabaseConnection() throws ClassNotFoundException, SQLException, NoSuchFileException {
         Class.forName("org.sqlite.JDBC");
         final StringBuilder sb = new StringBuilder();
@@ -324,8 +313,8 @@ public class PlexToolsTabControler extends AnchorPane implements ConfigurationsL
         return c;
     }
 
-    private void processResultFileInformationSearch(@Nullable final ResultSet rs, @NonNull final File file) throws SQLException {
-        if (rs == null || !rs.next()) {
+    private void processResultFileInformationSearch(@NonNull final List<@NonNull MediaPartsEntity> mediaPartsList, @NonNull final File file) throws SQLException {
+        if (mediaPartsList.isEmpty()) {
             final Text text1 = new Text("No match found in plex database for file: ");
             text1.setStyle("-fx-font-weight: bold; -fx-fill: #FFFFFF");
             final Text text2 = new Text(file.getAbsolutePath() + "\n");
@@ -341,15 +330,21 @@ public class PlexToolsTabControler extends AnchorPane implements ConfigurationsL
             text = new Text(file.getAbsolutePath() + "\n\n");
             text.setStyle("-fx-font-style: italic; -fx-fill: #FFFFFF; ");
             resultList.add(text);
-            do {
+            for (final @NonNull MediaPartsEntity mediaParts : mediaPartsList) {
                 text = new Text(i + ") ");
                 text.setStyle("-fx-fill: #FFFFFF; -fx-font-weight: bold; -fx-text-origin: top;");
                 resultList.add(text);
-                final String guid = rs.getString("guid");
-                final String title = rs.getString("title");
-                final Hyperlink hyperlink = addLinkInformation(resultList, guid, title);
-                addImage(resultList, rs, hyperlink);
-            } while (rs.next());
+                final MediaItemsEntity mediaItemsEntity = mediaParts.getMediaItem();
+                if (mediaItemsEntity != null) {
+                    final MetadataItemsEntity metadataItemsEntity = mediaItemsEntity.getMetadataItem();
+                    if (metadataItemsEntity != null) {
+                        final String guid = metadataItemsEntity.getGuid();
+                        final String title = metadataItemsEntity.getTitle();
+                        final Hyperlink hyperlink = addLinkInformation(resultList, guid, title);
+                        addImage(resultList, metadataItemsEntity, hyperlink);
+                    }
+                }
+            }
 
             text = new Text("\n---------------------------------------------------------\n");
             text.setStyle("-fx-font-style: italic; -fx-fill: #FFFFFF; ");
@@ -359,52 +354,55 @@ public class PlexToolsTabControler extends AnchorPane implements ConfigurationsL
         }
     }
 
-    private void addImage(@NonNull final LinkedList<@NonNull Node> resultList, @NonNull final ResultSet rs, @Nullable final Hyperlink hyperlink) throws SQLException {
+    private void addImage(@NonNull final LinkedList<@NonNull Node> resultList, @NonNull final MetadataItemsEntity metadataItemsEntity, @Nullable final Hyperlink hyperlink) throws SQLException {
         try {
-            String userThumbUrl = rs.getString("user_thumb_url");
+            String userThumbUrl = metadataItemsEntity.getUserThumbUrl();
             if (userThumbUrl != null) {
-                final int sectionTypeValue = rs.getInt("section_type");
-                final PlexConstants.SECTION_TYPE sectionType = PlexConstants.SECTION_TYPE.getSectionType(sectionTypeValue);
-                if (sectionType != null) {
-                    final int beginIndex = userThumbUrl.lastIndexOf("/");
-                    final int endIndex = userThumbUrl.length();
-                    userThumbUrl = userThumbUrl.substring(beginIndex, endIndex);
-                    final String guid = rs.getString("guid");
-                    final String shaGuid = DigestUtils.sha1Hex(guid);
-                    final String cacheDir = shaGuid.substring(0, 1);
-                    final String shaDir = shaGuid.substring(1, shaGuid.length());
+                final LibrarySectionsEntity librarySection = metadataItemsEntity.getLibrarySection();
+                if (librarySection != null) {
+                    final Integer sectionTypeValue = librarySection.getSectionType();
+                    final PlexConstants.SECTION_TYPE sectionType = PlexConstants.SECTION_TYPE.getSectionType(sectionTypeValue);
+                    if (sectionType != null) {
+                        final int beginIndex = userThumbUrl.lastIndexOf("/");
+                        final int endIndex = userThumbUrl.length();
+                        userThumbUrl = userThumbUrl.substring(beginIndex, endIndex);
+                        final String guid = metadataItemsEntity.getGuid();
+                        final String shaGuid = DigestUtils.sha1Hex(guid);
+                        final String cacheDir = shaGuid.substring(0, 1);
+                        final String shaDir = shaGuid.substring(1, shaGuid.length());
 
-                    final StringBuilder sb = new StringBuilder();
-                    sb.append(getCurrentPlexDBDirectory().getAbsolutePath());
-                    sb.append("/metadata/");
-                    sb.append(sectionType.getDirectoryName());
-                    sb.append("/");
-                    sb.append(cacheDir);
-                    sb.append("/");
-                    sb.append(shaDir);
-                    sb.append(".bundle/Contents/_stored/posters/");
-                    sb.append(userThumbUrl);
-                    if (DevConstants.DEBUG) {
-                        System.err.println("[PlexToolsTabControler] addImage - " + sb.toString());
-                    }
-
-                    try {
-                        final Image image = new Image(new FileInputStream(sb.toString()), 300, 150, true, false);
-                        final ImageView imageView = new ImageView(image);
-                        if (hyperlink == null) {
-                            resultList.add(imageView);
-                        } else {
-                            hyperlink.setGraphic(imageView);
-                            resultList.add(hyperlink);
+                        final StringBuilder sb = new StringBuilder();
+                        sb.append(getCurrentPlexDBDirectory().getAbsolutePath());
+                        sb.append("/metadata/");
+                        sb.append(sectionType.getDirectoryName());
+                        sb.append("/");
+                        sb.append(cacheDir);
+                        sb.append("/");
+                        sb.append(shaDir);
+                        sb.append(".bundle/Contents/_stored/posters/");
+                        sb.append(userThumbUrl);
+                        if (DevConstants.DEBUG) {
+                            System.err.println("[PlexToolsTabControler] addImage - " + sb.toString());
                         }
 
-                        final Text text = new Text(" ");
-                        text.setStyle("-fx-fill: #FFFFFF; -fx-font-weight: bold;");
-                        resultList.add(text);
-                    } catch (final FileNotFoundException e) {
-                        LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "addImage", e.getMessage(), e);
-                    }
+                        try {
+                            final Image image = new Image(new FileInputStream(sb.toString()), 300, 150, true, false);
+                            final ImageView imageView = new ImageView(image);
+                            if (hyperlink == null) {
+                                resultList.add(imageView);
+                            } else {
+                                hyperlink.setGraphic(imageView);
+                                resultList.add(hyperlink);
+                            }
 
+                            final Text text = new Text(" ");
+                            text.setStyle("-fx-fill: #FFFFFF; -fx-font-weight: bold;");
+                            resultList.add(text);
+                        } catch (final FileNotFoundException e) {
+                            LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "addImage", e.getMessage(), e);
+                        }
+
+                    }
                 }
             }
         } catch (final StringIndexOutOfBoundsException e) {
