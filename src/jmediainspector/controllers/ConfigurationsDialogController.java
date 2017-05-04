@@ -36,9 +36,9 @@ import javafx.util.Callback;
 import jmediainspector.config.Configurations.Configuration;
 import jmediainspector.context.Context;
 import jmediainspector.helpers.ConfigurationHelper;
-import jmediainspector.helpers.DialogsHelper;
-import jmediainspector.helpers.FileChooserHelper;
-import jmediainspector.helpers.ResizeHelper;
+import jmediainspector.helpers.dialogs.DialogsHelper;
+import jmediainspector.helpers.dialogs.FileChooserHelper;
+import jmediainspector.helpers.effects.ResizeHelper;
 
 /**
  * Controller for the Configurations dialog.
@@ -47,9 +47,10 @@ import jmediainspector.helpers.ResizeHelper;
  */
 public class ConfigurationsDialogController extends AnchorPane {
 
-    private @NonNull final static Logger LOGGER = Logger.getLogger(ConfigurationsDialogController.class.getName());
-    private ConfigurationHelper configurationHelper;
+    @NonNull
+    private final static Logger LOGGER = Logger.getLogger(ConfigurationsDialogController.class.getName());
 
+    private ConfigurationHelper configurationHelper;
     @NonNull
     private final BooleanProperty finished = new SimpleBooleanProperty();
     @FXML

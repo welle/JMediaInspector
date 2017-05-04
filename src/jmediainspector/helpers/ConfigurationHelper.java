@@ -1,6 +1,7 @@
 package jmediainspector.helpers;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -34,10 +35,10 @@ import jmediainspector.listeners.ConfigurationsListener;
  */
 public final class ConfigurationHelper {
 
-    private @NonNull final static Logger LOGGER = Logger.getLogger(ConfigurationHelper.class.getName());
-
-    private Configurations configurations;
-
+    @NonNull
+    private final static Logger LOGGER = Logger.getLogger(ConfigurationHelper.class.getName());
+    @NonNull
+    private final Configurations configurations;
     @NonNull
     private final ObjectFactory factoryConfig = new ObjectFactory();
     @NonNull
@@ -49,10 +50,13 @@ public final class ConfigurationHelper {
 
     /**
      * Constructor.
+     *
+     * @throws FileNotFoundException
      */
-    public ConfigurationHelper() {
+    public ConfigurationHelper() throws FileNotFoundException {
+        Configurations config = null;
         if (!this.configFile.exists()) {
-            this.configurations = this.factoryConfig.createConfigurations();
+            config = this.factoryConfig.createConfigurations();
             saveConfig();
         }
 
@@ -60,10 +64,14 @@ public final class ConfigurationHelper {
             final JAXBContext jc = JAXBContext.newInstance(ObjectFactory.class.getPackage().getName());
             final Unmarshaller unmarshaller = jc.createUnmarshaller();
 
-            this.configurations = (Configurations) unmarshaller.unmarshal(this.configFile);
+            config = (Configurations) unmarshaller.unmarshal(this.configFile);
         } catch (final JAXBException e) {
             LOGGER.logp(Level.SEVERE, "ConfigurationHelper", "ConfigurationHelper", e.getMessage(), e);
         }
+        if (config == null) {
+            throw new FileNotFoundException("Could not open configurations!");
+        }
+        this.configurations = config;
     }
 
     /**

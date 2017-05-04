@@ -52,8 +52,8 @@ import jmediainspector.constants.DevConstants;
 import jmediainspector.constants.PlexConstants;
 import jmediainspector.context.Context;
 import jmediainspector.helpers.ConfigurationHelper;
-import jmediainspector.helpers.DialogsHelper;
-import jmediainspector.helpers.FileChooserHelper;
+import jmediainspector.helpers.dialogs.DialogsHelper;
+import jmediainspector.helpers.dialogs.FileChooserHelper;
 import jmediainspector.listeners.ConfigurationsListener;
 import jmediainspector.services.CopyPlexDBService;
 

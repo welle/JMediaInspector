@@ -18,9 +18,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import jmediainspector.constants.ApplicationConstants;
 import jmediainspector.controllers.PlexToolsTabControler;
-import jmediainspector.helpers.DialogsHelper;
-import jmediainspector.helpers.EffectUtilities;
-import jmediainspector.helpers.ResizeHelper;
+import jmediainspector.helpers.dialogs.DialogsHelper;
+import jmediainspector.helpers.effects.EffectUtilities;
+import jmediainspector.helpers.effects.ResizeHelper;
 
 /**
  * Main Application.
