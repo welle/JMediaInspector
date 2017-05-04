@@ -83,10 +83,9 @@ public final class DialogsHelper {
      * Get process configurations dialog.
      *
      * @param owner stage owner
-     * @param configurationHelper
      * @throws IOException
      */
-    public static void createConfigurationsDialog(@NonNull final Stage owner, @NonNull final ConfigurationHelper configurationHelper) throws IOException {
+    public static void createConfigurationsDialog(@NonNull final Stage owner) throws IOException {
         final Stage manageConfigurationsStage = new Stage();
         // Load root layout from fxml file.
         final FXMLLoader loader = new FXMLLoader();
@@ -102,7 +101,7 @@ public final class DialogsHelper {
         scene.getStylesheets().add(DialogsHelper.class.getClassLoader().getResource(ApplicationConstants.CSS_FILE).toExternalForm());
 
         final ConfigurationsDialogController controller = (ConfigurationsDialogController) loader.getController();
-        controller.setStage(owner, configurationHelper);
+        controller.setStage(owner);
 
         controller.finished().addListener((obs, wasPrompted, isNowFinished) -> {
             if (isNowFinished.booleanValue()) {

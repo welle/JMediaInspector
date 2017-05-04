@@ -18,7 +18,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import jmediainspector.constants.ApplicationConstants;
 import jmediainspector.controllers.PlexToolsTabControler;
-import jmediainspector.helpers.ConfigurationHelper;
 import jmediainspector.helpers.DialogsHelper;
 import jmediainspector.helpers.EffectUtilities;
 import jmediainspector.helpers.ResizeHelper;
@@ -38,9 +37,6 @@ public class JMediaInspector extends Application {
     private final PlexToolsTabControler plexToolsTabPage = new PlexToolsTabControler();
 
     private Node menuBar;
-
-    @NonNull
-    private final ConfigurationHelper configurationHelper = new ConfigurationHelper();
 
     /**
      * Main.
@@ -82,7 +78,7 @@ public class JMediaInspector extends Application {
             // Load root layout from fxml file.
             final FXMLLoader loader = new FXMLLoader();
 
-            loader.setLocation(getClass().getClassLoader().getResource("jmediainspector/fxml/MainWindows.fxml"));
+            loader.setLocation(getClass().getClassLoader().getResource("fxml/MainWindows.fxml"));
             loader.setResources(new ResourceWrapper());
             this.rootLayout = (AnchorPane) loader.load();
 
@@ -118,7 +114,7 @@ public class JMediaInspector extends Application {
      */
     public void handleNewConfiguration(final ActionEvent event) {
         try {
-            DialogsHelper.createConfigurationsDialog(primaryStage, this.configurationHelper);
+            DialogsHelper.createConfigurationsDialog(JMediaInspector.primaryStage);
         } catch (final IOException e) {
             LOGGER.logp(Level.SEVERE, "JMediaInspector", "handleNewConfiguration", e.getMessage(), e);
         }

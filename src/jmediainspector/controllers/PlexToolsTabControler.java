@@ -30,10 +30,12 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextField;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
@@ -44,11 +46,16 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import javafx.util.Callback;
 import jmediainspector.JMediaInspector;
+import jmediainspector.config.Configurations.Configuration;
 import jmediainspector.constants.DevConstants;
 import jmediainspector.constants.PlexConstants;
+import jmediainspector.context.Context;
+import jmediainspector.helpers.ConfigurationHelper;
 import jmediainspector.helpers.DialogsHelper;
 import jmediainspector.helpers.FileChooserHelper;
+import jmediainspector.listeners.ConfigurationsListener;
 import jmediainspector.services.CopyPlexDBService;
 
 /**
@@ -56,38 +63,90 @@ import jmediainspector.services.CopyPlexDBService;
  *
  * @author Welle Charlotte
  */
-public class PlexToolsTabControler extends AnchorPane {
+public class PlexToolsTabControler extends AnchorPane implements ConfigurationsListener {
 
     private @NonNull final static Logger LOGGER = Logger.getLogger(PlexToolsTabControler.class.getName());
 
     @Nullable
     private File copiedPlexFileDB = null;
     @FXML
-    private TextField selectedPlexDBText;
-    @FXML
-    private Button selectPlexDBBUtton;
-    @FXML
     private Button searchMissingMedia;
+    @FXML
+    private Button loadConfigButton;
     @FXML
     private SplitPane anchorPaneRoot;
     @FXML
     private TextFlow resultArea;
 
     private File plexFileDB;
+    @FXML
+    private ComboBox<Configuration> configurationsList;
+
+    private ConfigurationHelper configurationHelper;
+
+    private Configuration currentConfiguration;
 
     /**
-     * Handle the select plex database button.
+     * Initialize component.
+     * Internal use only.
+     */
+    @FXML
+    public void initialize() {
+        this.configurationHelper = Context.getInstance().getCurrentConfigurationHelper();
+
+        this.configurationsList.setButtonCell(new ConfigurationListCell());
+        this.configurationsList.setCellFactory(new Callback<ListView<Configuration>, ListCell<Configuration>>() {
+            @Override
+            public ListCell<Configuration> call(final ListView<Configuration> p) {
+                return new ConfigurationListCell();
+            }
+        });
+
+        refreshConfigurationList();
+        setSelectedConfiguration();
+    }
+
+    private class ConfigurationListCell extends ListCell<Configuration> {
+        @Override
+        protected void updateItem(final Configuration item, final boolean empty) {
+            super.updateItem(item, empty);
+            if (item != null) {
+                setText(item.getName());
+            }
+        }
+    }
+
+    private void refreshConfigurationList() {
+        this.configurationsList.getItems().clear();
+        final List<Configuration> configurationsItemList = this.configurationHelper.getConfigurations().getConfiguration();
+        if (configurationsItemList != null && !configurationsItemList.isEmpty()) {
+            this.configurationsList.getItems().addAll(configurationsItemList);
+            if (this.currentConfiguration == null) {
+                this.configurationsList.setValue(this.configurationHelper.getSelectedConfiguration());
+            } else {
+                this.configurationsList.setValue(this.currentConfiguration);
+            }
+        }
+    }
+
+    /**
+     * Handle the select configuration button.
      *
      * @param event
      */
-    public void clickPlexDBButton(final ActionEvent event) {
+    @FXML
+    public void handleLoadConfigButton(final ActionEvent event) {
         this.copiedPlexFileDB = null;
-        this.plexFileDB = null;
-        final FileChooser fileChooser = FileChooserHelper.getPlexDBFileChooser();
-        final File file = fileChooser.showOpenDialog(this.anchorPaneRoot.getScene().getWindow());
-        if (file == null) {
-            this.selectedPlexDBText.setText(null);
-        } else {
+        File configFile = null;
+        try {
+            if (this.currentConfiguration != null) {
+                configFile = new File(this.currentConfiguration.getFile());
+            }
+        } catch (final Exception e) {
+            LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "handleLoadConfigButton", e.getMessage(), e);
+        }
+        if (configFile != null) {
+            final File file = configFile;
             // first copy db file as it can be used and so it is locked
             try {
                 final File target = File.createTempFile("plex", ".db");
@@ -112,14 +171,9 @@ public class PlexToolsTabControler extends AnchorPane {
                     final Window window = progressDialog.getDialogPane().getScene().getWindow();
                     window.hide();
                     JMediaInspector.getPrimaryStage().getScene().getRoot().setEffect(null);
-                    if (DevConstants.DEBUG) {
-                        System.err.println("[PlexToolsTabControler] clickPlexDBButton - copied " + file + " to " + target);
-                    }
                     this.copiedPlexFileDB = target;
                     final boolean isPlexDatabase = isPlexDatabase();
                     if (isPlexDatabase) {
-                        final String absoluteFileName = file.getAbsolutePath();
-                        this.selectedPlexDBText.setText(absoluteFileName);
                         this.plexFileDB = file;
                     } else {
                         this.copiedPlexFileDB = null;
@@ -133,16 +187,30 @@ public class PlexToolsTabControler extends AnchorPane {
                 });
                 service.start();
 
+                // everything ok, config loaded, disable load button
+                this.loadConfigButton.setDisable(true);
             } catch (final IOException e) {
-                LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "clickPlexDBButton", e.getMessage(), e);
+                LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "handleLoadConfigButton", e.getMessage(), e);
                 final Alert alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText(null);
                 alert.setContentText("This is not a Plex database file.");
 
                 alert.showAndWait();
+                // failed! enable load button
+                this.loadConfigButton.setDisable(false);
             }
+        }
+    }
 
+    @FXML
+    private void setSelectedConfiguration() {
+        final Configuration currentSelectedConfiguration = this.configurationsList.getValue();
+        if (currentSelectedConfiguration != null) {
+            if (this.currentConfiguration != currentSelectedConfiguration) {
+                this.currentConfiguration = currentSelectedConfiguration;
+                this.loadConfigButton.setDisable(false);
+            }
         }
     }
 
@@ -429,6 +497,11 @@ public class PlexToolsTabControler extends AnchorPane {
             }
         }
         return result;
+    }
+
+    @Override
+    public void onChanges() {
+        refreshConfigurationList();
     }
 
 }

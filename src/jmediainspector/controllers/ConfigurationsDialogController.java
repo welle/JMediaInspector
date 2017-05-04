@@ -44,6 +44,7 @@ import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import jmediainspector.config.Configurations.Configuration;
 import jmediainspector.constants.ApplicationConstants;
+import jmediainspector.context.Context;
 import jmediainspector.helpers.ConfigurationHelper;
 import jmediainspector.helpers.FileChooserHelper;
 import jmediainspector.helpers.ResizeHelper;
@@ -98,13 +99,21 @@ public class ConfigurationsDialogController extends AnchorPane {
     private JavaBeanBooleanProperty defaultConfigurationProperty;
 
     /**
+     * Initialize.
+     *
+     * Internal use only.
+     */
+    @FXML
+    public void initialize() {
+        this.configurationHelper = Context.getInstance().getCurrentConfigurationHelper();
+    }
+
+    /**
      * Set the stage.
      *
      * @param primaryStageInitial
-     * @param configurationHelper
      */
-    public void setStage(final Stage primaryStageInitial, @NonNull final ConfigurationHelper configurationHelper) {
-        this.configurationHelper = configurationHelper;
+    public void setStage(final Stage primaryStageInitial) {
         this.primaryStageInitial = primaryStageInitial;
 
         this.configurationsList.setButtonCell(new ConfigurationListCell());
@@ -360,7 +369,10 @@ public class ConfigurationsDialogController extends AnchorPane {
     @FXML
     private void changeSelectedConfiguration() {
         if (this.defaultConfiguration.isSelected()) {
-            this.configurationHelper.setSelectedConfiguration(this.currentConfiguration);
+            final Configuration cConfiguration = this.currentConfiguration;
+            if (cConfiguration != null) {
+                this.configurationHelper.setSelectedConfiguration(cConfiguration);
+            }
         }
     }
 

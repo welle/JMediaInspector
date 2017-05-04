@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,6 +21,7 @@ import jmediainspector.config.Configurations;
 import jmediainspector.config.Configurations.Configuration;
 import jmediainspector.config.Configurations.Configuration.Paths;
 import jmediainspector.config.ObjectFactory;
+import jmediainspector.listeners.ConfigurationsListener;
 
 /**
  * Configuration helper.
@@ -31,6 +34,8 @@ import jmediainspector.config.ObjectFactory;
  */
 public final class ConfigurationHelper {
 
+    private final static ConfigurationHelper INSTANCE = new ConfigurationHelper();
+
     private @NonNull final static Logger LOGGER = Logger.getLogger(ConfigurationHelper.class.getName());
 
     private Configurations configurations;
@@ -38,20 +43,17 @@ public final class ConfigurationHelper {
     @NonNull
     private final ObjectFactory factoryConfig = new ObjectFactory();
     @NonNull
-    private static File CONFIG_FILE;
+    private final File configFile = new File(System.getProperty("user.home") + "/jmediainspector.xml");;
     @Nullable
     private Configuration selectedConfiguration;
-
-    static {
-        final String homeDirectory = System.getProperty("user.home");
-        CONFIG_FILE = new File(homeDirectory + "/jmediainspector.xml");
-    }
+    @NonNull
+    private final List<@NonNull ConfigurationsListener> configurationsListenerList = new ArrayList<>();
 
     /**
      * Constructor.
      */
     public ConfigurationHelper() {
-        if (!CONFIG_FILE.exists()) {
+        if (!this.configFile.exists()) {
             this.configurations = this.factoryConfig.createConfigurations();
             saveConfig();
         }
@@ -60,7 +62,7 @@ public final class ConfigurationHelper {
             final JAXBContext jc = JAXBContext.newInstance(ObjectFactory.class.getPackage().getName());
             final Unmarshaller unmarshaller = jc.createUnmarshaller();
 
-            this.configurations = (Configurations) unmarshaller.unmarshal(CONFIG_FILE);
+            this.configurations = (Configurations) unmarshaller.unmarshal(this.configFile);
         } catch (final JAXBException e) {
             LOGGER.logp(Level.SEVERE, "ConfigurationHelper", "ConfigurationHelper", e.getMessage(), e);
         }
@@ -75,10 +77,15 @@ public final class ConfigurationHelper {
             final Marshaller marshaller = jaxbContext.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
 
-            final OutputStream outputStream = new FileOutputStream(CONFIG_FILE);
+            final OutputStream outputStream = new FileOutputStream(this.configFile);
             marshaller.marshal(this.configurations, outputStream);
 
             outputStream.close();
+
+            // warn listener
+            for (final ConfigurationsListener configurationsListener : this.configurationsListenerList) {
+                configurationsListener.onChanges();
+            }
         } catch (JAXBException | IOException e) {
             LOGGER.logp(Level.SEVERE, "ConfigurationHelper", "saveConfig", e.getMessage(), e);
         }
@@ -162,5 +169,23 @@ public final class ConfigurationHelper {
 
         assert newConfiguration != null;
         return newConfiguration;
+    }
+
+    /**
+     * Add configurations listener.
+     *
+     * @param configurationsListener
+     */
+    public void addListener(@NonNull final ConfigurationsListener configurationsListener) {
+        this.configurationsListenerList.add(configurationsListener);
+    }
+
+    /**
+     * Remove configurations listener.
+     *
+     * @param configurationsListener
+     */
+    public void removeListener(@NonNull final ConfigurationsListener configurationsListener) {
+        this.configurationsListenerList.remove(configurationsListener);
     }
 }

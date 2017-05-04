@@ -10,7 +10,7 @@ public final class ApplicationConstants {
     /**
      * CSS file path.
      */
-    public static final String CSS_FILE = "jmediainspector/css/application.css";
+    public static final String CSS_FILE = "css/application.css";
 
     /**
      * Title.
