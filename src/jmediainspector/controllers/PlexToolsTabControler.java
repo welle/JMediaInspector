@@ -1,12 +1,8 @@
 package jmediainspector.controllers;
 
-import java.awt.Desktop;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.NoSuchFileException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -18,14 +14,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
-import aka.plexdb.bean.LibrarySectionsEntity;
-import aka.plexdb.bean.MediaItemsEntity;
 import aka.plexdb.bean.MediaPartsEntity;
-import aka.plexdb.bean.MetadataItemsEntity;
 import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Worker.State;
 import javafx.event.ActionEvent;
@@ -35,16 +27,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.Effect;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -52,13 +40,12 @@ import javafx.stage.Window;
 import javafx.util.Callback;
 import jmediainspector.JMediaInspector;
 import jmediainspector.config.Configurations.Configuration;
-import jmediainspector.constants.DevConstants;
-import jmediainspector.constants.PlexConstants;
 import jmediainspector.context.Context;
 import jmediainspector.helpers.ConfigurationHelper;
 import jmediainspector.helpers.database.PlexDBHelper;
 import jmediainspector.helpers.dialogs.DialogsHelper;
 import jmediainspector.helpers.dialogs.FileChooserHelper;
+import jmediainspector.helpers.nodes.SearchFileHelper;
 import jmediainspector.listeners.ConfigurationsListener;
 import jmediainspector.services.CopyPlexDBService;
 
@@ -69,7 +56,8 @@ import jmediainspector.services.CopyPlexDBService;
  */
 public class PlexToolsTabControler extends AnchorPane implements ConfigurationsListener {
 
-    private @NonNull final static Logger LOGGER = Logger.getLogger(PlexToolsTabControler.class.getName());
+    @NonNull
+    private final static Logger LOGGER = Logger.getLogger(PlexToolsTabControler.class.getName());
 
     @Nullable
     private File copiedPlexFileDB = null;
@@ -292,7 +280,8 @@ public class PlexToolsTabControler extends AnchorPane implements ConfigurationsL
             this.resultArea.getChildren().clear();
             for (final File file : files) {
                 final List<@NonNull MediaPartsEntity> mediaItemsList = PlexDBHelper.getMediaParts(file);
-                processResultFileInformationSearch(mediaItemsList, file);
+                final LinkedList<@NonNull Node> resultList = SearchFileHelper.processResultFileInformationSearch(mediaItemsList, file);
+                this.resultArea.getChildren().addAll(resultList);
             }
         } catch (final Exception e) {
             LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "searchMissingMediaButton", e.getMessage(), e);
@@ -311,154 +300,6 @@ public class PlexToolsTabControler extends AnchorPane implements ConfigurationsL
         sb.append(absoluteFileName.toString());
         final Connection c = DriverManager.getConnection(sb.toString());
         return c;
-    }
-
-    private void processResultFileInformationSearch(@NonNull final List<@NonNull MediaPartsEntity> mediaPartsList, @NonNull final File file) throws SQLException {
-        if (mediaPartsList.isEmpty()) {
-            final Text text1 = new Text("No match found in plex database for file: ");
-            text1.setStyle("-fx-font-weight: bold; -fx-fill: #FFFFFF");
-            final Text text2 = new Text(file.getAbsolutePath() + "\n");
-            text2.setStyle("-fx-fill: #FFFFFF");
-
-            this.resultArea.getChildren().addAll(text1, text2);
-        } else {
-            final LinkedList<@NonNull Node> resultList = new LinkedList<>();
-            final int i = 1;
-            Text text = new Text("Result(s) founded for:");
-            text.setStyle("-fx-font-weight: bold; -fx-fill: #FFFFFF; -fx-underline: true;");
-            resultList.add(text);
-            text = new Text(file.getAbsolutePath() + "\n\n");
-            text.setStyle("-fx-font-style: italic; -fx-fill: #FFFFFF; ");
-            resultList.add(text);
-            for (final @NonNull MediaPartsEntity mediaParts : mediaPartsList) {
-                text = new Text(i + ") ");
-                text.setStyle("-fx-fill: #FFFFFF; -fx-font-weight: bold; -fx-text-origin: top;");
-                resultList.add(text);
-                final MediaItemsEntity mediaItemsEntity = mediaParts.getMediaItem();
-                if (mediaItemsEntity != null) {
-                    final MetadataItemsEntity metadataItemsEntity = mediaItemsEntity.getMetadataItem();
-                    if (metadataItemsEntity != null) {
-                        final String guid = metadataItemsEntity.getGuid();
-                        final String title = metadataItemsEntity.getTitle();
-                        final Hyperlink hyperlink = addLinkInformation(resultList, guid, title);
-                        addImage(resultList, metadataItemsEntity, hyperlink);
-                    }
-                }
-            }
-
-            text = new Text("\n---------------------------------------------------------\n");
-            text.setStyle("-fx-font-style: italic; -fx-fill: #FFFFFF; ");
-            resultList.add(text);
-
-            this.resultArea.getChildren().addAll(resultList);
-        }
-    }
-
-    private void addImage(@NonNull final LinkedList<@NonNull Node> resultList, @NonNull final MetadataItemsEntity metadataItemsEntity, @Nullable final Hyperlink hyperlink) throws SQLException {
-        try {
-            String userThumbUrl = metadataItemsEntity.getUserThumbUrl();
-            if (userThumbUrl != null) {
-                final LibrarySectionsEntity librarySection = metadataItemsEntity.getLibrarySection();
-                if (librarySection != null) {
-                    final Integer sectionTypeValue = librarySection.getSectionType();
-                    final PlexConstants.SECTION_TYPE sectionType = PlexConstants.SECTION_TYPE.getSectionType(sectionTypeValue);
-                    if (sectionType != null) {
-                        final int beginIndex = userThumbUrl.lastIndexOf("/");
-                        final int endIndex = userThumbUrl.length();
-                        userThumbUrl = userThumbUrl.substring(beginIndex, endIndex);
-                        final String guid = metadataItemsEntity.getGuid();
-                        final String shaGuid = DigestUtils.sha1Hex(guid);
-                        final String cacheDir = shaGuid.substring(0, 1);
-                        final String shaDir = shaGuid.substring(1, shaGuid.length());
-
-                        final StringBuilder sb = new StringBuilder();
-                        sb.append(getCurrentPlexDBDirectory().getAbsolutePath());
-                        sb.append("/metadata/");
-                        sb.append(sectionType.getDirectoryName());
-                        sb.append("/");
-                        sb.append(cacheDir);
-                        sb.append("/");
-                        sb.append(shaDir);
-                        sb.append(".bundle/Contents/_stored/posters/");
-                        sb.append(userThumbUrl);
-                        if (DevConstants.DEBUG) {
-                            System.err.println("[PlexToolsTabControler] addImage - " + sb.toString());
-                        }
-
-                        try {
-                            final Image image = new Image(new FileInputStream(sb.toString()), 300, 150, true, false);
-                            final ImageView imageView = new ImageView(image);
-                            if (hyperlink == null) {
-                                resultList.add(imageView);
-                            } else {
-                                hyperlink.setGraphic(imageView);
-                                resultList.add(hyperlink);
-                            }
-
-                            final Text text = new Text(" ");
-                            text.setStyle("-fx-fill: #FFFFFF; -fx-font-weight: bold;");
-                            resultList.add(text);
-                        } catch (final FileNotFoundException e) {
-                            LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "addImage", e.getMessage(), e);
-                        }
-
-                    }
-                }
-            }
-        } catch (final StringIndexOutOfBoundsException e) {
-            LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "addImage", e.getMessage(), e);
-        } catch (final NoSuchFileException e) {
-            LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "addImage", e.getMessage(), e);
-        }
-    }
-
-    @Nullable
-    private Hyperlink addLinkInformation(final LinkedList<@NonNull Node> resultList, @Nullable final String guid, @Nullable final String title) {
-        Hyperlink result = null;
-        if (guid != null && title != null) {
-            final int index = guid.indexOf("://");
-            if (index > 0) {
-                final int size = guid.length();
-                try {
-                    final String urlValue = guid.substring(index + 3, size);
-                    final StringBuilder sb = new StringBuilder();
-                    if (guid.toLowerCase().contains("imdb")) {
-                        sb.append("http://www.imdb.com/title/");
-                        sb.append(urlValue);
-                    } else if (guid.toLowerCase().contains("freebase")) {
-                        // deprecated
-                    } else if (guid.toLowerCase().contains("themoviedb")) {
-                        sb.append("https://www.themoviedb.org/movie/");
-                        sb.append(urlValue);
-                    } else if (guid.toLowerCase().contains("thetvdb")) {
-
-                    }
-
-                    final Hyperlink link = new Hyperlink(title);
-                    link.setStyle("-fx-text-origin:bottom");
-                    link.setOnAction(e -> {
-                        try {
-                            Desktop.getDesktop().browse(new URI(sb.toString()));
-                        } catch (final IOException | URISyntaxException e11) {
-                            LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "addLinkInformation", e11.getMessage(), e11);
-                        }
-                    });
-
-                    result = new Hyperlink();
-                    result.setOnAction(e -> {
-                        try {
-                            Desktop.getDesktop().browse(new URI(sb.toString()));
-                        } catch (final IOException | URISyntaxException e11) {
-                            LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "addLinkInformation", e11.getMessage(), e11);
-                        }
-                    });
-                    resultList.add(link);
-                } catch (final Exception e) {
-                    LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "addLinkInformation", e.getMessage(), e);
-                }
-            }
-        }
-        return result;
     }
 
     @Override
