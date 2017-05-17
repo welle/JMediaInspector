@@ -12,7 +12,7 @@ Plex part:
 - Export to HTML structures
 
 Media part:
-- Search files with filters (audio/video codecs, bitrate, resolution; multi; etc
+- Search files with filters (audio/video codecs, bitrate, resolution; multi; etc)
 - Search for missing files in collections
 - Statistiques (audio/video)
-- Export searching for couchpotato
+- Export searching for couchpotato/trakt.tv/sonaar/radarr

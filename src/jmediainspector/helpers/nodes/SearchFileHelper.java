@@ -148,6 +148,7 @@ public final class SearchFileHelper {
             if (index > 0) {
                 final int size = guid.length();
                 try {
+                    // TODO: Move to an helper
                     final String urlValue = guid.substring(index + 3, size);
                     final StringBuilder sb = new StringBuilder();
                     if (guid.toLowerCase().contains("imdb")) {

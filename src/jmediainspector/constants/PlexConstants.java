@@ -66,7 +66,8 @@ public final class PlexConstants {
         /**
          * @return the value
          */
-        public final int getValue() {
+        @NonNull
+        public final Integer getValue() {
             return this.value;
         }
     }
