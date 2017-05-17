@@ -1,0 +1,4 @@
+class javafx/stage/FileChooser
+showOpenMultipleDialog
+ (Ljavafx/stage/Window;)Ljava/util/List<Ljava/io/File;>;
+ (Ljavafx/stage/Window;)L0java/util/List<L1java/io/File;>;
