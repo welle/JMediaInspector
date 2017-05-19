@@ -27,8 +27,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.Effect;
@@ -37,7 +35,6 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import javafx.util.Callback;
 import jmediainspector.JMediaInspector;
 import jmediainspector.config.Configurations.Configuration;
 import jmediainspector.context.Context;
@@ -87,12 +84,7 @@ public class PlexToolsTabControler extends AnchorPane implements ConfigurationsL
         this.configurationHelper = Context.getInstance().getCurrentConfigurationHelper();
 
         this.configurationsList.setButtonCell(new ConfigurationListCell());
-        this.configurationsList.setCellFactory(new Callback<ListView<Configuration>, ListCell<Configuration>>() {
-            @Override
-            public ListCell<Configuration> call(final ListView<Configuration> p) {
-                return new ConfigurationListCell();
-            }
-        });
+        this.configurationsList.setCellFactory(p -> new ConfigurationListCell());
 
         refreshConfigurationList();
         setSelectedConfiguration();
@@ -225,7 +217,7 @@ public class PlexToolsTabControler extends AnchorPane implements ConfigurationsL
      */
     public void searchMissingMediaButton(final ActionEvent event) {
         final FileChooser fileChooser = FileChooserHelper.getMediaFileChooser();
-        final List<File> files = fileChooser.showOpenMultipleDialog(this.anchorPaneRoot.getScene().getWindow());
+        final List<@NonNull File> files = fileChooser.showOpenMultipleDialog(this.anchorPaneRoot.getScene().getWindow());
         if (files == null) {
             final Alert alert = DialogsHelper.getAlert(JMediaInspector.getPrimaryStage(), Alert.AlertType.ERROR, "No file selected!");
 
@@ -275,7 +267,7 @@ public class PlexToolsTabControler extends AnchorPane implements ConfigurationsL
         return parentFile;
     }
 
-    private void processFileInformationSearch(@NonNull final List<File> files) {
+    private void processFileInformationSearch(@NonNull final List<@NonNull File> files) {
         try {
             this.resultArea.getChildren().clear();
             for (final File file : files) {

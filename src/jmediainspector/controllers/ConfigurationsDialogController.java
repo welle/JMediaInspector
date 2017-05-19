@@ -24,7 +24,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
@@ -32,7 +31,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import jmediainspector.config.Configurations.Configuration;
 import jmediainspector.context.Context;
 import jmediainspector.helpers.ConfigurationHelper;
@@ -109,12 +107,7 @@ public class ConfigurationsDialogController extends AnchorPane {
         this.primaryStageInitial = primaryStageInitial;
 
         this.configurationsList.setButtonCell(new ConfigurationListCell());
-        this.configurationsList.setCellFactory(new Callback<ListView<Configuration>, ListCell<Configuration>>() {
-            @Override
-            public ListCell<Configuration> call(final ListView<Configuration> p) {
-                return new ConfigurationListCell();
-            }
-        });
+        this.configurationsList.setCellFactory(p -> new ConfigurationListCell());
 
         ResizeHelper.addResizeListener(primaryStageInitial);
         refreshConfigurationList(null);
@@ -192,11 +185,10 @@ public class ConfigurationsDialogController extends AnchorPane {
         list.removeAll(this.tempDelLineList);
         final ObservableList<String> observableList = FXCollections.observableArrayList(list);
         this.configurationPathListView.setItems(observableList);
-        this.configurationPathListView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
-            @Override
-            public ListCell<String> call(final ListView<String> param) {
-                return new ConfigurationPathListCell(ConfigurationsDialogController.this.configurationPathListView);
-            }
+        this.configurationPathListView.setCellFactory(param -> {
+            final ListView<String> configurationPathListView2 = ConfigurationsDialogController.this.configurationPathListView;
+            assert configurationPathListView2 != null;
+            return new ConfigurationPathListCell(configurationPathListView2);
         });
     }
 
@@ -224,7 +216,9 @@ public class ConfigurationsDialogController extends AnchorPane {
         // Check if name is not empty
         final Configuration currentConfig = this.configurationsList.getValue();
         if (currentConfig.getName() == null || "".equals(currentConfig.getName().trim())) {
-            final Alert alert = DialogsHelper.getAlert(this.primaryStageInitial, Alert.AlertType.ERROR, "Configuration name can not be empty!");
+            final Stage currentPrimaryStageInitial = this.primaryStageInitial;
+            assert currentPrimaryStageInitial != null;
+            final Alert alert = DialogsHelper.getAlert(currentPrimaryStageInitial, Alert.AlertType.ERROR, "Configuration name can not be empty!");
             alert.showAndWait();
             return;
         }
@@ -265,7 +259,9 @@ public class ConfigurationsDialogController extends AnchorPane {
 
     @FXML
     private void deleteConfiguration() {
-        final Alert alert = DialogsHelper.getAlert(this.primaryStageInitial, Alert.AlertType.CONFIRMATION, "Deleting is definitive! Continue ?");
+        final Stage currentPrimaryStageInitial = this.primaryStageInitial;
+        assert currentPrimaryStageInitial != null;
+        final Alert alert = DialogsHelper.getAlert(currentPrimaryStageInitial, Alert.AlertType.CONFIRMATION, "Deleting is definitive! Continue ?");
         final Optional<ButtonType> result = alert.showAndWait();
         result.ifPresent(button -> {
             if (button == ButtonType.OK) {

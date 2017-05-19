@@ -53,8 +53,11 @@ public class JMediaInspector extends Application {
      *
      * @return primary stage
      */
+    @NonNull
     static public Stage getPrimaryStage() {
-        return JMediaInspector.primaryStage;
+        final Stage currentPrimaryStage = JMediaInspector.primaryStage;
+        assert currentPrimaryStage != null;
+        return currentPrimaryStage;
     }
 
     @Override
@@ -115,7 +118,7 @@ public class JMediaInspector extends Application {
     @FXML
     public void handleNewConfiguration() {
         try {
-            DialogsHelper.createConfigurationsDialog(JMediaInspector.primaryStage);
+            DialogsHelper.createConfigurationsDialog(getPrimaryStage());
         } catch (final IOException e) {
             LOGGER.logp(Level.SEVERE, "JMediaInspector", "handleNewConfiguration", e.getMessage(), e);
         }

@@ -50,6 +50,8 @@ public class Context {
      */
     @NonNull
     public ConfigurationHelper getCurrentConfigurationHelper() {
-        return this.configurationHelper;
+        final ConfigurationHelper currentConfigurationHelper = this.configurationHelper;
+        assert currentConfigurationHelper != null;
+        return currentConfigurationHelper;
     }
 }
