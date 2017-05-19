@@ -16,50 +16,63 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.TextFlow?>
 
-<SplitPane fx:id="anchorPaneRoot" dividerPositions="0.6278195488721805" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="800.0" prefWidth="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jmediainspector.controllers.PlexToolsTabControler">
-  <items>
-    <AnchorPane>
-         <children>
-		        <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="70.0" prefWidth="342.0" styleClass="my-anchorpane" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
-		            <children>
-		                <Label alignment="CENTER_LEFT" layoutX="14.0" layoutY="7.0" prefHeight="20.0" prefWidth="280" style="-fx-font-size: 16px;" styleClass="title-label" text="Select configuration" />
-                  <ComboBox fx:id="configurationsList" layoutX="14.0" layoutY="35.0" onAction="#setSelectedConfiguration" prefHeight="25.0" prefWidth="265.0" />
-		            </children>
-		        </AnchorPane>
-              <AnchorPane styleClass="my-anchorpane" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="92.0">
-                  <children>
-                      
-                                    				        <Button fx:id="searchMissingMedia" layoutX="199.0" layoutY="35.0" mnemonicParsing="false" onAction="#searchMissingMediaButton" text="Select file(s)" />
-                  <Label layoutX="14.0" layoutY="4.0" style="-fx-font-size: 16px;" styleClass="title-label" text="Tools" />
-		                <Label alignment="CENTER_LEFT" layoutX="28.0" layoutY="37.0" styleClass="title-label" text="Look for file(s) association(s):">
-                     <tooltip>
-                        <Tooltip text="Will search for associated informations of selected file(s) into the given Plex Database" />
-                     </tooltip></Label>
-                  <StackPane layoutX="279.0" layoutY="38.0">
-                     <children>
-                        <Circle fill="#323232" radius="10.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0" />
-                        <Label style="-fx-font-size: 14; -fx-font-weight: bold;" text="?" textAlignment="CENTER">
-                           <tooltip>
-                              <Tooltip text="Will search for associated informations of selected file(s) into the given Plex Database" />
-                           </tooltip>
-                        </Label>
-                     </children>
-                  </StackPane>
-                  <Label alignment="CENTER_LEFT" layoutX="28.0" layoutY="77.0" styleClass="title-label" text="Look for file(s) association(s):">
-                     <tooltip>
-                        <Tooltip text="Will search for associated informations of selected file(s) into the given Plex Database" />
-                     </tooltip>
-                  </Label>
-                  <Button fx:id="searchMissingMedia1" layoutX="199.0" layoutY="74.0" mnemonicParsing="false" onAction="#searchMissingMediaButton" text="Select file(s)" /> 
-                  </children>
-              </AnchorPane>
-            <Button fx:id="loadConfigButton" layoutX="294.0" layoutY="45.0" mnemonicParsing="false" onAction="#handleLoadConfigButton" text="Load" />
-         </children>
-      </AnchorPane>
-        <ScrollPane fitToWidth="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-           <content>
-               <TextFlow fx:id="resultArea" style="-fx-padding:10px" />
-           </content>
-        </ScrollPane>
-  </items>
+<SplitPane fx:id="anchorPaneRoot" dividerPositions="0.55" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="800.0" prefWidth="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jmediainspector.controllers.PlexToolsTabControler">
+	<items>
+		<AnchorPane prefHeight="400.0" prefWidth="1278.0">
+			<children>
+				<AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="70.0" prefWidth="342.0" styleClass="my-anchorpane" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+					<children>
+						<Label alignment="CENTER_LEFT" layoutX="14.0" layoutY="7.0" prefHeight="20.0" prefWidth="280" style="-fx-font-size: 16px;" styleClass="title-label" text="Select configuration" />
+						<ComboBox fx:id="configurationsList" layoutX="14.0" layoutY="35.0" onAction="#setSelectedConfiguration" prefHeight="25.0" prefWidth="265.0" />
+      				<Button fx:id="loadConfigButton" layoutX="286.0" layoutY="35.0" mnemonicParsing="false" onAction="#handleLoadConfigButton" text="Load" />
+					</children>
+				</AnchorPane>
+				<TabPane layoutX="10.0" layoutY="85.0" prefHeight="350.0" prefWidth="1255.0" tabClosingPolicy="UNAVAILABLE">
+					<tabs>
+						<Tab styleClass="tab-subtab" text="Files">
+							<content>
+								<AnchorPane prefHeight="280.0" prefWidth="1209.0" styleClass="my-anchorpane" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="92.0">
+									<children>
+										<Button fx:id="searchMissingMedia" layoutX="199.0" layoutY="35.0" mnemonicParsing="false" onAction="#searchMissingMediaButton" text="Select file(s)" />
+										<Label layoutX="14.0" layoutY="4.0" style="-fx-font-size: 16px;" styleClass="title-label" text="Tools" />
+										<Label alignment="CENTER_LEFT" layoutX="28.0" layoutY="37.0" styleClass="title-label" text="Look for file(s) association(s):">
+											<tooltip>
+												<Tooltip text="Will search for associated informations of selected file(s) into the given Plex Database" />
+											</tooltip>
+										</Label>
+										<StackPane layoutX="279.0" layoutY="38.0">
+											<children>
+												<Circle fill="#323232" radius="10.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="2.0" />
+												<Label style="-fx-font-size: 14; -fx-font-weight: bold;" text="?" textAlignment="CENTER">
+													<tooltip>
+														<Tooltip text="Will search for associated informations of selected file(s) into the given Plex Database" />
+													</tooltip>
+												</Label>
+											</children>
+										</StackPane>
+										<Label alignment="CENTER_LEFT" layoutX="28.0" layoutY="77.0" styleClass="title-label" text="Look for file(s) association(s):">
+											<tooltip>
+												<Tooltip text="Will search for associated informations of selected file(s) into the given Plex Database" />
+											</tooltip>
+										</Label>
+										<Button fx:id="searchMissingMedia1" layoutX="199.0" layoutY="74.0" mnemonicParsing="false" onAction="#searchMissingMediaButton" text="Select file(s)" />
+									</children>
+								</AnchorPane>
+							</content>
+						</Tab>
+                  <Tab text="Search">
+                    <content>
+                      <fx:include source="SearchCriteriaTools.fxml" />
+                    </content>
+                  </Tab>
+					</tabs>
+				</TabPane>
+			</children>
+		</AnchorPane>
+		<ScrollPane fitToWidth="true" prefHeight="400.0" prefWidth="1278.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+			<content>
+				<TextFlow fx:id="resultArea" style="-fx-padding:10px" />
+			</content>
+		</ScrollPane>
+	</items>
 </SplitPane>
