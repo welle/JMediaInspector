@@ -1,21 +1,68 @@
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:element name="configurations">
+  <xs:element name="application">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="configuration" maxOccurs="unbounded" minOccurs="0">
+        <xs:element name="plex">
           <xs:complexType>
             <xs:sequence>
-              <xs:element type="xs:string" name="name"/>
-              <xs:element type="xs:anyURI" name="file"/>
-              <xs:element name="paths">
+              <xs:element name="configuration" maxOccurs="unbounded" minOccurs="0">
                 <xs:complexType>
                   <xs:sequence>
-                    <xs:element type="xs:anyURI" name="path" maxOccurs="unbounded" minOccurs="0"/>
+                    <xs:element type="xs:string" name="name"/>
+                    <xs:element type="xs:anyURI" name="file"/>
+                    <xs:element name="paths">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:anyURI" name="path" maxOccurs="unbounded" minOccurs="0"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute type="xs:boolean" name="selected" use="optional"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="searchs">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="search" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="name"/>
+                    <xs:element name="criterias">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="criteria" maxOccurs="unbounded" minOccurs="0">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element type="xs:string" name="type"/>
+                                <xs:element name="filters">
+                                  <xs:complexType>
+                                    <xs:sequence>
+                                      <xs:element name="filter" maxOccurs="unbounded" minOccurs="0">
+                                        <xs:complexType>
+                                          <xs:sequence>
+                                            <xs:element type="xs:string" name="type"/>
+                                            <xs:element type="xs:string" name="value"/>
+                                          </xs:sequence>
+                                          <xs:attribute type="xs:boolean" name="selected" use="optional"/>
+                                        </xs:complexType>
+                                      </xs:element>
+                                    </xs:sequence>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
                   </xs:sequence>
                 </xs:complexType>
               </xs:element>
             </xs:sequence>
-            <xs:attribute type="xs:boolean" name="selected" use="optional"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>

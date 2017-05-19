@@ -14,22 +14,7 @@ public class SearchCriteriaControler extends AnchorPane implements Configuration
     private final static Logger LOGGER = Logger.getLogger(PlexToolsTabControler.class.getName());
 
     @FXML
-    private void addGeneralCriteria() {
-
-    }
-
-    @FXML
-    private void addVideoCriteria() {
-
-    }
-
-    @FXML
-    private void addAudioCriteria() {
-
-    }
-
-    @FXML
-    private void addSubtitleCriteria() {
+    private void addVideoResolutionCriteria() {
 
     }
 

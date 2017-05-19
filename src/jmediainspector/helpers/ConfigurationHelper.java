@@ -18,6 +18,7 @@ import javax.xml.bind.Unmarshaller;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
+import jmediainspector.config.Application;
 import jmediainspector.config.Configurations;
 import jmediainspector.config.Configurations.Configuration;
 import jmediainspector.config.Configurations.Configuration.Paths;
@@ -38,13 +39,13 @@ public final class ConfigurationHelper {
     @NonNull
     private final static Logger LOGGER = Logger.getLogger(ConfigurationHelper.class.getName());
     @NonNull
-    private final Configurations configurations;
+    private final Application.Plex configurations;
     @NonNull
     private final ObjectFactory factoryConfig = new ObjectFactory();
     @NonNull
     private final File configFile = new File(System.getProperty("user.home") + "/jmediainspector.xml");
     @Nullable
-    private Configuration selectedConfiguration;
+    private Application.Plex.Configuration selectedConfiguration;
     @NonNull
     private final List<@NonNull ConfigurationsListener> configurationsListenerList = new ArrayList<>();
 
@@ -54,9 +55,9 @@ public final class ConfigurationHelper {
      * @throws FileNotFoundException
      */
     public ConfigurationHelper() throws FileNotFoundException {
-        Configurations config = null;
+        Application.Plex config = null;
         if (!this.configFile.exists()) {
-            config = this.factoryConfig.createConfigurations();
+            config = this.factoryConfig.createApplicationPlex();
             saveConfig();
         }
 
@@ -64,7 +65,7 @@ public final class ConfigurationHelper {
             final JAXBContext jc = JAXBContext.newInstance(ObjectFactory.class.getPackage().getName());
             final Unmarshaller unmarshaller = jc.createUnmarshaller();
 
-            config = (Configurations) unmarshaller.unmarshal(this.configFile);
+            config = (Application.Plex) unmarshaller.unmarshal(this.configFile);
         } catch (final JAXBException e) {
             LOGGER.logp(Level.SEVERE, "ConfigurationHelper", "ConfigurationHelper", e.getMessage(), e);
         }

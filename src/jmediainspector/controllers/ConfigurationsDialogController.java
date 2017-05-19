@@ -31,7 +31,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import jmediainspector.config.Configurations.Configuration;
+import jmediainspector.config.Application;
 import jmediainspector.context.Context;
 import jmediainspector.helpers.ConfigurationHelper;
 import jmediainspector.helpers.dialogs.DialogsHelper;
@@ -54,7 +54,7 @@ public class ConfigurationsDialogController extends AnchorPane {
     @FXML
     private Button closeButton;
     @FXML
-    private ComboBox<Configuration> configurationsList;
+    private ComboBox<Application.Plex.Configuration> configurationsList;
     @FXML
     private TitledPane currentConfigurationTitledPane;
     @FXML
@@ -80,7 +80,7 @@ public class ConfigurationsDialogController extends AnchorPane {
     @FXML
     private ListView<String> configurationPathListView;
     private Stage primaryStageInitial;
-    private Configuration currentConfiguration;
+    private Application.Plex.Configuration currentConfiguration;
     @NonNull
     private final List<String> tempNewLineList = new ArrayList<>();
     private final List<String> tempDelLineList = new ArrayList<>();
@@ -116,7 +116,7 @@ public class ConfigurationsDialogController extends AnchorPane {
 
     private void refreshConfigurationList(@Nullable final Configuration configuration) {
         this.configurationsList.getItems().clear();
-        final List<Configuration> configurationsItemList = this.configurationHelper.getConfigurations().getConfiguration();
+        final List<Application.Plex.Configuration> configurationsItemList = this.configurationHelper.getConfigurations().getConfiguration();
         if (configurationsItemList != null && !configurationsItemList.isEmpty()) {
             this.configurationsList.getItems().addAll(configurationsItemList);
             if (configuration == null) {
