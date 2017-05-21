@@ -5,7 +5,6 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import jmediainspector.config.Configuration;
 import jmediainspector.config.Configurations;
-import jmediainspector.config.ObjectFactory;
 import jmediainspector.config.Paths;
 import jmediainspector.config.Plex;
 
@@ -18,8 +17,6 @@ public final class PlexConfigurationHelper extends AbstractConfigurationHelper {
 
     private final Plex plex;
     private final Configurations plexConfigurations;
-    @NonNull
-    private final ObjectFactory factoryConfig = new ObjectFactory();
     private Configuration selectedConfiguration;
 
     /**
@@ -30,7 +27,7 @@ public final class PlexConfigurationHelper extends AbstractConfigurationHelper {
 
         final Configurations currentPlexConfigurations = getApplication().getPlex().getConfigurations();
         if (currentPlexConfigurations == null) {
-            getApplication().getPlex().setConfigurations(this.factoryConfig.createConfigurations());
+            getApplication().getPlex().setConfigurations(getFactoryConfig().createConfigurations());
         }
         this.plex = getApplication().getPlex();
         this.plexConfigurations = this.plex.getConfigurations();
@@ -39,6 +36,8 @@ public final class PlexConfigurationHelper extends AbstractConfigurationHelper {
     @Override
     public void onChanges() {
         super.onChanges();
+
+        // Override plex configuration with the current one.
         getApplication().setPlex(this.plex);
     }
 
@@ -94,7 +93,7 @@ public final class PlexConfigurationHelper extends AbstractConfigurationHelper {
      * @return new Paths
      */
     public Paths getNewPaths() {
-        return this.factoryConfig.createPaths();
+        return getFactoryConfig().createPaths();
     }
 
     /**
@@ -111,12 +110,13 @@ public final class PlexConfigurationHelper extends AbstractConfigurationHelper {
      *
      * @return new configuration created
      */
+    @NonNull
     public Configuration addNewConfiguration() {
-        final Configuration newConfiguration = this.factoryConfig.createConfiguration();
-        final Paths newPaths = this.factoryConfig.createPaths();
+        final Configuration newConfiguration = getFactoryConfig().createConfiguration();
+        final Paths newPaths = getFactoryConfig().createPaths();
         newConfiguration.setPaths(newPaths);
         if (this.plexConfigurations == null) {
-            getApplication().setPlex(this.factoryConfig.createPlex());
+            getApplication().setPlex(getFactoryConfig().createPlex());
 //            this.application.setSearchs(this.factoryConfig.createApplicationSearchs());
         }
         this.plexConfigurations.getConfiguration().add(newConfiguration);
