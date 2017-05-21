@@ -38,13 +38,13 @@ import javafx.stage.Window;
 import jmediainspector.JMediaInspector;
 import jmediainspector.config.Configuration;
 import jmediainspector.config.Configurations;
-import jmediainspector.context.Context;
-import jmediainspector.helpers.PlexConfigurationHelper;
+import jmediainspector.config.helpers.PlexConfigurationHelper;
+import jmediainspector.context.ApplicationContext;
 import jmediainspector.helpers.database.PlexDBHelper;
 import jmediainspector.helpers.dialogs.DialogsHelper;
 import jmediainspector.helpers.dialogs.FileChooserHelper;
 import jmediainspector.helpers.nodes.SearchFileHelper;
-import jmediainspector.listeners.ConfigurationsListener;
+import jmediainspector.listeners.ApplicationConfigurationsListener;
 import jmediainspector.services.CopyPlexDBService;
 
 /**
@@ -52,7 +52,7 @@ import jmediainspector.services.CopyPlexDBService;
  *
  * @author Welle Charlotte
  */
-public class PlexToolsTabControler extends AnchorPane implements ConfigurationsListener {
+public class PlexToolsTabControler extends AnchorPane implements ApplicationConfigurationsListener {
 
     @NonNull
     private final static Logger LOGGER = Logger.getLogger(PlexToolsTabControler.class.getName());
@@ -82,7 +82,7 @@ public class PlexToolsTabControler extends AnchorPane implements ConfigurationsL
      */
     @FXML
     public void initialize() {
-        this.configurationHelper = Context.getInstance().getCurrentConfigurationHelper();
+        this.configurationHelper = ApplicationContext.getInstance().getCurrentPlexConfigurationHelper();
 
         this.configurationsList.setButtonCell(new ConfigurationListCell());
         this.configurationsList.setCellFactory(p -> new ConfigurationListCell());

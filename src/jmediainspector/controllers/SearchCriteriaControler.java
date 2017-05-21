@@ -6,9 +6,9 @@ import org.eclipse.jdt.annotation.NonNull;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
-import jmediainspector.listeners.ConfigurationsListener;
+import jmediainspector.listeners.ApplicationConfigurationsListener;
 
-public class SearchCriteriaControler extends AnchorPane implements ConfigurationsListener {
+public class SearchCriteriaControler extends AnchorPane implements ApplicationConfigurationsListener {
 
     @NonNull
     private final static Logger LOGGER = Logger.getLogger(PlexToolsTabControler.class.getName());
@@ -20,7 +20,6 @@ public class SearchCriteriaControler extends AnchorPane implements Configuration
 
     @Override
     public void onChanges() {
-        // TODO Auto-generated method stub
-
+        // reload file
     }
 }

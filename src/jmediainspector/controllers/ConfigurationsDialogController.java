@@ -32,8 +32,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import jmediainspector.config.Configuration;
 import jmediainspector.config.Configurations;
-import jmediainspector.context.Context;
-import jmediainspector.helpers.PlexConfigurationHelper;
+import jmediainspector.config.helpers.PlexConfigurationHelper;
+import jmediainspector.context.ApplicationContext;
 import jmediainspector.helpers.dialogs.DialogsHelper;
 import jmediainspector.helpers.dialogs.FileChooserHelper;
 import jmediainspector.helpers.effects.ResizeHelper;
@@ -95,7 +95,7 @@ public class ConfigurationsDialogController extends AnchorPane {
      */
     @FXML
     public void initialize() {
-        this.configurationHelper = Context.getInstance().getCurrentConfigurationHelper();
+        this.configurationHelper = ApplicationContext.getInstance().getCurrentPlexConfigurationHelper();
     }
 
     /**

@@ -5,7 +5,7 @@ package jmediainspector.listeners;
  *
  * @author charlottew
  */
-public interface ConfigurationsListener {
+public interface ApplicationConfigurationsListener {
 
     /**
      * Configurations have changed.
