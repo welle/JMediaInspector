@@ -1,0 +1,77 @@
+package jmediainspector.helpers.search.video.filter;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.eclipse.jdt.annotation.NonNull;
+
+import aka.jmetadata.main.constants.CodecVideoConstants;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.layout.GridPane;
+import jmediainspector.config.Filter;
+import jmediainspector.helpers.search.commons.ConditionFilter;
+import jmediainspector.helpers.search.enums.Type;
+import jmediainspector.helpers.search.interfaces.FiltersInterface;
+
+/**
+ * Criteria for video resolution.
+ *
+ * @author charlottew
+ */
+public class VideoResolutionCriteria extends FiltersInterface {
+
+    /**
+     * Type of criteria.
+     */
+    public static Type TYPE = Type.VIDEO;
+
+    private static List<ConditionFilter> AVAILABLE_FILTERS;
+    private static List<CodecVideoConstants.RESOLUTION> AVAILABLE_VALUES;
+
+    static {
+        AVAILABLE_FILTERS = new ArrayList<>();
+        AVAILABLE_FILTERS.add(ConditionFilter.EQUALS);
+        AVAILABLE_FILTERS.add(ConditionFilter.GREATER_THAN);
+        AVAILABLE_FILTERS.add(ConditionFilter.GREATER_THAN_OR_EQUAL_TO);
+        AVAILABLE_FILTERS.add(ConditionFilter.LESS_THAN);
+        AVAILABLE_FILTERS.add(ConditionFilter.LESS_THAN_OR_EQUAL_TO);
+        AVAILABLE_FILTERS.add(ConditionFilter.NOT_EQUALS);
+
+        AVAILABLE_VALUES = new ArrayList<>(Arrays.asList(CodecVideoConstants.RESOLUTION.values()));
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param filter Linked Filter
+     * @see Filter
+     */
+    public VideoResolutionCriteria(@NonNull final Filter filter) {
+        super(filter);
+
+        final ObservableList<ConditionFilter> observableList = FXCollections.observableArrayList(AVAILABLE_FILTERS);
+        final ComboBox<ConditionFilter> listViewAvailableFilters = new ComboBox<>(observableList);
+        this.rightPane.add(listViewAvailableFilters, 1, 0);
+        final ObservableList<CodecVideoConstants.RESOLUTION> observableList2 = FXCollections.observableArrayList(AVAILABLE_VALUES);
+        final ComboBox<CodecVideoConstants.RESOLUTION> listViewAvailableFilters2 = new ComboBox<>(observableList2);
+        this.rightPane.add(listViewAvailableFilters2, 2, 0);
+
+        final Button deleteButton = new Button("-");
+        GridPane.setValignment(deleteButton, VPos.TOP);
+        GridPane.setHalignment(deleteButton, HPos.RIGHT);
+        this.rightPane.add(deleteButton, 3, 0);
+    }
+
+    @Override
+    public @NonNull Node getRightPaneChoices() {
+        return this.rightPane;
+    }
+
+}

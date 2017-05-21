@@ -4,6 +4,7 @@ import org.eclipse.jdt.annotation.NonNull;
 
 import jmediainspector.config.Criteria;
 import jmediainspector.config.Criterias;
+import jmediainspector.config.Filter;
 import jmediainspector.config.Metadatas;
 import jmediainspector.config.Search;
 import jmediainspector.config.Searchs;
@@ -84,4 +85,16 @@ public class MetadataSearchConfigurationHelper extends AbstractConfigurationHelp
         return newSearch;
     }
 
+    /**
+     * Add a new filter.
+     *
+     * @return new filter created
+     */
+    @NonNull
+    public Filter getNewFilter() {
+        final Filter newFilter = getFactoryConfig().createFilter();
+
+        assert newFilter != null;
+        return newFilter;
+    }
 }
