@@ -1,93 +1,97 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <application>
 	<plex>
-		<configuration selected="false">
-			<name>test</name>
-			<file>http://4.bp.blogspot.com/_xR71w9-qx9E/SrAz--pu0MI/AAAAAAAAC38/2ZP28rVEFKc/s200/johnny-depp-pirates.jpg
-			</file>
-			<paths>
-				<path>http://4.bp.blogspot.com/_xR71w9-qx9E/SrAz--pu0MI/AAAAAAAAC38/2ZP28rVEFKc/s200/johnny-depp-pirates.jpg
-				</path>
-				<path>http://4.bp.blogspot.com/_xR71w9-qx9E/SrAz--pu0MI/AAAAAAAAC38/2ZP28rVEFKc/s200/johnny-depp-pirates.jpg
-				</path>
-			</paths>
-		</configuration>
-		<configuration selected="true">
-			<name>test 2</name>
-			<file>http://4.bp.blogspot.com/_xR71w9-qx9E/SrAz--pu0MI/AAAAAAAAC38/2ZP28rVEFKc/s200/johnny-depp-pirates.jpg
-			</file>
-			<paths>
-				<path>http://4.bp.blogspot.com/_xR71w9-qx9E/SrAz--pu0MI/AAAAAAAAC38/2ZP28rVEFKc/s200/johnny-depp-pirates.jpg
-				</path>
-				<path>http://4.bp.blogspot.com/_xR71w9-qx9E/SrAz--pu0MI/AAAAAAAAC38/2ZP28rVEFKc/s200/johnny-depp-pirates.jpg
-				</path>
-				<path>http://4.bp.blogspot.com/_xR71w9-qx9E/SrAz--pu0MI/AAAAAAAAC38/2ZP28rVEFKc/s200/johnny-depp-pirates.jpg
-				</path>
-			</paths>
-		</configuration>
+		<configurations>
+			<configuration selected="false">
+				<name>test</name>
+				<file>http://4.bp.blogspot.com/_xR71w9-qx9E/SrAz--pu0MI/AAAAAAAAC38/2ZP28rVEFKc/s200/johnny-depp-pirates.jpg
+				</file>
+				<paths>
+					<path>http://4.bp.blogspot.com/_xR71w9-qx9E/SrAz--pu0MI/AAAAAAAAC38/2ZP28rVEFKc/s200/johnny-depp-pirates.jpg
+					</path>
+					<path>http://4.bp.blogspot.com/_xR71w9-qx9E/SrAz--pu0MI/AAAAAAAAC38/2ZP28rVEFKc/s200/johnny-depp-pirates.jpg
+					</path>
+				</paths>
+			</configuration>
+			<configuration selected="true">
+				<name>test 2</name>
+				<file>http://4.bp.blogspot.com/_xR71w9-qx9E/SrAz--pu0MI/AAAAAAAAC38/2ZP28rVEFKc/s200/johnny-depp-pirates.jpg
+				</file>
+				<paths>
+					<path>http://4.bp.blogspot.com/_xR71w9-qx9E/SrAz--pu0MI/AAAAAAAAC38/2ZP28rVEFKc/s200/johnny-depp-pirates.jpg
+					</path>
+					<path>http://4.bp.blogspot.com/_xR71w9-qx9E/SrAz--pu0MI/AAAAAAAAC38/2ZP28rVEFKc/s200/johnny-depp-pirates.jpg
+					</path>
+					<path>http://4.bp.blogspot.com/_xR71w9-qx9E/SrAz--pu0MI/AAAAAAAAC38/2ZP28rVEFKc/s200/johnny-depp-pirates.jpg
+					</path>
+				</paths>
+			</configuration>
+		</configurations>
 	</plex>
-	<searchs>
-		<search>
-			<name>test</name>
-			<criterias>
-				<criteria>
-					<type>VideoResolutionCriteria</type>
-					<filters>
-						<filter selected="true">
-							<type>EQUALS</type>
-							<value>R_1080</value>
-						</filter>
-						<filter selected="true">
-							<type>GREATER_THAN_OR_EQUAL_TO</type>
-							<value>R_1080</value>
-						</filter>
-					</filters>
-				</criteria>
-				<criteria>
-					<type>VideoAspectRatioCriteria</type>
-					<filters>
-						<filter selected="true">
-							<type>EQUALS</type>
-							<value>AS_1_78</value>
-						</filter>
-						<filter selected="true">
-							<type>GREATER_THAN_OR_EQUAL_TO</type>
-							<value>AS_1_78</value>
-						</filter>
-					</filters>
-				</criteria>
-			</criterias>
-		</search>
-		<search>
-			<name>test2</name>
-			<criterias>
-				<criteria>
-					<type>AudioResolutionCriteria</type>
-					<filters>
-						<filter>
-							<type>EQUALS</type>
-							<value>R_1080</value>
-						</filter>
-						<filter>
-							<type>GREATER_THAN_OR_EQUAL_TO</type>
-							<value>R_1080</value>
-						</filter>
-					</filters>
-				</criteria>
-				<criteria>
-					<type>VideoAspectRatioCriteria</type>
-					<filters>
-						<filter selected="true">
-							<type>EQUALS</type>
-							<value>AS_1_78</value>
-						</filter>
-						<filter selected="false">
-							<type>GREATER_THAN_OR_EQUAL_TO</type>
-							<value>AS_1_78</value>
-						</filter>
-					</filters>
-				</criteria>
-			</criterias>
-		</search>
-	</searchs>
+	<metadatas>
+		<searchs>
+			<search>
+				<name>test</name>
+				<criterias>
+					<criteria>
+						<type>VideoResolutionCriteria</type>
+						<filters>
+							<filter selected="true">
+								<type>EQUALS</type>
+								<value>R_1080</value>
+							</filter>
+							<filter selected="true">
+								<type>GREATER_THAN_OR_EQUAL_TO</type>
+								<value>R_1080</value>
+							</filter>
+						</filters>
+					</criteria>
+					<criteria>
+						<type>VideoAspectRatioCriteria</type>
+						<filters>
+							<filter selected="true">
+								<type>EQUALS</type>
+								<value>AS_1_78</value>
+							</filter>
+							<filter selected="true">
+								<type>GREATER_THAN_OR_EQUAL_TO</type>
+								<value>AS_1_78</value>
+							</filter>
+						</filters>
+					</criteria>
+				</criterias>
+			</search>
+			<search>
+				<name>test2</name>
+				<criterias>
+					<criteria>
+						<type>AudioResolutionCriteria</type>
+						<filters>
+							<filter>
+								<type>EQUALS</type>
+								<value>R_1080</value>
+							</filter>
+							<filter>
+								<type>GREATER_THAN_OR_EQUAL_TO</type>
+								<value>R_1080</value>
+							</filter>
+						</filters>
+					</criteria>
+					<criteria>
+						<type>VideoAspectRatioCriteria</type>
+						<filters>
+							<filter selected="true">
+								<type>EQUALS</type>
+								<value>AS_1_78</value>
+							</filter>
+							<filter selected="false">
+								<type>GREATER_THAN_OR_EQUAL_TO</type>
+								<value>AS_1_78</value>
+							</filter>
+						</filters>
+					</criteria>
+				</criterias>
+			</search>
+		</searchs>
+	</metadatas>
 </application>  

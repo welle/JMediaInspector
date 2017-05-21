@@ -36,9 +36,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import jmediainspector.JMediaInspector;
-import jmediainspector.config.Configurations.Configuration;
+import jmediainspector.config.Configuration;
+import jmediainspector.config.Configurations;
 import jmediainspector.context.Context;
-import jmediainspector.helpers.ConfigurationHelper;
+import jmediainspector.helpers.PlexConfigurationHelper;
 import jmediainspector.helpers.database.PlexDBHelper;
 import jmediainspector.helpers.dialogs.DialogsHelper;
 import jmediainspector.helpers.dialogs.FileChooserHelper;
@@ -71,7 +72,7 @@ public class PlexToolsTabControler extends AnchorPane implements ConfigurationsL
     @FXML
     private ComboBox<Configuration> configurationsList;
 
-    private ConfigurationHelper configurationHelper;
+    private PlexConfigurationHelper configurationHelper;
 
     private Configuration currentConfiguration;
 
@@ -92,13 +93,16 @@ public class PlexToolsTabControler extends AnchorPane implements ConfigurationsL
 
     private void refreshConfigurationList() {
         this.configurationsList.getItems().clear();
-        final List<Configuration> configurationsItemList = this.configurationHelper.getConfigurations().getConfiguration();
-        if (configurationsItemList != null && !configurationsItemList.isEmpty()) {
-            this.configurationsList.getItems().addAll(configurationsItemList);
-            if (this.currentConfiguration == null) {
-                this.configurationsList.setValue(this.configurationHelper.getSelectedConfiguration());
-            } else {
-                this.configurationsList.setValue(this.currentConfiguration);
+        final Configurations configurations = this.configurationHelper.getConfigurations();
+        if (configurations != null) {
+            final List<Configuration> configurationsItemList = configurations.getConfiguration();
+            if (configurationsItemList != null && !configurationsItemList.isEmpty()) {
+                this.configurationsList.getItems().addAll(configurationsItemList);
+                if (this.currentConfiguration == null) {
+                    this.configurationsList.setValue(this.configurationHelper.getSelectedConfiguration());
+                } else {
+                    this.configurationsList.setValue(this.currentConfiguration);
+                }
             }
         }
     }

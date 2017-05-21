@@ -19,33 +19,28 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import jmediainspector.config.Application;
+import jmediainspector.config.Configuration;
 import jmediainspector.config.Configurations;
-import jmediainspector.config.Configurations.Configuration;
-import jmediainspector.config.Configurations.Configuration.Paths;
 import jmediainspector.config.ObjectFactory;
+import jmediainspector.config.Paths;
 import jmediainspector.listeners.ConfigurationsListener;
 
 /**
- * Configuration helper.
+ * Plex Configurations helper.
  *
  * @author cha
  */
-/**
- * @author charlottew
- *
- */
-public final class ConfigurationHelper {
+public final class PlexConfigurationHelper {
 
+    private Application application;
     @NonNull
-    private final static Logger LOGGER = Logger.getLogger(ConfigurationHelper.class.getName());
-    @NonNull
-    private final Application.Plex configurations;
+    private final static Logger LOGGER = Logger.getLogger(PlexConfigurationHelper.class.getName());
+    private final Configurations plexConfigurations;
     @NonNull
     private final ObjectFactory factoryConfig = new ObjectFactory();
     @NonNull
     private final File configFile = new File(System.getProperty("user.home") + "/jmediainspector.xml");
-    @Nullable
-    private Application.Plex.Configuration selectedConfiguration;
+    private Configuration selectedConfiguration;
     @NonNull
     private final List<@NonNull ConfigurationsListener> configurationsListenerList = new ArrayList<>();
 
@@ -54,10 +49,10 @@ public final class ConfigurationHelper {
      *
      * @throws FileNotFoundException
      */
-    public ConfigurationHelper() throws FileNotFoundException {
-        Application.Plex config = null;
+    public PlexConfigurationHelper() throws FileNotFoundException {
+        this.application = null;
         if (!this.configFile.exists()) {
-            config = this.factoryConfig.createApplicationPlex();
+            this.application = this.factoryConfig.createApplication();
             saveConfig();
         }
 
@@ -65,14 +60,23 @@ public final class ConfigurationHelper {
             final JAXBContext jc = JAXBContext.newInstance(ObjectFactory.class.getPackage().getName());
             final Unmarshaller unmarshaller = jc.createUnmarshaller();
 
-            config = (Application.Plex) unmarshaller.unmarshal(this.configFile);
+            this.application = (Application) unmarshaller.unmarshal(this.configFile);
         } catch (final JAXBException e) {
-            LOGGER.logp(Level.SEVERE, "ConfigurationHelper", "ConfigurationHelper", e.getMessage(), e);
+            LOGGER.logp(Level.INFO, "ConfigurationHelper", "ConfigurationHelper", e.getMessage(), e);
+            this.application = this.factoryConfig.createApplication();
+            this.application.setPlex(this.factoryConfig.createPlex());
+            this.application.setMetadatas(this.factoryConfig.createMetadatas());
+            saveConfig();
         }
-        if (config == null) {
+        if (this.application == null) {
             throw new FileNotFoundException("Could not open configurations!");
         }
-        this.configurations = config;
+
+        final Configurations currentPlexConfigurations = this.application.getPlex().getConfigurations();
+        if (currentPlexConfigurations == null) {
+            this.application.getPlex().setConfigurations(this.factoryConfig.createConfigurations());
+        }
+        this.plexConfigurations = this.application.getPlex().getConfigurations();
     }
 
     /**
@@ -85,7 +89,7 @@ public final class ConfigurationHelper {
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
 
             final OutputStream outputStream = new FileOutputStream(this.configFile);
-            marshaller.marshal(this.configurations, outputStream);
+            marshaller.marshal(this.application, outputStream);
 
             outputStream.close();
 
@@ -107,8 +111,8 @@ public final class ConfigurationHelper {
     public Configuration getSelectedConfiguration() {
         Configuration currentSelectedConfiguration = this.selectedConfiguration;
         if (currentSelectedConfiguration == null) {
-            for (final Configuration configuration : this.configurations.getConfiguration()) {
-                if (configuration.isSelected() != null && configuration.isSelected().booleanValue()) {
+            for (final Configuration configuration : this.plexConfigurations.getConfiguration()) {
+                if (configuration.isSelected()) {
                     currentSelectedConfiguration = configuration;
                     this.selectedConfiguration = currentSelectedConfiguration;
 
@@ -126,7 +130,7 @@ public final class ConfigurationHelper {
      *
      * @param configuration
      */
-    public void setSelectedConfiguration(@NonNull final Configuration configuration) {
+    public void setSelectedConfiguration(final Configuration configuration) {
         if (this.selectedConfiguration != null) {
             this.selectedConfiguration.setSelected(Boolean.FALSE);
         }
@@ -136,12 +140,12 @@ public final class ConfigurationHelper {
     }
 
     /**
-     * Get the configuration.
+     * Get the configurations of Plex.
      *
      * @return configuration
      */
     public Configurations getConfigurations() {
-        return this.configurations;
+        return this.plexConfigurations;
     }
 
     /**
@@ -150,7 +154,7 @@ public final class ConfigurationHelper {
      * @return new Paths
      */
     public Paths getNewPaths() {
-        return this.factoryConfig.createConfigurationsConfigurationPaths();
+        return this.factoryConfig.createPaths();
     }
 
     /**
@@ -158,8 +162,8 @@ public final class ConfigurationHelper {
      *
      * @param configuration configuration to be deleted
      */
-    public void deleteCurrentConfiguration(@NonNull final Configuration configuration) {
-        this.configurations.getConfiguration().remove(configuration);
+    public void deleteCurrentConfiguration(final Configuration configuration) {
+        this.plexConfigurations.getConfiguration().remove(configuration);
     }
 
     /**
@@ -167,12 +171,15 @@ public final class ConfigurationHelper {
      *
      * @return new configuration created
      */
-    @NonNull
     public Configuration addNewConfiguration() {
-        final Configuration newConfiguration = this.factoryConfig.createConfigurationsConfiguration();
-        final Paths newPaths = this.factoryConfig.createConfigurationsConfigurationPaths();
+        final Configuration newConfiguration = this.factoryConfig.createConfiguration();
+        final Paths newPaths = this.factoryConfig.createPaths();
         newConfiguration.setPaths(newPaths);
-        this.configurations.getConfiguration().add(newConfiguration);
+        if (this.plexConfigurations == null) {
+            this.application.setPlex(this.factoryConfig.createPlex());
+//            this.application.setSearchs(this.factoryConfig.createApplicationSearchs());
+        }
+        this.plexConfigurations.getConfiguration().add(newConfiguration);
 
         assert newConfiguration != null;
         return newConfiguration;

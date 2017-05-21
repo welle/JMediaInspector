@@ -8,7 +8,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -31,9 +30,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import jmediainspector.config.Application;
+import jmediainspector.config.Configuration;
+import jmediainspector.config.Configurations;
 import jmediainspector.context.Context;
-import jmediainspector.helpers.ConfigurationHelper;
+import jmediainspector.helpers.PlexConfigurationHelper;
 import jmediainspector.helpers.dialogs.DialogsHelper;
 import jmediainspector.helpers.dialogs.FileChooserHelper;
 import jmediainspector.helpers.effects.ResizeHelper;
@@ -48,13 +48,13 @@ public class ConfigurationsDialogController extends AnchorPane {
     @NonNull
     private final static Logger LOGGER = Logger.getLogger(ConfigurationsDialogController.class.getName());
 
-    private ConfigurationHelper configurationHelper;
+    private PlexConfigurationHelper configurationHelper;
     @NonNull
     private final BooleanProperty finished = new SimpleBooleanProperty();
     @FXML
     private Button closeButton;
     @FXML
-    private ComboBox<Application.Plex.Configuration> configurationsList;
+    private ComboBox<Configuration> configurationsList;
     @FXML
     private TitledPane currentConfigurationTitledPane;
     @FXML
@@ -80,7 +80,7 @@ public class ConfigurationsDialogController extends AnchorPane {
     @FXML
     private ListView<String> configurationPathListView;
     private Stage primaryStageInitial;
-    private Application.Plex.Configuration currentConfiguration;
+    private Configuration currentConfiguration;
     @NonNull
     private final List<String> tempNewLineList = new ArrayList<>();
     private final List<String> tempDelLineList = new ArrayList<>();
@@ -114,15 +114,18 @@ public class ConfigurationsDialogController extends AnchorPane {
         setSelectedConfiguration();
     }
 
-    private void refreshConfigurationList(@Nullable final Configuration configuration) {
+    private void refreshConfigurationList(final Configuration configuration) {
         this.configurationsList.getItems().clear();
-        final List<Application.Plex.Configuration> configurationsItemList = this.configurationHelper.getConfigurations().getConfiguration();
-        if (configurationsItemList != null && !configurationsItemList.isEmpty()) {
-            this.configurationsList.getItems().addAll(configurationsItemList);
-            if (configuration == null) {
-                this.configurationsList.setValue(this.configurationHelper.getSelectedConfiguration());
-            } else {
-                this.configurationsList.setValue(configuration);
+        final Configurations configurations = this.configurationHelper.getConfigurations();
+        if (configurations != null) {
+            final List<Configuration> configurationsItemList = configurations.getConfiguration();
+            if (configurationsItemList != null && !configurationsItemList.isEmpty()) {
+                this.configurationsList.getItems().addAll(configurationsItemList);
+                if (configuration == null) {
+                    this.configurationsList.setValue(this.configurationHelper.getSelectedConfiguration());
+                } else {
+                    this.configurationsList.setValue(configuration);
+                }
             }
         }
     }

@@ -38,7 +38,7 @@
 	<classpathentry kind="lib" path="libs/PlexTelosys/sqlite-jdbc-3.8.11.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
-			<attribute name="annotationpath" value="/jmediainspector/externalAnnotations"/>
+			<attribute name="annotationpath" value="/JMediaInspector/externalAnnotations"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/JMetadata"/>

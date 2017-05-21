@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 import org.eclipse.jdt.annotation.NonNull;
 
-import jmediainspector.helpers.ConfigurationHelper;
+import jmediainspector.helpers.PlexConfigurationHelper;
 
 /**
  * Context.
@@ -20,14 +20,14 @@ public class Context {
     @NonNull
     private final static Context INSTANCE = new Context();
 
-    private ConfigurationHelper configurationHelper = null;
+    private PlexConfigurationHelper configurationHelper = null;
 
     /**
      * Constructor.
      */
     public Context() {
         try {
-            this.configurationHelper = new ConfigurationHelper();
+            this.configurationHelper = new PlexConfigurationHelper();
         } catch (final FileNotFoundException e) {
             LOGGER.logp(Level.SEVERE, "Context", "Context", e.getMessage(), e);
         }
@@ -49,8 +49,8 @@ public class Context {
      * @return current configurationHelper
      */
     @NonNull
-    public ConfigurationHelper getCurrentConfigurationHelper() {
-        final ConfigurationHelper currentConfigurationHelper = this.configurationHelper;
+    public PlexConfigurationHelper getCurrentConfigurationHelper() {
+        final PlexConfigurationHelper currentConfigurationHelper = this.configurationHelper;
         assert currentConfigurationHelper != null;
         return currentConfigurationHelper;
     }

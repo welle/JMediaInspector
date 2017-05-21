@@ -1,0 +1,18 @@
+<jaxb:bindings xmlns:xsd='http://www.w3.org/2001/XMLSchema'
+	xmlns:jaxb='http://java.sun.com/xml/ns/jaxb' version='2.1'
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/jaxb http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/jaxb/bindingschema_2_0.xsd">
+
+	<jaxb:globalBindings localScoping="toplevel" />
+	<jaxb:bindings schemaLocation="templateconfig.xsd">
+		<jaxb:schemaBindings>
+			<jaxb:package name="jmediainspector.config" />
+		</jaxb:schemaBindings>
+		<!--jaxb:bindings 
+			node="//xsd:element[@name='application']/xsd:complexType/xsd:sequence/xsd:element[@name='plex']">
+			<jaxb:schemaBindings>
+    			<jaxb:package name="jmediainspector.config.plex" />
+			</jaxb:schemaBindings>
+		</jaxb:bindings-->
+	</jaxb:bindings>
+</jaxb:bindings>

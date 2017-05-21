@@ -1,0 +1,10 @@
+1) Changes the XML structure file.
+2) Generate XSD from XML (from https://www.freeformatter.com/xsd-generator.html for instance)
+3) Copy the result in the XSD file. (Don't forget to change xs:string to xs:boolean is needed, for select='true' for example)
+3b) Adapt binding.xml if needed (binding.xml is usefull if some of sub types have the same name (see http://blog.bdoughan.com/2011/07/jaxb-xjc-and-nested-classes.html)
+4) Generate JAXB java classes using the XSD and the binding.xml with for example the JAXB generate eclipse plugin.
+
+
+NOTE:
+
+<xs:attribute type="xs:boolean" name="selected" use="required"/> ! REQUIRED not Optionnal
