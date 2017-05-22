@@ -24,12 +24,12 @@ import jmediainspector.config.ObjectFactory;
  */
 public class ApplicationConfigurationContext {
 
+    private static Logger LOGGER;
+
     @NonNull
     private final static ApplicationConfigurationContext INSTANCE = new ApplicationConfigurationContext();
 
     private Application application;
-    @NonNull
-    private final static Logger LOGGER = Logger.getLogger(ApplicationConfigurationContext.class.getName());
     @NonNull
     private final ObjectFactory factoryConfig = new ObjectFactory();
     @NonNull
@@ -51,7 +51,7 @@ public class ApplicationConfigurationContext {
 
             this.application = (Application) unmarshaller.unmarshal(this.configFile);
         } catch (final JAXBException e) {
-            LOGGER.logp(Level.INFO, "ConfigurationHelper", "ConfigurationHelper", e.getMessage(), e);
+            getLogger().logp(Level.INFO, "ConfigurationHelper", "ConfigurationHelper", e.getMessage(), e);
             this.application = this.factoryConfig.createApplication();
             this.application.setPlex(this.factoryConfig.createPlex());
             this.application.setMetadatas(this.factoryConfig.createMetadatas());
@@ -73,7 +73,7 @@ public class ApplicationConfigurationContext {
 
             outputStream.close();
         } catch (JAXBException | IOException e) {
-            LOGGER.logp(Level.SEVERE, "ApplicationContext", "saveConfig", e.getMessage(), e);
+            getLogger().logp(Level.SEVERE, "ApplicationContext", "saveConfig", e.getMessage(), e);
         }
     }
 
@@ -129,7 +129,18 @@ public class ApplicationConfigurationContext {
 
             this.application = (Application) unmarshaller.unmarshal(this.configFile);
         } catch (final JAXBException e) {
-            LOGGER.logp(Level.INFO, "ApplicationContext", "reload", e.getMessage(), e);
+            getLogger().logp(Level.INFO, "ApplicationContext", "reload", e.getMessage(), e);
         }
+    }
+
+    @NonNull
+    private Logger getLogger() {
+        Logger currentLogger = LOGGER;
+        if (currentLogger == null) {
+            currentLogger = Logger.getLogger(ApplicationConfigurationContext.class.getName());
+            LOGGER = currentLogger;
+        }
+
+        return currentLogger;
     }
 }

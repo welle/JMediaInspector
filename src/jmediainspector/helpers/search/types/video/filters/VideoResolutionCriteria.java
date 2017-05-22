@@ -1,4 +1,4 @@
-package jmediainspector.helpers.search.video.filter;
+package jmediainspector.helpers.search.types.video.filters;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,8 +17,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.GridPane;
 import jmediainspector.config.Filter;
 import jmediainspector.helpers.search.commons.ConditionFilter;
-import jmediainspector.helpers.search.enums.Type;
-import jmediainspector.helpers.search.interfaces.FiltersInterface;
+import jmediainspector.helpers.search.enums.SearchTypeEnum;
+import jmediainspector.helpers.search.types.interfaces.FiltersInterface;
 
 /**
  * Criteria for video resolution.
@@ -30,7 +30,7 @@ public class VideoResolutionCriteria extends FiltersInterface {
     /**
      * Type of criteria.
      */
-    public static Type TYPE = Type.VIDEO;
+    public static SearchTypeEnum TYPE = SearchTypeEnum.VIDEO;
 
     private static List<ConditionFilter> AVAILABLE_FILTERS;
     private static List<CodecVideoConstants.RESOLUTION> AVAILABLE_VALUES;

@@ -1,4 +1,4 @@
-package jmediainspector.helpers.search.audio.filter;
+package jmediainspector.helpers.search.types.audio.filters;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +17,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.GridPane;
 import jmediainspector.config.Filter;
 import jmediainspector.helpers.search.commons.ConditionFilter;
-import jmediainspector.helpers.search.interfaces.FiltersInterface;
+import jmediainspector.helpers.search.types.interfaces.FiltersInterface;
 
 /**
  * Criteria for Audio Codec.

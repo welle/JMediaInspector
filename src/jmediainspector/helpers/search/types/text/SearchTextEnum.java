@@ -1,34 +1,33 @@
-package jmediainspector.helpers.search.enums;
+package jmediainspector.helpers.search.types.text;
 
 import org.eclipse.jdt.annotation.NonNull;
 
-import jmediainspector.helpers.search.interfaces.SearchPanelInterface;
-import jmediainspector.helpers.search.video.SearchVideoHelper;
+import jmediainspector.helpers.search.types.interfaces.SearchPanelInterface;
 
-public enum Type {
+public enum SearchTextEnum {
     /**
      * General.
      */
-    GENERAL(new SearchVideoHelper()),
+    GENERAL(new SearchTextHelper()),
 
     /**
      * Video.
      */
-    VIDEO(new SearchVideoHelper()),
+    VIDEO(new SearchTextHelper()),
 
     /**
      * Audio.
      */
-    AUDIO(new SearchVideoHelper()),
+    AUDIO(new SearchTextHelper()),
 
     /**
      * Test.
      */
-    TEXT(new SearchVideoHelper());
+    TEXT(new SearchTextHelper());
 
     private @NonNull SearchPanelInterface searchPanelInterface;
 
-    Type(@NonNull final SearchPanelInterface searchPanelInterface) {
+    SearchTextEnum(@NonNull final SearchPanelInterface searchPanelInterface) {
         this.searchPanelInterface = searchPanelInterface;
     }
 

@@ -1,4 +1,4 @@
-package jmediainspector.helpers.search.interfaces;
+package jmediainspector.helpers.search.types.interfaces;
 
 import javafx.scene.Node;
 

@@ -1,13 +1,10 @@
 package jmediainspector.controllers;
 
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import org.eclipse.jdt.annotation.NonNull;
 
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import jmediainspector.config.Criteria;
@@ -15,9 +12,8 @@ import jmediainspector.config.Filter;
 import jmediainspector.config.helpers.MetadataSearchConfigurationHelper;
 import jmediainspector.context.ApplicationContext;
 import jmediainspector.helpers.search.SearchHelper;
-import jmediainspector.helpers.search.audio.filter.AudioCodecCriteria;
-import jmediainspector.helpers.search.enums.Type;
-import jmediainspector.helpers.search.video.filter.VideoResolutionCriteria;
+import jmediainspector.helpers.search.types.audio.filters.AudioCodecCriteria;
+import jmediainspector.helpers.search.types.video.filters.VideoResolutionCriteria;
 import jmediainspector.listeners.ApplicationConfigurationsListener;
 
 public class SearchCriteriaControler extends AnchorPane implements ApplicationConfigurationsListener {
@@ -42,13 +38,7 @@ public class SearchCriteriaControler extends AnchorPane implements ApplicationCo
     public void initialize() {
         this.searchHelper = new SearchHelper();
 
-        for (final Entry<Type, Map<Node, Node>> entry : this.searchHelper.leftRightPanelsMap.entrySet()) {
-            final Map<Node, Node> value = entry.getValue();
-
-            for (final Entry<Node, Node> iterable_element : value.entrySet()) {
-                this.leftPane.getChildren().add(iterable_element.getKey());
-            }
-        }
+        this.leftPane.getChildren().add(this.searchHelper.getLeftPanel());
 
         this.metadataSearchCriteriaHelper = ApplicationContext.getInstance().getCurrentMetadataSearchConfigurationHelper();
 
