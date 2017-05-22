@@ -17,6 +17,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.GridPane;
 import jmediainspector.config.Filter;
 import jmediainspector.helpers.search.commons.ConditionFilter;
+import jmediainspector.helpers.search.enums.SearchTypeEnum;
 import jmediainspector.helpers.search.types.interfaces.FiltersInterface;
 
 /**
@@ -25,6 +26,8 @@ import jmediainspector.helpers.search.types.interfaces.FiltersInterface;
  * @author charlottew
  */
 public class AudioCodecCriteria extends FiltersInterface {
+
+    public static SearchTypeEnum TYPE = SearchTypeEnum.AUDIO;
 
     private static List<ConditionFilter> AVAILABLE_FILTERS;
     private static List<CodecVideoConstants.RESOLUTION> AVAILABLE_VALUES;
@@ -67,5 +70,4 @@ public class AudioCodecCriteria extends FiltersInterface {
     public @NonNull Node getRightPaneChoices() {
         return this.rightPane;
     }
-
 }

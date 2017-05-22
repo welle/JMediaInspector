@@ -35,6 +35,7 @@ public enum SearchTypeEnum {
         this.searchPanelInterface = searchPanelInterface;
     }
 
+    @NonNull
     public SearchPanelInterface getSearchPanelInterface() {
         return this.searchPanelInterface;
     }

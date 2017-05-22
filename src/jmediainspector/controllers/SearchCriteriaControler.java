@@ -24,8 +24,9 @@ public class SearchCriteriaControler extends AnchorPane implements ApplicationCo
 
     @FXML
     private AnchorPane leftPane;
+
     @FXML
-    private GridPane rightCriteriaPane;
+    private AnchorPane rightPane;
 
     private int rowIndex = 0;
     private SearchHelper searchHelper;
@@ -36,9 +37,7 @@ public class SearchCriteriaControler extends AnchorPane implements ApplicationCo
      */
     @FXML
     public void initialize() {
-        this.searchHelper = new SearchHelper();
-
-        this.leftPane.getChildren().add(this.searchHelper.getLeftPanel());
+        this.searchHelper = new SearchHelper(this.leftPane, this.rightPane);
 
         this.metadataSearchCriteriaHelper = ApplicationContext.getInstance().getCurrentMetadataSearchConfigurationHelper();
 
@@ -55,9 +54,10 @@ public class SearchCriteriaControler extends AnchorPane implements ApplicationCo
         assert newCriteria != null;
         final Filter filter = this.metadataSearchCriteriaHelper.getNewFilter();
         filter.setSelected(true);
-        final AudioCodecCriteria videoResolutionCriteria = new AudioCodecCriteria(filter);
+        final AudioCodecCriteria audioCodecCriteria = new AudioCodecCriteria(filter);
 
-        this.rightCriteriaPane.addRow(this.rowIndex, videoResolutionCriteria.getRightPaneChoices());
+        final GridPane rightGridPane = (GridPane) this.searchHelper.getRightPane(AudioCodecCriteria.TYPE);
+        rightGridPane.addRow(this.rowIndex, audioCodecCriteria.getRightPaneChoices());
         this.rowIndex++;
     }
 
@@ -69,7 +69,8 @@ public class SearchCriteriaControler extends AnchorPane implements ApplicationCo
         filter.setSelected(true);
         final VideoResolutionCriteria videoResolutionCriteria = new VideoResolutionCriteria(filter);
 
-        this.rightCriteriaPane.addRow(this.rowIndex, videoResolutionCriteria.getRightPaneChoices());
+        final GridPane rightGridPane = (GridPane) this.searchHelper.getRightPane(VideoResolutionCriteria.TYPE);
+        rightGridPane.addRow(this.rowIndex, videoResolutionCriteria.getRightPaneChoices());
         this.rowIndex++;
     }
 

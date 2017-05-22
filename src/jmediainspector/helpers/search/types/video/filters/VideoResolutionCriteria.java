@@ -30,6 +30,7 @@ public class VideoResolutionCriteria extends FiltersInterface {
     /**
      * Type of criteria.
      */
+    @NonNull
     public static SearchTypeEnum TYPE = SearchTypeEnum.VIDEO;
 
     private static List<ConditionFilter> AVAILABLE_FILTERS;
