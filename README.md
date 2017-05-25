@@ -16,3 +16,4 @@ Media part:
 - Search for missing files in collections
 - Statistiques (audio/video)
 - Export searching for couchpotato/trakt.tv/sonaar/radarr
+- Search for duplicates files
