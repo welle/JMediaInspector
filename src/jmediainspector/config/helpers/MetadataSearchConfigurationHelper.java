@@ -18,6 +18,7 @@ public class MetadataSearchConfigurationHelper extends AbstractConfigurationHelp
 
     private final Metadatas metadatas;
     private final Searchs searchs;
+    private final Search currentSelectedSearch;
 
     /**
      * Constructor.
@@ -32,6 +33,10 @@ public class MetadataSearchConfigurationHelper extends AbstractConfigurationHelp
 
         this.metadatas = getApplication().getMetadatas();
         this.searchs = getApplication().getMetadatas().getSearchs();
+        if (this.searchs.getSearch().isEmpty()) {
+            getNewSearch();
+        }
+        this.currentSelectedSearch = this.searchs.getSearch().get(0);
     }
 
     @Override
@@ -56,8 +61,25 @@ public class MetadataSearchConfigurationHelper extends AbstractConfigurationHelp
      *
      * @return new Criteria
      */
+    public Search getNewSearch() {
+        final Search newSearch = getFactoryConfig().createSearch();
+        this.searchs.getSearch().add(newSearch);
+        final Criterias criterias = getFactoryConfig().createCriterias();
+        newSearch.setCriterias(criterias);
+
+        return newSearch;
+    }
+
+    /**
+     * Get a new Criteria object.
+     *
+     * @return new Criteria
+     */
     public Criteria getNewCriteria() {
-        return getFactoryConfig().createCriteria();
+        final Criteria newCriteria = getFactoryConfig().createCriteria();
+        this.currentSelectedSearch.getCriterias().getCriteria().add(newCriteria);
+
+        return newCriteria;
     }
 
     /**

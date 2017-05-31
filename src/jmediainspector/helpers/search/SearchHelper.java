@@ -1,34 +1,43 @@
 package jmediainspector.helpers.search;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.jdt.annotation.NonNull;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import jmediainspector.config.Search;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
 import jmediainspector.helpers.search.types.interfaces.FiltersInterface;
 import jmediainspector.helpers.search.types.interfaces.SearchCriteriaListener;
 import jmediainspector.helpers.search.types.interfaces.SearchPanelInterface;
 
+/**
+ * SearchHelper handle the right panel with a related search in the XML config file.
+ *
+ * @author Cha
+ */
 public class SearchHelper implements SearchCriteriaListener {
 
-    private final Map<SearchTypeEnum, LinkedPanel> linkedPanelMap = new LinkedHashMap<>();
+    @NonNull
+    private final Map<@NonNull SearchTypeEnum, LinkedPanel> linkedPanelMap = new LinkedHashMap<>();
+    @NonNull
     private final ListView<LinkedPanel> listLeftPanel = new ListView<>();
     private final AnchorPane leftPane;
     private final AnchorPane rightPane;
+    private @NonNull final Search search;
 
     /**
      * Constructor.
@@ -36,9 +45,10 @@ public class SearchHelper implements SearchCriteriaListener {
      * @param leftPane
      * @param rightPane
      */
-    public SearchHelper(final AnchorPane leftPane, final AnchorPane rightPane) {
+    public SearchHelper(@NonNull final Search search, @NonNull final AnchorPane leftPane, @NonNull final AnchorPane rightPane) {
         this.leftPane = leftPane;
         this.rightPane = rightPane;
+        this.search = search;
 
         for (final SearchTypeEnum type : SearchTypeEnum.values()) {
             final SearchPanelInterface searchPanelInterface = type.getSearchPanelInterface();
@@ -68,18 +78,15 @@ public class SearchHelper implements SearchCriteriaListener {
         this.listLeftPanel.setItems(observableList);
         this.listLeftPanel.setCellFactory(p -> new PanelListCell());
 
-        this.listLeftPanel.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(final MouseEvent event) {
-                // Set all right panels to not visible
-                for (final LinkedPanel linkedPanel : observableList) {
-                    linkedPanel.rightNode.setVisible(false);
-                }
-
-                // set current right panel to visible
-                final LinkedPanel currentLinkedPanel = SearchHelper.this.listLeftPanel.getSelectionModel().getSelectedItem();
-                currentLinkedPanel.rightNode.setVisible(true);
+        this.listLeftPanel.setOnMouseClicked(event -> {
+            // Set all right panels to not visible
+            for (final LinkedPanel linkedPanel : observableList) {
+                linkedPanel.rightNode.setVisible(false);
             }
+
+            // set current right panel to visible
+            final LinkedPanel currentLinkedPanel = SearchHelper.this.listLeftPanel.getSelectionModel().getSelectedItem();
+            currentLinkedPanel.rightNode.setVisible(true);
         });
 
         this.leftPane.getChildren().add(this.listLeftPanel);
@@ -118,6 +125,7 @@ public class SearchHelper implements SearchCriteriaListener {
         /**
          * @return the searchTypeEnum
          */
+        @NonNull
         public final SearchTypeEnum getSearchTypeEnum() {
             return this.searchTypeEnum;
         }
@@ -176,6 +184,7 @@ public class SearchHelper implements SearchCriteriaListener {
         rightGridPane.addRow(nextIndex, filtersInterface.getRightPaneChoices());
 
         setSelectedPanels(filtersInterface.getType());
+        filtersInterface.setListener(this);
     }
 
     private int getMaxRows(@NonNull final GridPane gridPane) {
@@ -193,6 +202,30 @@ public class SearchHelper implements SearchCriteriaListener {
     public void delete(@NonNull final FiltersInterface filtersInterface) {
         final GridPane rightGridPane = (GridPane) this.linkedPanelMap.get(filtersInterface.getType()).getRightNode();
         final Integer index = GridPane.getRowIndex(filtersInterface.getRightPaneChoices());
-        System.err.println("index =" + index);
+        if (index != null) {
+            deleteRow(rightGridPane, index.intValue());
+        }
+    }
+
+    private void deleteRow(final GridPane grid, final int row) {
+        final Set<Node> deleteNodes = new HashSet<>();
+        for (final Node child : grid.getChildren()) {
+            // get index from child
+            final Integer rowIndex = GridPane.getRowIndex(child);
+
+            // handle null values for index=0
+            final int r = rowIndex == null ? 0 : rowIndex.intValue();
+
+            if (r > row) {
+                // decrement rows for rows after the deleted row
+                GridPane.setRowIndex(child, Integer.valueOf(r - 1));
+            } else if (r == row) {
+                // collect matching rows for deletion
+                deleteNodes.add(child);
+            }
+        }
+
+        // remove nodes from row
+        grid.getChildren().removeAll(deleteNodes);
     }
 }

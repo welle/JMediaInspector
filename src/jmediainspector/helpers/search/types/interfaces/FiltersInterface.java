@@ -4,8 +4,6 @@ import org.eclipse.jdt.annotation.NonNull;
 
 import javafx.beans.property.adapter.JavaBeanBooleanProperty;
 import javafx.beans.property.adapter.JavaBeanBooleanPropertyBuilder;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
@@ -68,15 +66,14 @@ public abstract class FiltersInterface {
         final Button deleteButton = new Button("X");
         GridPane.setValignment(deleteButton, VPos.TOP);
         GridPane.setHalignment(deleteButton, HPos.RIGHT);
-        deleteButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(final ActionEvent e) {
-//                FiltersInterface.this.searchCriteriaListener.delete(FiltersInterface.this);
-            }
-        });
+        deleteButton.setOnAction(e -> delete());
         this.rightPane.add(deleteButton, 3, 0);
 
         return this.rightPane;
+    }
+
+    private void delete() {
+        this.searchCriteriaListener.delete(this);
     }
 
     /**
@@ -98,6 +95,11 @@ public abstract class FiltersInterface {
         return this.selectedCheckBox;
     }
 
+    /**
+     * Set the listener.
+     *
+     * @param searchCriteriaListener
+     */
     public void setListener(@NonNull final SearchCriteriaListener searchCriteriaListener) {
         this.searchCriteriaListener = searchCriteriaListener;
     }

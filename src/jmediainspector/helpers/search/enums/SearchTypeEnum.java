@@ -8,6 +8,11 @@ import jmediainspector.helpers.search.types.interfaces.SearchPanelInterface;
 import jmediainspector.helpers.search.types.text.SearchTextHelper;
 import jmediainspector.helpers.search.types.video.SearchVideoHelper;
 
+/**
+ * Search Type.
+ *
+ * @author Cha
+ */
 public enum SearchTypeEnum {
     /**
      * General.

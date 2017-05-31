@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import jmediainspector.config.Criteria;
 import jmediainspector.config.Filter;
+import jmediainspector.config.Search;
 import jmediainspector.config.helpers.MetadataSearchConfigurationHelper;
 import jmediainspector.context.ApplicationContext;
 import jmediainspector.helpers.search.SearchHelper;
@@ -23,11 +24,9 @@ public class SearchCriteriaControler extends AnchorPane implements ApplicationCo
 
     @FXML
     private AnchorPane leftPane;
-
     @FXML
     private AnchorPane rightPane;
 
-    private final int rowIndex = 0;
     private SearchHelper searchHelper;
 
     /**
@@ -37,8 +36,12 @@ public class SearchCriteriaControler extends AnchorPane implements ApplicationCo
     @FXML
     public void initialize() {
         // TODO link searchhelper with related search
+        final AnchorPane currentLeftPane = this.leftPane;
+        assert currentLeftPane != null;
+        final AnchorPane currentRightPane = this.rightPane;
+        assert currentRightPane != null;
 
-        this.searchHelper = new SearchHelper(this.leftPane, this.rightPane);
+        this.searchHelper = new SearchHelper(new Search(), currentLeftPane, currentRightPane);
 
         this.metadataSearchCriteriaHelper = ApplicationContext.getInstance().getCurrentMetadataSearchConfigurationHelper();
 
