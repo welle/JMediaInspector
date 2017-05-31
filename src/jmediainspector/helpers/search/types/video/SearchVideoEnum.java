@@ -5,10 +5,15 @@ import org.eclipse.jdt.annotation.NonNull;
 import jmediainspector.helpers.search.types.interfaces.FiltersInterface;
 import jmediainspector.helpers.search.types.video.filters.VideoResolutionCriteria;
 
+/**
+ * Search Video enumeration.
+ *
+ * @author charlottew
+ */
 public enum SearchVideoEnum {
 
     /**
-     * General.
+     * Resolution.
      */
     RESOLUTION(VideoResolutionCriteria.class);
 

@@ -4,11 +4,16 @@ import org.eclipse.jdt.annotation.NonNull;
 
 import javafx.beans.property.adapter.JavaBeanBooleanProperty;
 import javafx.beans.property.adapter.JavaBeanBooleanPropertyBuilder;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.GridPane;
 import jmediainspector.config.Filter;
+import jmediainspector.helpers.search.enums.SearchTypeEnum;
 
 /**
  * @author Cha
@@ -25,6 +30,7 @@ public abstract class FiltersInterface {
      */
     @NonNull
     public final GridPane rightPane;
+    private SearchCriteriaListener searchCriteriaListener;
 
     /**
      * Constructor.
@@ -58,7 +64,29 @@ public abstract class FiltersInterface {
      * @return pane containing choices to be includes in the screen.
      */
     @NonNull
-    public abstract Node getRightPaneChoices();
+    public Node getRightPaneChoices() {
+        final Button deleteButton = new Button("X");
+        GridPane.setValignment(deleteButton, VPos.TOP);
+        GridPane.setHalignment(deleteButton, HPos.RIGHT);
+        deleteButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent e) {
+//                FiltersInterface.this.searchCriteriaListener.delete(FiltersInterface.this);
+            }
+        });
+        this.rightPane.add(deleteButton, 3, 0);
+
+        return this.rightPane;
+    }
+
+    /**
+     * Get pane Type.
+     *
+     * @return pane type.
+     * @see SearchTypeEnum
+     */
+    @NonNull
+    public abstract SearchTypeEnum getType();
 
     /**
      * Get selected checkbox.
@@ -68,5 +96,9 @@ public abstract class FiltersInterface {
     @NonNull
     public Node getSelectedCheckBox() {
         return this.selectedCheckBox;
+    }
+
+    public void setListener(@NonNull final SearchCriteriaListener searchCriteriaListener) {
+        this.searchCriteriaListener = searchCriteriaListener;
     }
 }

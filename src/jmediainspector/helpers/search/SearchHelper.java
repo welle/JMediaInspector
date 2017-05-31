@@ -1,6 +1,7 @@
 package jmediainspector.helpers.search;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jdt.annotation.NonNull;
@@ -8,6 +9,7 @@ import org.eclipse.jdt.annotation.NonNull;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -17,9 +19,11 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
+import jmediainspector.helpers.search.types.interfaces.FiltersInterface;
+import jmediainspector.helpers.search.types.interfaces.SearchCriteriaListener;
 import jmediainspector.helpers.search.types.interfaces.SearchPanelInterface;
 
-public class SearchHelper {
+public class SearchHelper implements SearchCriteriaListener {
 
     private final Map<SearchTypeEnum, LinkedPanel> linkedPanelMap = new LinkedHashMap<>();
     private final ListView<LinkedPanel> listLeftPanel = new ListView<>();
@@ -146,8 +150,49 @@ public class SearchHelper {
         }
     }
 
-    @NonNull
-    public Node getRightPane(@NonNull final SearchTypeEnum type) {
-        return this.linkedPanelMap.get(type).getRightNode();
+    private void setSelectedPanels(@NonNull final SearchTypeEnum type) {
+        final LinkedPanel selectedLinkedPanel = this.linkedPanelMap.get(type);
+        final List<LinkedPanel> observableList = this.listLeftPanel.getItems();
+        // Set all right panels to not visible
+        for (final LinkedPanel linkedPanel : observableList) {
+            linkedPanel.rightNode.setVisible(false);
+        }
+
+        // set current right panel to visible
+        selectedLinkedPanel.rightNode.setVisible(true);
+    }
+
+    /**
+     * Add Search Criteria into left and right panels.
+     *
+     * @param filtersInterface
+     */
+    public void addCriteria(@NonNull final FiltersInterface filtersInterface) {
+        final GridPane rightGridPane = (GridPane) this.linkedPanelMap.get(filtersInterface.getType()).getRightNode();
+        rightGridPane.setHgap(10); // horizontal gap in pixels => that's what you are asking for
+        rightGridPane.setVgap(5); // vertical gap in pixels
+        rightGridPane.setPadding(new Insets(10, 10, 10, 10)); // margins around the whole grid
+        final int nextIndex = getMaxRows(rightGridPane) + 1;
+        rightGridPane.addRow(nextIndex, filtersInterface.getRightPaneChoices());
+
+        setSelectedPanels(filtersInterface.getType());
+    }
+
+    private int getMaxRows(@NonNull final GridPane gridPane) {
+        final int maxIndex = gridPane.getChildren().stream().mapToInt(n -> {
+            final Integer row = GridPane.getRowIndex(n);
+
+            // default values are 0 / 1 respectively
+            return (row == null ? 0 : row.intValue());
+        }).max().orElse(-1);
+
+        return maxIndex;
+    }
+
+    @Override
+    public void delete(@NonNull final FiltersInterface filtersInterface) {
+        final GridPane rightGridPane = (GridPane) this.linkedPanelMap.get(filtersInterface.getType()).getRightNode();
+        final Integer index = GridPane.getRowIndex(filtersInterface.getRightPaneChoices());
+        System.err.println("index =" + index);
     }
 }

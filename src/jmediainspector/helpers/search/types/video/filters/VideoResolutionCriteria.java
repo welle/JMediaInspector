@@ -9,12 +9,8 @@ import org.eclipse.jdt.annotation.NonNull;
 import aka.jmetadata.main.constants.CodecVideoConstants;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.HPos;
-import javafx.geometry.VPos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.layout.GridPane;
 import jmediainspector.config.Filter;
 import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
@@ -26,12 +22,6 @@ import jmediainspector.helpers.search.types.interfaces.FiltersInterface;
  * @author charlottew
  */
 public class VideoResolutionCriteria extends FiltersInterface {
-
-    /**
-     * Type of criteria.
-     */
-    @NonNull
-    public static SearchTypeEnum TYPE = SearchTypeEnum.VIDEO;
 
     private static List<ConditionFilter> AVAILABLE_FILTERS;
     private static List<CodecVideoConstants.RESOLUTION> AVAILABLE_VALUES;
@@ -63,16 +53,12 @@ public class VideoResolutionCriteria extends FiltersInterface {
         final ObservableList<CodecVideoConstants.RESOLUTION> observableList2 = FXCollections.observableArrayList(AVAILABLE_VALUES);
         final ComboBox<CodecVideoConstants.RESOLUTION> listViewAvailableFilters2 = new ComboBox<>(observableList2);
         this.rightPane.add(listViewAvailableFilters2, 2, 0);
-
-        final Button deleteButton = new Button("-");
-        GridPane.setValignment(deleteButton, VPos.TOP);
-        GridPane.setHalignment(deleteButton, HPos.RIGHT);
-        this.rightPane.add(deleteButton, 3, 0);
     }
 
     @Override
-    public @NonNull Node getRightPaneChoices() {
-        return this.rightPane;
+    @NonNull
+    public SearchTypeEnum getType() {
+        return SearchTypeEnum.VIDEO;
     }
 
 }

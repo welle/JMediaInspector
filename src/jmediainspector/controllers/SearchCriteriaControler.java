@@ -6,7 +6,6 @@ import org.eclipse.jdt.annotation.NonNull;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import jmediainspector.config.Criteria;
 import jmediainspector.config.Filter;
 import jmediainspector.config.helpers.MetadataSearchConfigurationHelper;
@@ -28,7 +27,7 @@ public class SearchCriteriaControler extends AnchorPane implements ApplicationCo
     @FXML
     private AnchorPane rightPane;
 
-    private int rowIndex = 0;
+    private final int rowIndex = 0;
     private SearchHelper searchHelper;
 
     /**
@@ -37,6 +36,8 @@ public class SearchCriteriaControler extends AnchorPane implements ApplicationCo
      */
     @FXML
     public void initialize() {
+        // TODO link searchhelper with related search
+
         this.searchHelper = new SearchHelper(this.leftPane, this.rightPane);
 
         this.metadataSearchCriteriaHelper = ApplicationContext.getInstance().getCurrentMetadataSearchConfigurationHelper();
@@ -50,28 +51,27 @@ public class SearchCriteriaControler extends AnchorPane implements ApplicationCo
 
     @FXML
     private void addAudioCodecCriteria() {
-        final Criteria newCriteria = this.metadataSearchCriteriaHelper.getNewCriteria();
-        assert newCriteria != null;
-        final Filter filter = this.metadataSearchCriteriaHelper.getNewFilter();
-        filter.setSelected(true);
+        final Filter filter = getNewCriteria();
         final AudioCodecCriteria audioCodecCriteria = new AudioCodecCriteria(filter);
 
-        final GridPane rightGridPane = (GridPane) this.searchHelper.getRightPane(AudioCodecCriteria.TYPE);
-        rightGridPane.addRow(this.rowIndex, audioCodecCriteria.getRightPaneChoices());
-        this.rowIndex++;
+        this.searchHelper.addCriteria(audioCodecCriteria);
     }
 
     @FXML
     private void addVideoResolutionCriteria() {
+        final Filter filter = getNewCriteria();
+        final VideoResolutionCriteria videoResolutionCriteria = new VideoResolutionCriteria(filter);
+
+        this.searchHelper.addCriteria(videoResolutionCriteria);
+    }
+
+    @NonNull
+    private Filter getNewCriteria() {
         final Criteria newCriteria = this.metadataSearchCriteriaHelper.getNewCriteria();
         assert newCriteria != null;
         final Filter filter = this.metadataSearchCriteriaHelper.getNewFilter();
         filter.setSelected(true);
-        final VideoResolutionCriteria videoResolutionCriteria = new VideoResolutionCriteria(filter);
-
-        final GridPane rightGridPane = (GridPane) this.searchHelper.getRightPane(VideoResolutionCriteria.TYPE);
-        rightGridPane.addRow(this.rowIndex, videoResolutionCriteria.getRightPaneChoices());
-        this.rowIndex++;
+        return filter;
     }
 
     @Override
