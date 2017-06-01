@@ -12,6 +12,7 @@ import jmediainspector.config.Search;
 import jmediainspector.config.helpers.MetadataSearchConfigurationHelper;
 import jmediainspector.context.ApplicationContext;
 import jmediainspector.helpers.search.SearchHelper;
+import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.types.audio.filters.AudioCodecCriteria;
 import jmediainspector.helpers.search.types.video.filters.VideoResolutionCriteria;
 import jmediainspector.listeners.ApplicationConfigurationsListener;
@@ -63,6 +64,7 @@ public class SearchCriteriaControler extends AnchorPane implements ApplicationCo
     @FXML
     private void addVideoResolutionCriteria() {
         final Filter filter = getNewCriteria();
+        filter.setType(ConditionFilter.GREATER_THAN.name());
         final VideoResolutionCriteria videoResolutionCriteria = new VideoResolutionCriteria(filter);
 
         this.searchHelper.addCriteria(videoResolutionCriteria);

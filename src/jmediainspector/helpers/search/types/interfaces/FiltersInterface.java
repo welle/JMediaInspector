@@ -14,6 +14,11 @@ import jmediainspector.config.Filter;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
 
 /**
+ * <filter selected="true">
+ * <type>EQUALS</type>
+ * <value>R_1080</value>
+ * </filter>
+ *
  * @author Cha
  */
 public abstract class FiltersInterface {
