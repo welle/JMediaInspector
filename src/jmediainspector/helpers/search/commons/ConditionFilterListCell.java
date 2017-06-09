@@ -1,19 +1,26 @@
 package jmediainspector.helpers.search.commons;
 
-import javafx.scene.control.ListCell;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import jmediainspector.config.Filter;
 
 /**
  * ListCell for {@link jmediainspector.config.Configuration}
  *
  * @author charlottew
  */
-public final class ConditionFilterListCell extends ListCell<ConditionFilter> {
+public final class ConditionFilterListCell implements ChangeListener<String> {
+
+    private final Filter filter;
+
+    public ConditionFilterListCell(final Filter filter) {
+        this.filter = filter;
+    }
 
     @Override
-    protected void updateItem(final ConditionFilter item, final boolean empty) {
-        super.updateItem(item, empty);
-        if (item != null) {
-            setText(item.name());
-        }
+    public void changed(final ObservableValue<? extends String> observable, final String oldValue, final String newValue) {
+        this.filter.setType(newValue);
+        System.out.println(ConditionFilter.getConditionFilter(this.filter.getType()));
     }
+
 }

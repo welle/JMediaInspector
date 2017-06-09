@@ -9,8 +9,6 @@ import org.eclipse.jdt.annotation.NonNull;
 import com.sun.javafx.collections.ObservableListWrapper;
 
 import aka.jmetadata.main.constants.CodecVideoConstants;
-import javafx.beans.property.adapter.JavaBeanObjectProperty;
-import javafx.beans.property.adapter.JavaBeanObjectPropertyBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
@@ -58,24 +56,31 @@ public class VideoResolutionCriteria extends FiltersInterface {
 
         // TODO LINK WITH FILTER
         // Link type
-        final List<ConditionFilter> list = new ArrayList<>();
-        for (final ConditionFilter filterType : AVAILABLE_TYPES) {
-            list.add(filterType);
-        }
-        final ObservableList<ConditionFilter> observableList = new ObservableListWrapper<>(list);
-        final ComboBox<ConditionFilter> listViewFiltersType = new ComboBox<>(observableList);
-        listViewFiltersType.setButtonCell(new ConditionFilterListCell());
-        listViewFiltersType.setCellFactory(p -> new ConditionFilterListCell());
-        JavaBeanObjectProperty value;
-        try {
-            value = JavaBeanObjectPropertyBuilder.create().bean(filter).name("type").build();
-            listViewFiltersType.valueProperty().bindBidirectional(value);
-        } catch (final NoSuchMethodException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
 
-        this.rightPane.add(listViewFiltersType, 1, 0);
+//      Person person = new Person();
+//      PathProperty prop = new PathProperty(
+//                      person, "address.streetName", String.class);
+//      // bind it to a JavaFX control
+//      Bindings.bindBidirectional(prop, myTextField.textProperty());
+
+        final List<String> list = new ArrayList<>();
+        for (final ConditionFilter filterType : AVAILABLE_TYPES) {
+            list.add(filterType.getReadableName());
+        }
+        final ObservableList<String> observableList = new ObservableListWrapper<>(list);
+        final ComboBox<String> comboboFiltersType = new ComboBox<>(observableList);
+//        comboboFiltersType.setButtonCell(new ConditionFilterListCell());
+//        comboboFiltersType.setCellFactory(p -> new ConditionFilterListCell());
+        comboboFiltersType.valueProperty().addListener(new ConditionFilterListCell(filter));
+
+        String value = null;
+        final ConditionFilter conditionFilter = ConditionFilter.getConditionFilter(filter.getType());
+        if (conditionFilter != null) {
+            value = conditionFilter.name();
+        }
+        comboboFiltersType.setValue(value);
+
+        this.rightPane.add(comboboFiltersType, 1, 0);
 
         // link value
         final ObservableList<CodecVideoConstants.RESOLUTION> observableList2 = FXCollections.observableArrayList(AVAILABLE_VALUES);
