@@ -1,5 +1,10 @@
 package jmediainspector.controllers;
 
+import java.io.File;
+import java.util.List;
+
+import org.eclipse.jdt.annotation.NonNull;
+
 import javafx.fxml.FXML;
 import jmediainspector.config.helpers.MetadataSearchConfigurationHelper;
 import jmediainspector.config.helpers.MetadataSearchConfigurationHelper.Type;
@@ -18,6 +23,13 @@ public class SearchCriteriaPlexControler extends AbstractSearchCriteriaControlle
         super.initialize();
 
         initExistingSearches(Type.Plex);
+    }
+
+    @Override
+    void handleSearchResult(final List<@NonNull File> result) {
+        // For each result: match with plex
+
+        // display
     }
 
 }

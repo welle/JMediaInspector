@@ -39,9 +39,9 @@ import jmediainspector.listeners.ApplicationConfigurationsListener;
  *
  * @author Cha
  */
-public class AbstractSearchCriteriaController extends AnchorPane implements ApplicationConfigurationsListener {
+public abstract class AbstractSearchCriteriaController extends AnchorPane implements ApplicationConfigurationsListener {
 
-    protected MetadataSearchConfigurationHelper metadataSearchCriteriaHelper;
+    private MetadataSearchConfigurationHelper metadataSearchCriteriaHelper;
 
     @FXML
     private AnchorPane leftPane;
@@ -87,6 +87,7 @@ public class AbstractSearchCriteriaController extends AnchorPane implements Appl
      * @param type
      */
     void initExistingSearches(@NonNull final Type type) {
+        // FIXME this method and all relevant methods must be in a upper controler so each searchhelper correspond to a search and we just have to set visible true/false on left list view click
         this.searchType = type;
         this.existingSearchListView.getItems().clear();
         final List<Search> list = this.metadataSearchCriteriaHelper.getSearchByType(type);
@@ -145,26 +146,38 @@ public class AbstractSearchCriteriaController extends AnchorPane implements Appl
     @FXML
     private void runSearch() {
         final List<@NonNull File> result = new ArrayList<>();
-        @Nullable
-        final Configuration selectedConfiguration = this.configurationHelper.getSelectedConfiguration();
-        if (selectedConfiguration == null) {
-            final Alert alert = DialogsHelper.getAlert(JMediaInspector.getPrimaryStage(), Alert.AlertType.ERROR, "No configuration selected!");
-            alert.showAndWait();
-        } else {
-            final Paths paths = selectedConfiguration.getPaths();
-            if (paths == null) {
-                final Alert alert = DialogsHelper.getAlert(JMediaInspector.getPrimaryStage(), Alert.AlertType.ERROR, "No path(s) in the selected configuration!");
+        final List<@NonNull FiltersInterface> filterList = this.searchHelper.getFiltersList();
+        if (!filterList.isEmpty()) {
+            @Nullable
+            final Configuration selectedConfiguration = this.configurationHelper.getSelectedConfiguration();
+            if (selectedConfiguration == null) {
+                final Alert alert = DialogsHelper.getAlert(JMediaInspector.getPrimaryStage(), Alert.AlertType.ERROR, "No configuration selected!");
                 alert.showAndWait();
             } else {
-                for (final String path : paths.getPath()) {
-                    if (path != null && path.trim().length() > 0) {
-                        final List<@NonNull File> searchInPathResult = searchInPath(path);
-                        result.addAll(searchInPathResult);
+                final Paths paths = selectedConfiguration.getPaths();
+                if (paths == null) {
+                    final Alert alert = DialogsHelper.getAlert(JMediaInspector.getPrimaryStage(), Alert.AlertType.ERROR, "No path(s) in the selected configuration!");
+                    alert.showAndWait();
+                } else {
+                    for (final String path : paths.getPath()) {
+                        if (path != null && path.trim().length() > 0) {
+                            final List<@NonNull File> searchInPathResult = searchInPath(path);
+                            result.addAll(searchInPathResult);
+                        }
                     }
                 }
             }
         }
+
+        handleSearchResult(result);
     }
+
+    /**
+     * Handle the result.
+     *
+     * @param result list of matching criteria files
+     */
+    abstract void handleSearchResult(List<@NonNull File> result);
 
     @NonNull
     private List<@NonNull File> searchInPath(@NonNull final String path) {
@@ -183,9 +196,7 @@ public class AbstractSearchCriteriaController extends AnchorPane implements Appl
         final List<@NonNull File> result = new ArrayList<>();
         if (file != null) {
             final List<@NonNull FiltersInterface> filterList = this.searchHelper.getFiltersList();
-            if (!filterList.isEmpty()) {
 
-            }
         }
 
         return result;
