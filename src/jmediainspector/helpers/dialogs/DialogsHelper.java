@@ -122,6 +122,7 @@ public final class DialogsHelper {
      * @param contentText dialog box text
      * @return Alert dialog
      */
+    @NonNull
     public static Alert getAlert(@NonNull final Stage stage, final Alert.AlertType alertType, final String contentText) {
         final Alert alert = new Alert(alertType);
         alert.initStyle(StageStyle.UNDECORATED);

@@ -218,7 +218,7 @@ public class ConfigurationsDialogController extends AnchorPane {
     private void saveConfiguration() {
         // Check if name is not empty
         final Configuration currentConfig = this.configurationsList.getValue();
-        if (currentConfig.getName() == null || "".equals(currentConfig.getName().trim())) {
+        if (currentConfig.getName() == null || currentConfig.getName().trim().length() > 0) {
             final Stage currentPrimaryStageInitial = this.primaryStageInitial;
             assert currentPrimaryStageInitial != null;
             final Alert alert = DialogsHelper.getAlert(currentPrimaryStageInitial, Alert.AlertType.ERROR, "Configuration name can not be empty!");
@@ -303,10 +303,16 @@ public class ConfigurationsDialogController extends AnchorPane {
         final FileChooser fileChooser = FileChooserHelper.getPlexDBFileChooser();
         File file = null;
         try {
-            final File initialDir = new File(this.plexDBFileTextField.getText());
-            if (initialDir.getParentFile() != null) {
-                fileChooser.setInitialDirectory(initialDir.getParentFile());
+            final String initialDirString = this.plexDBFileTextField.getText();
+            if (initialDirString == null || initialDirString.trim().length() == 0) {
+                fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+            } else {
+                final File initialDir = new File(initialDirString);
+                if (initialDir.getParentFile() != null) {
+                    fileChooser.setInitialDirectory(initialDir.getParentFile());
+                }
             }
+
             file = fileChooser.showOpenDialog(this.primaryStageInitial.getScene().getWindow());
         } catch (final IllegalArgumentException e) {
             fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));

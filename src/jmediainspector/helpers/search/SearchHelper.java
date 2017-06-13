@@ -1,5 +1,6 @@
 package jmediainspector.helpers.search;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -38,10 +39,13 @@ public class SearchHelper implements SearchCriteriaListener {
     private final AnchorPane leftPane;
     private final AnchorPane rightPane;
     private @NonNull final Search search;
+    @NonNull
+    private final List<@NonNull FiltersInterface> filtersInterfaceList = new ArrayList<>();
 
     /**
      * Constructor.
      *
+     * @param search
      * @param leftPane
      * @param rightPane
      */
@@ -185,6 +189,7 @@ public class SearchHelper implements SearchCriteriaListener {
 
         setSelectedPanels(filtersInterface.getType());
         filtersInterface.setListener(this);
+        this.filtersInterfaceList.add(filtersInterface);
     }
 
     private int getMaxRows(@NonNull final GridPane gridPane) {
@@ -204,10 +209,11 @@ public class SearchHelper implements SearchCriteriaListener {
         final Integer index = GridPane.getRowIndex(filtersInterface.getRightPaneChoices());
         if (index != null) {
             deleteRow(rightGridPane, index.intValue());
+            this.filtersInterfaceList.remove(filtersInterface);
         }
     }
 
-    private void deleteRow(final GridPane grid, final int row) {
+    private void deleteRow(@NonNull final GridPane grid, final int row) {
         final Set<Node> deleteNodes = new HashSet<>();
         for (final Node child : grid.getChildren()) {
             // get index from child
@@ -227,5 +233,15 @@ public class SearchHelper implements SearchCriteriaListener {
 
         // remove nodes from row
         grid.getChildren().removeAll(deleteNodes);
+    }
+
+    /**
+     * Get existing filter list in the search.
+     *
+     * @return filters list
+     */
+    @NonNull
+    public List<@NonNull FiltersInterface> getFiltersList() {
+        return this.filtersInterfaceList;
     }
 }
