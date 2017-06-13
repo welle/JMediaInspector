@@ -1,17 +1,11 @@
 package jmediainspector.controllers;
 
-import java.util.logging.Logger;
-
-import org.eclipse.jdt.annotation.NonNull;
-
 import javafx.fxml.FXML;
 import jmediainspector.config.helpers.MetadataSearchConfigurationHelper;
 import jmediainspector.config.helpers.MetadataSearchConfigurationHelper.Type;
 
-public class SearchCriteriaControler extends AbstractSearchCriteriaControler {
+public class SearchCriteriaControler extends AbstractSearchCriteriaController {
 
-    @NonNull
-    private final static Logger LOGGER = Logger.getLogger(SearchCriteriaControler.class.getName());
     private MetadataSearchConfigurationHelper metadataSearchCriteriaHelper;
 
     /**

@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -16,6 +15,7 @@ import org.eclipse.jdt.annotation.NonNull;
 
 import jmediainspector.config.Application;
 import jmediainspector.config.ObjectFactory;
+import jmediainspector.context.ApplicationContext;
 
 /**
  * Context for Application configuration.
@@ -23,8 +23,6 @@ import jmediainspector.config.ObjectFactory;
  * @author Cha
  */
 public class ApplicationConfigurationContext {
-
-    private static Logger LOGGER;
 
     @NonNull
     private final static ApplicationConfigurationContext INSTANCE = new ApplicationConfigurationContext();
@@ -51,7 +49,7 @@ public class ApplicationConfigurationContext {
 
             this.application = (Application) unmarshaller.unmarshal(this.configFile);
         } catch (final JAXBException e) {
-            getLogger().logp(Level.INFO, "ConfigurationHelper", "ConfigurationHelper", e.getMessage(), e);
+            ApplicationContext.getInstance().getLogger().logp(Level.INFO, "ConfigurationHelper", "ConfigurationHelper", e.getMessage(), e);
             this.application = this.factoryConfig.createApplication();
             this.application.setPlex(this.factoryConfig.createPlex());
             this.application.setMetadatas(this.factoryConfig.createMetadatas());
@@ -73,7 +71,7 @@ public class ApplicationConfigurationContext {
 
             outputStream.close();
         } catch (JAXBException | IOException e) {
-            getLogger().logp(Level.SEVERE, "ApplicationContext", "saveConfig", e.getMessage(), e);
+            ApplicationContext.getInstance().getLogger().logp(Level.SEVERE, "ApplicationContext", "saveConfig", e.getMessage(), e);
         }
     }
 
@@ -129,18 +127,8 @@ public class ApplicationConfigurationContext {
 
             this.application = (Application) unmarshaller.unmarshal(this.configFile);
         } catch (final JAXBException e) {
-            getLogger().logp(Level.INFO, "ApplicationContext", "reload", e.getMessage(), e);
+            ApplicationContext.getInstance().getLogger().logp(Level.INFO, "ApplicationContext", "reload", e.getMessage(), e);
         }
     }
 
-    @NonNull
-    private Logger getLogger() {
-        Logger currentLogger = LOGGER;
-        if (currentLogger == null) {
-            currentLogger = Logger.getLogger(ApplicationConfigurationContext.class.getName());
-            LOGGER = currentLogger;
-        }
-
-        return currentLogger;
-    }
 }

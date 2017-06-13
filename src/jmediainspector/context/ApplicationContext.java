@@ -1,5 +1,7 @@
 package jmediainspector.context;
 
+import java.util.logging.Logger;
+
 import org.eclipse.jdt.annotation.NonNull;
 
 import jmediainspector.config.helpers.MetadataSearchConfigurationHelper;
@@ -18,6 +20,9 @@ public class ApplicationContext {
     private final PlexConfigurationHelper plexConfigurationHelper;
     @NonNull
     private final MetadataSearchConfigurationHelper metadataSearchConfigurationHelper;
+
+    @NonNull
+    private final static Logger LOGGER = Logger.getLogger(ApplicationContext.class.getName());
 
     /**
      * Constructor.
@@ -58,5 +63,15 @@ public class ApplicationContext {
     @NonNull
     public MetadataSearchConfigurationHelper getCurrentMetadataSearchConfigurationHelper() {
         return this.metadataSearchConfigurationHelper;
+    }
+
+    /**
+     * Get logger.
+     *
+     * @return logger
+     */
+    @NonNull
+    public Logger getLogger() {
+        return LOGGER;
     }
 }

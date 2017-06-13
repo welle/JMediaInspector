@@ -2,8 +2,6 @@ package jmediainspector.controllers;
 
 import org.eclipse.jdt.annotation.NonNull;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -18,6 +16,7 @@ import javafx.scene.layout.Priority;
  * @author charlottew
  */
 public final class ConfigurationPathListCell extends ListCell<String> {
+
     @NonNull
     private final HBox hbox = new HBox();
     @NonNull
@@ -59,12 +58,6 @@ public final class ConfigurationPathListCell extends ListCell<String> {
             this.label.setText(toDisplay);
             setGraphic(this.hbox);
         }
-        this.deleteButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(final ActionEvent event) {
-                // delete current item
-                ConfigurationPathListCell.this.listView.getItems().remove(item);
-            }
-        });
+        this.deleteButton.setOnAction(event -> ConfigurationPathListCell.this.listView.getItems().remove(item));
     }
 }

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.eclipse.jdt.annotation.NonNull;
 
@@ -44,9 +43,6 @@ import jmediainspector.helpers.effects.ResizeHelper;
  * @author Welle Charlotte
  */
 public class ConfigurationsDialogController extends AnchorPane {
-
-    @NonNull
-    private final static Logger LOGGER = Logger.getLogger(ConfigurationsDialogController.class.getName());
 
     private PlexConfigurationHelper configurationHelper;
     @NonNull
@@ -162,7 +158,7 @@ public class ConfigurationsDialogController extends AnchorPane {
                 this.defaultConfigurationProperty = JavaBeanBooleanPropertyBuilder.create().bean(currentSelectedConfiguration).name("selected").build();
                 this.defaultConfiguration.selectedProperty().bindBidirectional(this.defaultConfigurationProperty);
             } catch (final NoSuchMethodException e) {
-                LOGGER.logp(Level.SEVERE, "ConfigurationsDialogController", "setSelectedConfiguration", e.getMessage(), e);
+                ApplicationContext.getInstance().getLogger().logp(Level.SEVERE, "ConfigurationsDialogController", "setSelectedConfiguration", e.getMessage(), e);
             }
 
             this.currentConfiguration = currentSelectedConfiguration;

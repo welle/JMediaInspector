@@ -3,7 +3,6 @@ package jmediainspector.config.helpers;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.eclipse.jdt.annotation.NonNull;
 
@@ -20,8 +19,6 @@ import jmediainspector.listeners.ApplicationConfigurationsListener;
 public abstract class AbstractConfigurationHelper implements ApplicationConfigurationsListener {
 
     @NonNull
-    private final static Logger LOGGER = Logger.getLogger(AbstractConfigurationHelper.class.getName());
-    @NonNull
     private final List<@NonNull ApplicationConfigurationsListener> configurationsListenerList = new ArrayList<>();
     @NonNull
     private final ApplicationConfigurationContext applicationContext;
@@ -31,16 +28,6 @@ public abstract class AbstractConfigurationHelper implements ApplicationConfigur
      */
     public AbstractConfigurationHelper() {
         this.applicationContext = ApplicationConfigurationContext.getInstance();
-    }
-
-    /**
-     * Get logger.
-     *
-     * @return logger
-     */
-    @NonNull
-    public Logger getLogger() {
-        return LOGGER;
     }
 
     /**

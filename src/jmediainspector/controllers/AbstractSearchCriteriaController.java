@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
@@ -35,10 +34,13 @@ import jmediainspector.helpers.search.types.interfaces.FiltersInterface;
 import jmediainspector.helpers.search.types.video.filters.VideoResolutionCriteria;
 import jmediainspector.listeners.ApplicationConfigurationsListener;
 
-public class AbstractSearchCriteriaControler extends AnchorPane implements ApplicationConfigurationsListener {
+/**
+ * Abstract class for SearchCriteria Controllers.
+ *
+ * @author Cha
+ */
+public class AbstractSearchCriteriaController extends AnchorPane implements ApplicationConfigurationsListener {
 
-    @NonNull
-    private final static Logger LOGGER = Logger.getLogger(AbstractSearchCriteriaControler.class.getName());
     protected MetadataSearchConfigurationHelper metadataSearchCriteriaHelper;
 
     @FXML

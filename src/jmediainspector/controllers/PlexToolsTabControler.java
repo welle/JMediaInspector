@@ -12,7 +12,6 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
@@ -53,9 +52,6 @@ import jmediainspector.services.CopyPlexDBService;
  * @author Welle Charlotte
  */
 public class PlexToolsTabControler extends AnchorPane implements ApplicationConfigurationsListener {
-
-    @NonNull
-    private final static Logger LOGGER = Logger.getLogger(PlexToolsTabControler.class.getName());
 
     @Nullable
     private File copiedPlexFileDB = null;
@@ -121,7 +117,7 @@ public class PlexToolsTabControler extends AnchorPane implements ApplicationConf
                 configFile = new File(this.currentConfiguration.getFile());
             }
         } catch (final Exception e) {
-            LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "handleLoadConfigButton", e.getMessage(), e);
+            ApplicationContext.getInstance().getLogger().logp(Level.SEVERE, "PlexToolsTabControler", "handleLoadConfigButton", e.getMessage(), e);
         }
         if (configFile != null) {
             final File file = configFile;
@@ -165,7 +161,7 @@ public class PlexToolsTabControler extends AnchorPane implements ApplicationConf
                 // everything ok, config loaded, disable load button
                 this.loadConfigButton.setDisable(true);
             } catch (final IOException e) {
-                LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "handleLoadConfigButton", e.getMessage(), e);
+                ApplicationContext.getInstance().getLogger().logp(Level.SEVERE, "PlexToolsTabControler", "handleLoadConfigButton", e.getMessage(), e);
                 final Alert alert = DialogsHelper.getAlert(JMediaInspector.getPrimaryStage(), Alert.AlertType.ERROR, "This is not a Plex database file.");
 
                 alert.showAndWait();
@@ -201,14 +197,14 @@ public class PlexToolsTabControler extends AnchorPane implements ApplicationConf
         } catch (final ClassNotFoundException | SQLException e) {
             result = false;
         } catch (final NoSuchFileException e) {
-            LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "isPlexDatabase", e.getMessage(), e);
+            ApplicationContext.getInstance().getLogger().logp(Level.SEVERE, "PlexToolsTabControler", "isPlexDatabase", e.getMessage(), e);
         } finally {
             try {
                 if (connection != null) {
                     connection.close();
                 }
             } catch (final SQLException e) {
-                LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "isPlexDatabase", e.getMessage(), e);
+                ApplicationContext.getInstance().getLogger().logp(Level.SEVERE, "PlexToolsTabControler", "isPlexDatabase", e.getMessage(), e);
             }
         }
         return result;
@@ -280,7 +276,7 @@ public class PlexToolsTabControler extends AnchorPane implements ApplicationConf
                 this.resultArea.getChildren().addAll(resultList);
             }
         } catch (final Exception e) {
-            LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "searchMissingMediaButton", e.getMessage(), e);
+            ApplicationContext.getInstance().getLogger().logp(Level.SEVERE, "PlexToolsTabControler", "searchMissingMediaButton", e.getMessage(), e);
             final Alert alert = DialogsHelper.getAlert(JMediaInspector.getPrimaryStage(), Alert.AlertType.ERROR, "Can not open Plex database file!");
             alert.showAndWait();
         }

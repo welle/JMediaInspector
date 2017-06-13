@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.eclipse.jdt.annotation.NonNull;
@@ -23,6 +22,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.text.Text;
 import jmediainspector.constants.PlexConstants;
+import jmediainspector.context.ApplicationContext;
 
 /**
  * Node helper for file search.
@@ -30,9 +30,6 @@ import jmediainspector.constants.PlexConstants;
  * @author charlottew
  */
 public final class SearchFileHelper {
-
-    @NonNull
-    private final static Logger LOGGER = Logger.getLogger(SearchFileHelper.class.getName());
 
     /**
      * Get list of node to display related to given MediaPartsEntity list and file.
@@ -134,7 +131,7 @@ public final class SearchFileHelper {
                 }
             }
         } catch (final StringIndexOutOfBoundsException e) {
-            LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "addImage", e.getMessage(), e);
+            ApplicationContext.getInstance().getLogger().logp(Level.SEVERE, "PlexToolsTabControler", "addImage", e.getMessage(), e);
 //        } catch (final NoSuchFileException e) {
 //            LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "addImage", e.getMessage(), e);
         }
@@ -169,7 +166,7 @@ public final class SearchFileHelper {
                         try {
                             Desktop.getDesktop().browse(new URI(sb.toString()));
                         } catch (final IOException | URISyntaxException e11) {
-                            LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "addLinkInformation", e11.getMessage(), e11);
+                            ApplicationContext.getInstance().getLogger().logp(Level.SEVERE, "PlexToolsTabControler", "addLinkInformation", e11.getMessage(), e11);
                         }
                     });
 
@@ -178,12 +175,12 @@ public final class SearchFileHelper {
                         try {
                             Desktop.getDesktop().browse(new URI(sb.toString()));
                         } catch (final IOException | URISyntaxException e11) {
-                            LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "addLinkInformation", e11.getMessage(), e11);
+                            ApplicationContext.getInstance().getLogger().logp(Level.SEVERE, "PlexToolsTabControler", "addLinkInformation", e11.getMessage(), e11);
                         }
                     });
                     resultList.add(link);
                 } catch (final Exception e) {
-                    LOGGER.logp(Level.SEVERE, "PlexToolsTabControler", "addLinkInformation", e.getMessage(), e);
+                    ApplicationContext.getInstance().getLogger().logp(Level.SEVERE, "PlexToolsTabControler", "addLinkInformation", e.getMessage(), e);
                 }
             }
         }
