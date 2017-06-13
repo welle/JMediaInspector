@@ -13,6 +13,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -135,5 +136,18 @@ public final class DialogsHelper {
         alert.initOwner(stage);
 
         return alert;
+    }
+
+    @NonNull
+    public static TextInputDialog getTextDialog() {
+        final TextInputDialog dialog = new TextInputDialog("");
+        dialog.setTitle("Save search...");
+        dialog.initStyle(StageStyle.UNDECORATED);
+        dialog.initStyle(StageStyle.TRANSPARENT);
+        dialog.setTitle(null);
+        dialog.setHeaderText(null);
+        dialog.setContentText("Please enter the name of the search:");
+
+        return dialog;
     }
 }

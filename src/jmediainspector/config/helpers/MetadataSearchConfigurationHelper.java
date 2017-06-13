@@ -1,5 +1,9 @@
 package jmediainspector.config.helpers;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.eclipse.jdt.annotation.NonNull;
 
 import jmediainspector.config.Criteria;
@@ -21,6 +25,23 @@ public class MetadataSearchConfigurationHelper extends AbstractConfigurationHelp
     private final Search currentSelectedSearch;
 
     /**
+     * Search type.
+     *
+     * @author Cha
+     */
+    public enum Type {
+        /**
+         * Search in Plex.
+         */
+        Plex,
+
+        /**
+         * Search in files.
+         */
+        File;
+    }
+
+    /**
      * Constructor.
      */
     public MetadataSearchConfigurationHelper() {
@@ -34,7 +55,7 @@ public class MetadataSearchConfigurationHelper extends AbstractConfigurationHelp
         this.metadatas = getApplication().getMetadatas();
         this.searchs = getApplication().getMetadatas().getSearchs();
         if (this.searchs.getSearch().isEmpty()) {
-            getNewSearch();
+            addNewSearch(Type.Plex);
         }
         this.currentSelectedSearch = this.searchs.getSearch().get(0);
     }
@@ -61,20 +82,6 @@ public class MetadataSearchConfigurationHelper extends AbstractConfigurationHelp
      *
      * @return new Criteria
      */
-    public Search getNewSearch() {
-        final Search newSearch = getFactoryConfig().createSearch();
-        this.searchs.getSearch().add(newSearch);
-        final Criterias criterias = getFactoryConfig().createCriterias();
-        newSearch.setCriterias(criterias);
-
-        return newSearch;
-    }
-
-    /**
-     * Get a new Criteria object.
-     *
-     * @return new Criteria
-     */
     public Criteria getNewCriteria() {
         final Criteria newCriteria = getFactoryConfig().createCriteria();
         this.currentSelectedSearch.getCriterias().getCriteria().add(newCriteria);
@@ -94,17 +101,38 @@ public class MetadataSearchConfigurationHelper extends AbstractConfigurationHelp
     /**
      * Add a new search.
      *
+     * @param type search type
      * @return new search created
      */
     @NonNull
-    public Search addNewSearch() {
+    public Search addNewSearch(@NonNull final Type type) {
         final Search newSearch = getFactoryConfig().createSearch();
         final Criterias newCriterias = getFactoryConfig().createCriterias();
         newSearch.setCriterias(newCriterias);
+        newSearch.setType(type.name());
         this.searchs.getSearch().add(newSearch);
 
         assert newSearch != null;
         return newSearch;
+    }
+
+    /**
+     * Get all searches of given type.
+     *
+     * @param type
+     * @return all search of given type
+     */
+    @NonNull
+    public List<Search> getSearchByType(@NonNull final Type type) {
+        List<Search> result = this.searchs.getSearch().stream()
+                .filter(search -> type.name().equals(search.getType()))
+                .collect(Collectors.toList());
+
+        if (result == null) {
+            result = new ArrayList<>();
+        }
+
+        return result;
     }
 
     /**

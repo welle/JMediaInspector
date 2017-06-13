@@ -8,10 +8,10 @@ import javafx.fxml.FXML;
 import jmediainspector.config.helpers.MetadataSearchConfigurationHelper;
 import jmediainspector.config.helpers.MetadataSearchConfigurationHelper.Type;
 
-public class SearchCriteriaControler extends AbstractSearchCriteriaControler {
+public class SearchCriteriaPlexControler extends AbstractSearchCriteriaControler {
 
     @NonNull
-    private final static Logger LOGGER = Logger.getLogger(SearchCriteriaControler.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(SearchCriteriaPlexControler.class.getName());
     private MetadataSearchConfigurationHelper metadataSearchCriteriaHelper;
 
     /**
@@ -23,7 +23,7 @@ public class SearchCriteriaControler extends AbstractSearchCriteriaControler {
     public void initialize() {
         super.initialize();
 
-        initExistingSearches(Type.File);
+        initExistingSearches(Type.Plex);
     }
 
 }

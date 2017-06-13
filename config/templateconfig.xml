@@ -30,7 +30,7 @@
 	</plex>
 	<metadatas>
 		<searchs>
-			<search>
+			<search type="Plex">
 				<name>test</name>
 				<criterias>
 					<criteria>
@@ -61,7 +61,7 @@
 					</criteria>
 				</criterias>
 			</search>
-			<search>
+			<search type="File">
 				<name>test2</name>
 				<criterias>
 					<criteria>

@@ -60,7 +60,12 @@
 								</AnchorPane>
 							</content>
 						</Tab>
-                  <Tab text="Search">
+                  <Tab text="Search in Plex">
+                    <content>
+                      <fx:include source="SearchCriteriaPlexTools.fxml" />
+                    </content>
+                  </Tab>
+                  <Tab text="Search in files">
                     <content>
                       <fx:include source="SearchCriteriaTools.fxml" />
                     </content>
