@@ -138,8 +138,13 @@ public final class DialogsHelper {
         return alert;
     }
 
+    /**
+     * Get "Save as" dialog.
+     *
+     * @return "save as" TextInputDialog
+     */
     @NonNull
-    public static TextInputDialog getTextDialog() {
+    public static TextInputDialog getSaveAsDialog() {
         final TextInputDialog dialog = new TextInputDialog("");
         dialog.setTitle("Save search...");
         dialog.initStyle(StageStyle.UNDECORATED);
@@ -147,6 +152,7 @@ public final class DialogsHelper {
         dialog.setTitle(null);
         dialog.setHeaderText(null);
         dialog.setContentText("Please enter the name of the search:");
+        dialog.getDialogPane().getStylesheets().add(DialogsHelper.class.getClassLoader().getResource(ApplicationConstants.CSS_FILE).toExternalForm());
 
         return dialog;
     }

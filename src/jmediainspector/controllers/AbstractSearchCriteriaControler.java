@@ -12,8 +12,8 @@ import org.eclipse.jdt.annotation.Nullable;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.AnchorPane;
 import jmediainspector.JMediaInspector;
@@ -50,7 +50,7 @@ public class AbstractSearchCriteriaControler extends AnchorPane implements Appli
     private PlexConfigurationHelper configurationHelper;
 
     @FXML
-    private TableView<Search> existingSearchTableView;
+    private ListView<Search> existingSearchListView;
     private Type searchType;
 
     /**
@@ -70,7 +70,7 @@ public class AbstractSearchCriteriaControler extends AnchorPane implements Appli
         this.searchHelper = new SearchHelper(new Search(), currentLeftPane, currentRightPane);
 
         this.metadataSearchCriteriaHelper = ApplicationContext.getInstance().getCurrentMetadataSearchConfigurationHelper();
-        this.existingSearchTableView.setRowFactory(p -> new SearchTableRow());
+        this.existingSearchListView.setCellFactory(p -> new SearchCellListView(this.existingSearchListView));
 
 //        this.configurationsList.setButtonCell(new ConfigurationListCell());
 //        this.configurationsList.setCellFactory(p -> new ConfigurationListCell());
@@ -86,19 +86,19 @@ public class AbstractSearchCriteriaControler extends AnchorPane implements Appli
      */
     void initExistingSearches(@NonNull final Type type) {
         this.searchType = type;
-        this.existingSearchTableView.getItems().clear();
+        this.existingSearchListView.getItems().clear();
         final List<Search> list = this.metadataSearchCriteriaHelper.getSearchByType(type);
         for (final Search search : list) {
-            this.existingSearchTableView.getItems().add(search);
+            this.existingSearchListView.getItems().add(search);
         }
     }
 
-    private final class SearchTableRow extends TableRow<Search> {
+    private final class SearchCellListView extends ListCell<Search> {
 
-        public SearchTableRow() {
+        public SearchCellListView(final ListView<Search> listView) {
             setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (!isEmpty())) {
-                    final Search rowData = getItem();
+                if (event.getClickCount() == 2 && (listView.getItems().size() > 0)) {
+                    final Search rowData = listView.getSelectionModel().getSelectedItem();
                     System.out.println(rowData);
                 }
             });
@@ -108,6 +108,7 @@ public class AbstractSearchCriteriaControler extends AnchorPane implements Appli
         protected void updateItem(final Search item, final boolean empty) {
             super.updateItem(item, empty);
             if (item != null) {
+                System.err.println("[AbstractSearchCriteriaControler.SearchTableRow] updateItem - " + item.getName());
                 setText(item.getName());
             }
         }
@@ -200,10 +201,10 @@ public class AbstractSearchCriteriaControler extends AnchorPane implements Appli
 
     private void processSave(final boolean saveAs) {
         boolean processSave = true;
-        final Search currentSearch = this.existingSearchTableView.getSelectionModel().getSelectedItem();
+        final Search currentSearch = this.existingSearchListView.getSelectionModel().getSelectedItem();
         Search newSearch;
         if (currentSearch == null) {
-            final TextInputDialog dialog = DialogsHelper.getTextDialog();
+            final TextInputDialog dialog = DialogsHelper.getSaveAsDialog();
             final Optional<String> result = dialog.showAndWait();
             if (result.isPresent()) {
                 final String searchName = result.get();
