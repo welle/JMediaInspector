@@ -8,7 +8,7 @@ import org.eclipse.jdt.annotation.NonNull;
 
 import com.sun.javafx.collections.ObservableListWrapper;
 
-import aka.jmetadata.main.constants.CodecVideoConstants;
+import aka.jmetadata.main.constants.video.Resolution;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
@@ -31,7 +31,7 @@ import jmediainspector.helpers.search.types.interfaces.FiltersInterface;
 public class VideoResolutionCriteria extends FiltersInterface {
 
     private static List<@NonNull ConditionFilter> AVAILABLE_TYPES;
-    private static List<CodecVideoConstants.RESOLUTION> AVAILABLE_VALUES;
+    private static List<Resolution> AVAILABLE_VALUES;
 
     static {
         AVAILABLE_TYPES = new ArrayList<>();
@@ -42,7 +42,7 @@ public class VideoResolutionCriteria extends FiltersInterface {
         AVAILABLE_TYPES.add(ConditionFilter.LESS_THAN_OR_EQUAL_TO);
         AVAILABLE_TYPES.add(ConditionFilter.NOT_EQUALS);
 
-        AVAILABLE_VALUES = new ArrayList<>(Arrays.asList(CodecVideoConstants.RESOLUTION.values()));
+        AVAILABLE_VALUES = new ArrayList<>(Arrays.asList(Resolution.values()));
     }
 
     /**
@@ -83,8 +83,8 @@ public class VideoResolutionCriteria extends FiltersInterface {
         this.rightPane.add(comboboFiltersType, 1, 0);
 
         // link value
-        final ObservableList<CodecVideoConstants.RESOLUTION> observableList2 = FXCollections.observableArrayList(AVAILABLE_VALUES);
-        final ComboBox<CodecVideoConstants.RESOLUTION> listViewAvailableFilters2 = new ComboBox<>(observableList2);
+        final ObservableList<Resolution> observableList2 = FXCollections.observableArrayList(AVAILABLE_VALUES);
+        final ComboBox<Resolution> listViewAvailableFilters2 = new ComboBox<>(observableList2);
         this.rightPane.add(listViewAvailableFilters2, 2, 0);
     }
 
