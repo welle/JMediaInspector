@@ -1,8 +1,10 @@
 package jmediainspector.helpers.search.commons;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import jmediainspector.config.Filter;
+import jmediainspector.config.Criteria;
 
 /**
  * ListCell for {@link jmediainspector.config.Configuration}
@@ -11,16 +13,21 @@ import jmediainspector.config.Filter;
  */
 public final class ConditionFilterListCell implements ChangeListener<String> {
 
-    private final Filter filter;
+    @NonNull
+    private final Criteria criteria;
 
-    public ConditionFilterListCell(final Filter filter) {
-        this.filter = filter;
+    /**
+     * Constructor.
+     *
+     * @param criteria
+     */
+    public ConditionFilterListCell(@NonNull final Criteria criteria) {
+        this.criteria = criteria;
     }
 
     @Override
     public void changed(final ObservableValue<? extends String> observable, final String oldValue, final String newValue) {
-        this.filter.setType(newValue);
-        System.out.println(ConditionFilter.getConditionFilter(this.filter.getType()));
+        this.criteria.setType(newValue);
     }
 
 }

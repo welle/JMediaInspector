@@ -33,63 +33,31 @@
 			<search type="Plex">
 				<name>test</name>
 				<criterias>
-					<criteria>
-						<type>VideoResolutionCriteria</type>
-						<filters>
-							<filter selected="true">
-								<type>EQUALS</type>
-								<value>R_1080</value>
-							</filter>
-							<filter selected="true">
-								<type>GREATER_THAN_OR_EQUAL_TO</type>
-								<value>R_1080</value>
-							</filter>
-						</filters>
+					<criteria type="Video" selected="true">
+						<subtype>VideoResolutionCriteria</subtype>
+						<operator>EQUALS</operator>
+						<value>R_1080</value>
 					</criteria>
-					<criteria>
-						<type>VideoAspectRatioCriteria</type>
-						<filters>
-							<filter selected="true">
-								<type>EQUALS</type>
-								<value>AS_1_78</value>
-							</filter>
-							<filter selected="true">
-								<type>GREATER_THAN_OR_EQUAL_TO</type>
-								<value>AS_1_78</value>
-							</filter>
-						</filters>
+					<criteria type="Video" selected="true">
+						<subtype>VideoResolutionCriteria</subtype>
+                        <operator>EQUALS</operator>
+                        <value>R_1080</value>
 					</criteria>
 				</criterias>
 			</search>
 			<search type="File">
 				<name>test2</name>
 				<criterias>
-					<criteria>
-						<type>AudioResolutionCriteria</type>
-						<filters>
-							<filter>
-								<type>EQUALS</type>
-								<value>R_1080</value>
-							</filter>
-							<filter>
-								<type>GREATER_THAN_OR_EQUAL_TO</type>
-								<value>R_1080</value>
-							</filter>
-						</filters>
+					<criteria type="Audio" selected="true">
+						<subtype>AudioResolutionCriteria</subtype>
+						<operator>EQUALS</operator>
+						<value>R_1080</value>
 					</criteria>
-					<criteria>
-						<type>VideoAspectRatioCriteria</type>
-						<filters>
-							<filter selected="true">
-								<type>EQUALS</type>
-								<value>AS_1_78</value>
-							</filter>
-							<filter selected="false">
-								<type>GREATER_THAN_OR_EQUAL_TO</type>
-								<value>AS_1_78</value>
-							</filter>
-						</filters>
-					</criteria>
+					<criteria type="Video" selected="true">
+                        <subtype>VideoResolutionCriteria</subtype>
+                        <operator>EQUALS</operator>
+                        <value>R_1080</value>
+                    </criteria>
 				</criterias>
 			</search>
 		</searchs>

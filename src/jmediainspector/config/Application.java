@@ -2,7 +2,7 @@
 // Ce fichier a été généré par l'implémentation de référence JavaTM Architecture for XML Binding (JAXB), v2.2.11 
 // Voir <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Toute modification apportée à ce fichier sera perdue lors de la recompilation du schéma source. 
-// Généré le : 2017.06.13 à 02:07:59 PM CEST 
+// Généré le : 2017.06.25 à 12:28:27 PM CEST 
 //
 
 
@@ -95,31 +95,12 @@ import javax.xml.bind.annotation.XmlType;
  *                                                     &lt;complexContent&gt;
  *                                                       &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *                                                         &lt;sequence&gt;
- *                                                           &lt;element name="type" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
- *                                                           &lt;element name="filters"&gt;
- *                                                             &lt;complexType&gt;
- *                                                               &lt;complexContent&gt;
- *                                                                 &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *                                                                   &lt;sequence&gt;
- *                                                                     &lt;element name="filter" maxOccurs="unbounded" minOccurs="0"&gt;
- *                                                                       &lt;complexType&gt;
- *                                                                         &lt;complexContent&gt;
- *                                                                           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *                                                                             &lt;sequence&gt;
- *                                                                               &lt;element name="type" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
- *                                                                               &lt;element name="value" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
- *                                                                             &lt;/sequence&gt;
- *                                                                             &lt;attribute name="selected" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" /&gt;
- *                                                                           &lt;/restriction&gt;
- *                                                                         &lt;/complexContent&gt;
- *                                                                       &lt;/complexType&gt;
- *                                                                     &lt;/element&gt;
- *                                                                   &lt;/sequence&gt;
- *                                                                 &lt;/restriction&gt;
- *                                                               &lt;/complexContent&gt;
- *                                                             &lt;/complexType&gt;
- *                                                           &lt;/element&gt;
+ *                                                           &lt;element name="subtype" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *                                                           &lt;element name="operator" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *                                                           &lt;element name="value" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *                                                         &lt;/sequence&gt;
+ *                                                         &lt;attribute name="type" use="required" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *                                                         &lt;attribute name="selected" use="required" type="{http://www.w3.org/2001/XMLSchema}boolean" /&gt;
  *                                                       &lt;/restriction&gt;
  *                                                     &lt;/complexContent&gt;
  *                                                   &lt;/complexType&gt;

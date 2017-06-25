@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
@@ -13,12 +14,13 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.AnchorPane;
 import jmediainspector.JMediaInspector;
 import jmediainspector.config.Configuration;
 import jmediainspector.config.Criteria;
-import jmediainspector.config.Filter;
 import jmediainspector.config.Paths;
 import jmediainspector.config.Search;
 import jmediainspector.config.helpers.JAXBHelper;
@@ -29,8 +31,9 @@ import jmediainspector.context.ApplicationContext;
 import jmediainspector.helpers.dialogs.DialogsHelper;
 import jmediainspector.helpers.search.SearchHelper;
 import jmediainspector.helpers.search.commons.ConditionFilter;
+import jmediainspector.helpers.search.enums.SearchTypeEnum;
 import jmediainspector.helpers.search.types.audio.filters.AudioCodecCriteria;
-import jmediainspector.helpers.search.types.interfaces.FiltersInterface;
+import jmediainspector.helpers.search.types.interfaces.CriteriaInterface;
 import jmediainspector.helpers.search.types.video.filters.VideoResolutionCriteria;
 import jmediainspector.listeners.ApplicationConfigurationsListener;
 
@@ -47,6 +50,8 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
     private AnchorPane leftPane;
     @FXML
     private AnchorPane rightPane;
+    @FXML
+    private Menu menuVideo;
 
     private SearchHelper searchHelper;
     private PlexConfigurationHelper configurationHelper;
@@ -74,11 +79,25 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
         this.metadataSearchCriteriaHelper = ApplicationContext.getInstance().getCurrentMetadataSearchConfigurationHelper();
         this.existingSearchListView.setCellFactory(p -> new SearchCellListView(this.existingSearchListView));
 
+        initMenuVideo();
 //        this.configurationsList.setButtonCell(new ConfigurationListCell());
 //        this.configurationsList.setCellFactory(p -> new ConfigurationListCell());
 //
 //        refreshConfigurationList();
 //        setSelectedConfiguration();
+    }
+
+    private void initMenuVideo() {
+        @NonNull
+        final List<Search> searchList = this.metadataSearchCriteriaHelper.getSearchByType(getSearchType());
+        final List<Search> result = searchList.stream()
+                .filter(search -> SearchTypeEnum.VIDEO.name().equals(search.getType()))
+                .collect(Collectors.toList());
+
+        for (final Search searchs : result) {
+            final MenuItem menuItem = new MenuItem(searchs.getName());
+            this.menuVideo.getItems().add(menuItem);
+        }
     }
 
     /**
@@ -111,7 +130,6 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
         protected void updateItem(final Search item, final boolean empty) {
             super.updateItem(item, empty);
             if (item != null) {
-                System.err.println("[AbstractSearchCriteriaControler.SearchTableRow] updateItem - " + item.getName());
                 setText(item.getName());
             }
         }
@@ -119,7 +137,7 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
 
     @FXML
     private void addAudioCodecCriteria() {
-        final Filter filter = getNewCriteria();
+        final Criteria filter = getNewCriteria();
         final AudioCodecCriteria audioCodecCriteria = new AudioCodecCriteria(filter);
 
         this.searchHelper.addCriteria(audioCodecCriteria);
@@ -127,7 +145,7 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
 
     @FXML
     private void addVideoResolutionCriteria() {
-        final Filter filter = getNewCriteria();
+        final Criteria filter = getNewCriteria();
         filter.setType(ConditionFilter.GREATER_THAN.name());
         final VideoResolutionCriteria videoResolutionCriteria = new VideoResolutionCriteria(filter);
 
@@ -135,18 +153,17 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
     }
 
     @NonNull
-    private Filter getNewCriteria() {
+    private Criteria getNewCriteria() {
         final Criteria newCriteria = this.metadataSearchCriteriaHelper.getNewCriteria();
         assert newCriteria != null;
-        final Filter filter = this.metadataSearchCriteriaHelper.getNewFilter();
-        filter.setSelected(true);
-        return filter;
+        newCriteria.setSelected(true);
+        return newCriteria;
     }
 
     @FXML
     private void runSearch() {
         final List<@NonNull File> result = new ArrayList<>();
-        final List<@NonNull FiltersInterface> filterList = this.searchHelper.getFiltersList();
+        final List<@NonNull CriteriaInterface> filterList = this.searchHelper.getFiltersList();
         if (!filterList.isEmpty()) {
             @Nullable
             final Configuration selectedConfiguration = this.configurationHelper.getSelectedConfiguration();
@@ -195,7 +212,7 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
     private @NonNull List<@NonNull File> searchInPath(@Nullable final File file) {
         final List<@NonNull File> result = new ArrayList<>();
         if (file != null) {
-            final List<@NonNull FiltersInterface> filterList = this.searchHelper.getFiltersList();
+            final List<@NonNull CriteriaInterface> filterList = this.searchHelper.getFiltersList();
 
         }
 

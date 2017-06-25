@@ -2,7 +2,8 @@ package jmediainspector.helpers.search.types.video;
 
 import org.eclipse.jdt.annotation.NonNull;
 
-import jmediainspector.helpers.search.types.interfaces.FiltersInterface;
+import jmediainspector.helpers.search.types.interfaces.CriteriaInterface;
+import jmediainspector.helpers.search.types.interfaces.SearchInterface;
 import jmediainspector.helpers.search.types.video.filters.VideoResolutionCriteria;
 
 /**
@@ -10,20 +11,22 @@ import jmediainspector.helpers.search.types.video.filters.VideoResolutionCriteri
  *
  * @author charlottew
  */
-public enum SearchVideoEnum {
+public enum SearchVideoEnum implements SearchInterface {
 
     /**
      * Resolution.
      */
     RESOLUTION(VideoResolutionCriteria.class);
 
-    private Class<? extends FiltersInterface> filtersInterface;
+    @NonNull
+    private Class<? extends CriteriaInterface> filtersInterface;
 
-    SearchVideoEnum(@NonNull final Class<? extends FiltersInterface> filtersInterface) {
+    SearchVideoEnum(@NonNull final Class<? extends CriteriaInterface> filtersInterface) {
         this.filtersInterface = filtersInterface;
     }
 
-    public Class<? extends FiltersInterface> getFiltersInterface() {
+    @Override
+    public Class<? extends CriteriaInterface> getFiltersInterface() {
         return this.filtersInterface;
     }
 }

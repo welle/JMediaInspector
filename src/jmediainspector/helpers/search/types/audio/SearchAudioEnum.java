@@ -2,37 +2,30 @@ package jmediainspector.helpers.search.types.audio;
 
 import org.eclipse.jdt.annotation.NonNull;
 
-import jmediainspector.helpers.search.types.interfaces.SearchPanelInterface;
-import jmediainspector.helpers.search.types.text.SearchTextHelper;
+import jmediainspector.helpers.search.types.audio.filters.AudioCodecCriteria;
+import jmediainspector.helpers.search.types.interfaces.CriteriaInterface;
+import jmediainspector.helpers.search.types.interfaces.SearchInterface;
 
-public enum SearchAudioEnum {
+/**
+ * Search audio criterias.
+ *
+ * @author Cha
+ */
+public enum SearchAudioEnum implements SearchInterface {
     /**
-     * General.
+     * Codec.
      */
-    GENERAL(new SearchTextHelper()),
+    CODEC(AudioCodecCriteria.class);
 
-    /**
-     * Video.
-     */
-    VIDEO(new SearchTextHelper()),
+    @NonNull
+    private Class<? extends CriteriaInterface> filtersInterface;
 
-    /**
-     * Audio.
-     */
-    AUDIO(new SearchTextHelper()),
-
-    /**
-     * Test.
-     */
-    TEXT(new SearchTextHelper());
-
-    private @NonNull SearchPanelInterface searchPanelInterface;
-
-    SearchAudioEnum(@NonNull final SearchPanelInterface searchPanelInterface) {
-        this.searchPanelInterface = searchPanelInterface;
+    SearchAudioEnum(@NonNull final Class<? extends CriteriaInterface> filtersInterface) {
+        this.filtersInterface = filtersInterface;
     }
 
-    public SearchPanelInterface getSearchPanelInterface() {
-        return this.searchPanelInterface;
+    @Override
+    public Class<? extends CriteriaInterface> getFiltersInterface() {
+        return this.filtersInterface;
     }
 }

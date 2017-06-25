@@ -20,7 +20,7 @@
                     <children>
                         <SplitMenuButton layoutX="816.0" layoutY="2.0" mnemonicParsing="false" style="-fx-font-weight: bold;" text="+">
                             <items>
-                                <Menu mnemonicParsing="false" text="Video">
+                                <Menu mnemonicParsing="false" text="Video" fx:id="menuVideo">
                                     <items>
                                         <MenuItem mnemonicParsing="false" onAction="#addVideoResolutionCriteria" text="Resolution" />
                                         <MenuItem mnemonicParsing="false" text="Bitrate" />

@@ -2,36 +2,30 @@ package jmediainspector.helpers.search.types.text;
 
 import org.eclipse.jdt.annotation.NonNull;
 
-import jmediainspector.helpers.search.types.interfaces.SearchPanelInterface;
+import jmediainspector.helpers.search.types.interfaces.CriteriaInterface;
+import jmediainspector.helpers.search.types.interfaces.SearchInterface;
+import jmediainspector.helpers.search.types.text.filters.TextLanguageCriteria;
 
-public enum SearchTextEnum {
+/**
+ * Search Text(subtitles) enumeration.
+ *
+ * @author charlottew
+ */
+public enum SearchTextEnum implements SearchInterface {
     /**
-     * General.
+     * Language.
      */
-    GENERAL(new SearchTextHelper()),
+    LANGUAGE(TextLanguageCriteria.class);
 
-    /**
-     * Video.
-     */
-    VIDEO(new SearchTextHelper()),
+    @NonNull
+    private Class<? extends CriteriaInterface> filtersInterface;
 
-    /**
-     * Audio.
-     */
-    AUDIO(new SearchTextHelper()),
-
-    /**
-     * Test.
-     */
-    TEXT(new SearchTextHelper());
-
-    private @NonNull SearchPanelInterface searchPanelInterface;
-
-    SearchTextEnum(@NonNull final SearchPanelInterface searchPanelInterface) {
-        this.searchPanelInterface = searchPanelInterface;
+    SearchTextEnum(@NonNull final Class<? extends CriteriaInterface> filtersInterface) {
+        this.filtersInterface = filtersInterface;
     }
 
-    public SearchPanelInterface getSearchPanelInterface() {
-        return this.searchPanelInterface;
+    @Override
+    public Class<? extends CriteriaInterface> getFiltersInterface() {
+        return this.filtersInterface;
     }
 }
