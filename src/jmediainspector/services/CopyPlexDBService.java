@@ -5,12 +5,12 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.eclipse.jdt.annotation.NonNull;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import jmediainspector.context.ApplicationContext;
 
 /**
  * Copy Plex database service.
@@ -18,8 +18,6 @@ import javafx.concurrent.Task;
  * @author Cha
  */
 public final class CopyPlexDBService extends Service<File> {
-
-    private @NonNull static final Logger LOGGER = Logger.getLogger(CopyPlexDBService.class.getPackage().getName());
 
     private @NonNull final File sourceFile;
     private @NonNull final File targetFile;
@@ -58,7 +56,7 @@ public final class CopyPlexDBService extends Service<File> {
                     fis.close();
                     fos.close();
                 } catch (final IOException e) {
-                    LOGGER.logp(Level.SEVERE, "PlexToolsTabControler.clickPlexDBButton(...).new Service() {...}.createTask().new Task() {...}", "call", e.getMessage(), e);
+                    ApplicationContext.getInstance().getLogger().logp(Level.SEVERE, "PlexToolsTabControler.clickPlexDBButton(...).new Service() {...}.createTask().new Task() {...}", "call", e.getMessage(), e);
                 }
                 updateMessage("Found all.");
                 return CopyPlexDBService.this.targetFile;

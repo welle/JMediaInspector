@@ -80,12 +80,22 @@ public enum ConditionFilter {
     @Nullable
     public static ConditionFilter getConditionFilter(@Nullable final String condition) {
         ConditionFilter result = null;
-        for (final ConditionFilter conditionFilter : values()) {
-            if (conditionFilter.getReadableName().equals(condition)) {
-                result = conditionFilter;
-                break;
+
+        if (condition != null && condition.trim().length() > 0) {
+            for (final ConditionFilter conditionFilter : values()) {
+                if (conditionFilter.getReadableName().equals(condition)) {
+                    result = conditionFilter;
+                    break;
+                }
             }
         }
         return result;
+    }
+
+    /**
+     * @return the operation
+     */
+    public final Op getOperation() {
+        return this.operation;
     }
 }

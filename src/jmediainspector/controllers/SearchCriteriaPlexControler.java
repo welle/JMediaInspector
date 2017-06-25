@@ -26,10 +26,13 @@ public class SearchCriteriaPlexControler extends AbstractSearchCriteriaControlle
     }
 
     @Override
-    void handleSearchResult(final List<@NonNull File> result) {
+    void handleSearchResult(@NonNull final List<@NonNull File> result) {
         // For each result: match with plex
 
         // display
+        for (final File file : result) {
+            System.err.println("[SearchCriteriaControler] handleSearchResult - " + file.getAbsolutePath());
+        }
     }
 
 }

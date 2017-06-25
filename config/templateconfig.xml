@@ -33,12 +33,12 @@
 			<search type="Plex">
 				<name>test</name>
 				<criterias>
-					<criteria type="Video" selected="true">
+					<criteria type="Video" selected="true" required="true">
 						<subtype>VideoResolutionCriteria</subtype>
 						<operator>EQUALS</operator>
 						<value>R_1080</value>
 					</criteria>
-					<criteria type="Video" selected="true">
+					<criteria type="Video" selected="true" required="true">
 						<subtype>VideoResolutionCriteria</subtype>
                         <operator>EQUALS</operator>
                         <value>R_1080</value>
@@ -48,12 +48,12 @@
 			<search type="File">
 				<name>test2</name>
 				<criterias>
-					<criteria type="Audio" selected="true">
+					<criteria type="Audio" selected="true" required="true">
 						<subtype>AudioResolutionCriteria</subtype>
 						<operator>EQUALS</operator>
 						<value>R_1080</value>
 					</criteria>
-					<criteria type="Video" selected="true">
+					<criteria type="Video" selected="true" required="false">
                         <subtype>VideoResolutionCriteria</subtype>
                         <operator>EQUALS</operator>
                         <value>R_1080</value>

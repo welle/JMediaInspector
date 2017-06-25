@@ -2,6 +2,7 @@ package jmediainspector.helpers.dialogs;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNull;
 
@@ -67,6 +68,56 @@ public final class DialogsHelper {
 
         grid.add(indicator, 0, 1);
         text = new Text("Processing import, please wait.");
+        text.setStyle("-fx-font-style: italic; -fx-fill: #FFFFFF; -fx-text-alignment: center;");
+
+        indicator.setMaxWidth(Double.MAX_VALUE);
+        GridPane.setHgrow(indicator, Priority.ALWAYS);
+        GridPane.setFillWidth(text, Boolean.TRUE);
+
+        grid.add(text, 0, 2);
+        GridPane.setHalignment(text, HPos.CENTER);
+        dialogPane.setContent(grid);
+
+        dialogPane.getStylesheets().add(DialogsHelper.class.getClassLoader().getResource(ApplicationConstants.CSS_FILE).toExternalForm());
+        return dialog;
+    }
+
+    /**
+     * Get run search service dialog.
+     *
+     * @param service
+     * @param owner
+     * @return process run search service dialog
+     */
+    @NonNull
+    public static Dialog<String> createProgressRunSearchServiceDialog(@NonNull final Service<List<@NonNull File>> service, @NonNull final Stage owner) {
+        final Dialog<String> dialog = new Dialog<>();
+        dialog.initModality(Modality.WINDOW_MODAL);
+        dialog.initStyle(StageStyle.UNDECORATED);
+
+        dialog.initOwner(owner);
+
+        final DialogPane dialogPane = dialog.getDialogPane();
+        final ProgressBar indicator = new ProgressBar();
+        indicator.setMinWidth(200);
+        // have the indicator display the progress of the service:
+        indicator.progressProperty().bind(service.progressProperty());
+
+        // Create content
+        final GridPane grid = new GridPane();
+        grid.setHgap(2);
+        grid.setVgap(3);
+        grid.setMaxWidth(Double.MAX_VALUE);
+
+        // Do layout
+        Text text = new Text("Searching...");
+        text.setStyle("-fx-font-weight: bold; -fx-fill: #FFFFFF; -fx-underline: true;");
+        grid.add(text, 0, 0);
+
+        dialog.setTitle("Search.");
+
+        grid.add(indicator, 0, 1);
+        text = new Text("Processing search, please wait.");
         text.setStyle("-fx-font-style: italic; -fx-fill: #FFFFFF; -fx-text-alignment: center;");
 
         indicator.setMaxWidth(Double.MAX_VALUE);

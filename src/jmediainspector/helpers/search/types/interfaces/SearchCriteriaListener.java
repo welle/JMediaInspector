@@ -4,6 +4,6 @@ import org.eclipse.jdt.annotation.NonNull;
 
 public interface SearchCriteriaListener {
 
-    public void delete(@NonNull AbstractInterface filtersInterface);
+    public void delete(@NonNull AbstractInterface<?> filtersInterface);
 
 }

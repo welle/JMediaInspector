@@ -1,16 +1,22 @@
 package jmediainspector.helpers.search.types.general.filters;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+import com.healthmarketscience.sqlbuilder.BinaryCondition;
+
 import aka.jmetadataquery.main.types.constants.file.FileExtensionSearchEnum;
+import aka.jmetadataquery.main.types.search.file.FileExtensionSearch;
+import aka.jmetadataquery.main.types.search.operation.interfaces.OperatorSearchInterface;
 import jmediainspector.config.Criteria;
 import jmediainspector.controllers.AbstractSearchCriteriaController;
 import jmediainspector.helpers.search.SearchHelper;
 import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
 import jmediainspector.helpers.search.types.componenttype.AbstractComboboxCriteria;
+import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 
 /**
  * Criteria for File extension.
@@ -19,11 +25,7 @@ import jmediainspector.helpers.search.types.componenttype.AbstractComboboxCriter
  */
 public class GeneralFileExtensionCriteria extends AbstractComboboxCriteria<FileExtensionSearchEnum> {
 
-    static {
-        AVAILABLE_TYPES = new ArrayList<>();
-        AVAILABLE_TYPES.add(ConditionFilter.EQUALS);
-        AVAILABLE_TYPES.add(ConditionFilter.NOT_EQUALS);
-    }
+    private GeneralFileExtensionCriteria fileExtensionCriteria;
 
     /**
      * Default Constructor.
@@ -55,7 +57,37 @@ public class GeneralFileExtensionCriteria extends AbstractComboboxCriteria<FileE
 
     @Override
     public void handleEvent(final SearchHelper searchHelper, @NonNull final AbstractSearchCriteriaController abstractSearchCriteriaController) {
-        // TODO Auto-generated method stub
+        final Criteria filter = abstractSearchCriteriaController.getNewCriteria();
+        final GeneralFileExtensionCriteria newCriteria = new GeneralFileExtensionCriteria(filter);
+        this.fileExtensionCriteria = newCriteria;
 
+        searchHelper.addCriteria(newCriteria);
     }
+
+    @Override
+    public OperatorSearchInterface getSearch() {
+        final BinaryCondition.Op operation = this.fileExtensionCriteria.getSelectedOperator();
+        FileExtensionSearch fileExtensionSearch = null;
+        final Enum<?> value = this.fileExtensionCriteria.getSelectedEnumValue();
+        if (operation != null && value instanceof FileExtensionSearchEnum) {
+            final FileExtensionSearchEnum codecEnum = (FileExtensionSearchEnum) value;
+            fileExtensionSearch = new FileExtensionSearch(operation, codecEnum);
+        }
+        return fileExtensionSearch;
+    }
+
+    @Override
+    public void init() {
+        this.availableTypes = new ArrayList<>();
+        this.availableTypes.add(ConditionFilter.EQUALS);
+        this.availableTypes.add(ConditionFilter.NOT_EQUALS);
+
+        this.availableValues = new ArrayList<>(Arrays.asList(FileExtensionSearchEnum.values()));
+    }
+
+    @Override
+    public AbstractInterface<?> getCriteria() {
+        return this.fileExtensionCriteria;
+    }
+
 }

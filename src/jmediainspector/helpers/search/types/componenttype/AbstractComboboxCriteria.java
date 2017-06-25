@@ -1,14 +1,13 @@
 package jmediainspector.helpers.search.types.componenttype;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.sun.javafx.collections.ObservableListWrapper;
 
-import aka.jmetadataquery.main.types.constants.LanguageEnum;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
@@ -24,23 +23,26 @@ import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
  * @author charlottew
  * @param <T> enum type
  */
-public abstract class AbstractComboboxCriteria<T extends Enum<?>> extends AbstractInterface {
+public abstract class AbstractComboboxCriteria<T extends Enum<?>> extends AbstractInterface<T> {
 
     /**
      * Available types.
      */
-    protected static List<@NonNull ConditionFilter> AVAILABLE_TYPES;
-    private static List<? extends Enum<?>> AVAILABLE_VALUES;
+    protected List<@NonNull ConditionFilter> availableTypes;
+    /**
+     * Available values.
+     */
+    protected List<? extends Enum<?>> availableValues;
 
-    static {
-        AVAILABLE_VALUES = new ArrayList<>(Arrays.asList(LanguageEnum.values()));
-    }
+    private ComboBox<? extends Enum<?>> valueCombobox;
+    private ComboBox<String> comboboxFiltersType;
 
     /**
      * Default Constructor.
      */
     public AbstractComboboxCriteria() {
         // Internal use, do not delete, used in reflection.
+        init();
     }
 
     /**
@@ -51,36 +53,54 @@ public abstract class AbstractComboboxCriteria<T extends Enum<?>> extends Abstra
      */
     public AbstractComboboxCriteria(@NonNull final Criteria criteria) {
         super(criteria);
-
+        init();
         // TODO LINK WITH FILTER
         // Link type
 
         final List<String> list = new ArrayList<>();
-        for (final ConditionFilter filterType : AVAILABLE_TYPES) {
+        for (final ConditionFilter filterType : this.availableTypes) {
             list.add(filterType.getReadableName());
         }
         final ObservableList<String> observableList = new ObservableListWrapper<>(list);
-        final ComboBox<String> comboboFiltersType = new ComboBox<>(observableList);
-        comboboFiltersType.valueProperty().addListener(new ConditionFilterListCell(this.criteria));
+        this.comboboxFiltersType = new ComboBox<>(observableList);
+        this.comboboxFiltersType.valueProperty().addListener(new ConditionFilterListCell(this.criteria));
 
         String value = null;
         final ConditionFilter conditionFilter = ConditionFilter.getConditionFilter(this.criteria.getType());
         if (conditionFilter != null) {
             value = conditionFilter.name();
         }
-        comboboFiltersType.setValue(value);
+        this.comboboxFiltersType.setValue(value);
 
-        this.rightPane.add(comboboFiltersType, 1, 0);
+        this.rightPane.add(this.comboboxFiltersType, 2, 0);
 
         // link value
-        final ObservableList<? extends Enum<?>> observableList2 = FXCollections.observableArrayList(AVAILABLE_VALUES);
-        final ComboBox<? extends Enum<?>> listViewAvailableFilters2 = new ComboBox<>(observableList2);
-        this.rightPane.add(listViewAvailableFilters2, 2, 0);
+        final ObservableList<? extends Enum<?>> observableList2 = FXCollections.observableArrayList(this.availableValues);
+        this.valueCombobox = new ComboBox<>(observableList2);
+        this.rightPane.add(this.valueCombobox, 3, 0);
     }
 
     @Override
     @NonNull
     public SearchTypeEnum getType() {
         return SearchTypeEnum.VIDEO;
+    }
+
+    @Override
+    public BinaryCondition.Op getSelectedOperator() {
+        final String value = this.comboboxFiltersType.getSelectionModel().getSelectedItem();
+        final ConditionFilter conditionFilter = ConditionFilter.getConditionFilter(value);
+        BinaryCondition.Op result = null;
+        if (conditionFilter != null) {
+            result = conditionFilter.getOperation();
+        }
+        return result;
+    }
+
+    @Override
+    public Enum<?> getSelectedEnumValue() {
+        final Enum<?> value = this.valueCombobox.getSelectionModel().getSelectedItem();
+
+        return value;
     }
 }

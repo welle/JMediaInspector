@@ -26,8 +26,12 @@ public class SearchCriteriaControler extends AbstractSearchCriteriaController {
     }
 
     @Override
-    void handleSearchResult(final List<@NonNull File> result) {
+    void handleSearchResult(@NonNull final List<@NonNull File> result) {
+        System.err.println("[SearchCriteriaControler] handleSearchResult - " + result.size());
         // display
+        for (final File file : result) {
+            System.err.println("[SearchCriteriaControler] handleSearchResult - " + file.getAbsolutePath());
+        }
     }
 
 }

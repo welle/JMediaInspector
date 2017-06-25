@@ -1,16 +1,22 @@
 package jmediainspector.helpers.search.types.video.filters;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.eclipse.jdt.annotation.NonNull;
 
-import aka.jmetadata.main.constants.video.Resolution;
+import com.healthmarketscience.sqlbuilder.BinaryCondition;
+
+import aka.jmetadataquery.main.types.search.constants.video.VideoResolutionSearchEnum;
+import aka.jmetadataquery.main.types.search.operation.interfaces.OperatorSearchInterface;
+import aka.jmetadataquery.main.types.search.video.VideoResolutionSearch;
 import jmediainspector.config.Criteria;
 import jmediainspector.controllers.AbstractSearchCriteriaController;
 import jmediainspector.helpers.search.SearchHelper;
 import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
 import jmediainspector.helpers.search.types.componenttype.AbstractComboboxCriteria;
+import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 
 /**
  * Criteria for video resolution.
@@ -22,17 +28,9 @@ import jmediainspector.helpers.search.types.componenttype.AbstractComboboxCriter
  *
  * @author charlottew
  */
-public class VideoResolutionCriteria extends AbstractComboboxCriteria<Resolution> {
+public class VideoResolutionCriteria extends AbstractComboboxCriteria<VideoResolutionSearchEnum> {
 
-    static {
-        AVAILABLE_TYPES = new ArrayList<>();
-        AVAILABLE_TYPES.add(ConditionFilter.EQUALS);
-        AVAILABLE_TYPES.add(ConditionFilter.GREATER_THAN);
-        AVAILABLE_TYPES.add(ConditionFilter.GREATER_THAN_OR_EQUAL_TO);
-        AVAILABLE_TYPES.add(ConditionFilter.LESS_THAN);
-        AVAILABLE_TYPES.add(ConditionFilter.LESS_THAN_OR_EQUAL_TO);
-        AVAILABLE_TYPES.add(ConditionFilter.NOT_EQUALS);
-    }
+    private VideoResolutionCriteria videoResolutionCriteria;
 
     /**
      * Default Constructor.
@@ -66,9 +64,40 @@ public class VideoResolutionCriteria extends AbstractComboboxCriteria<Resolution
     public void handleEvent(final SearchHelper searchHelper, @NonNull final AbstractSearchCriteriaController abstractSearchCriteriaController) {
         final Criteria filter = abstractSearchCriteriaController.getNewCriteria();
         filter.setType(ConditionFilter.GREATER_THAN.name());
-        final VideoResolutionCriteria videoResolutionCriteria = new VideoResolutionCriteria(filter);
+        final VideoResolutionCriteria newCriteria = new VideoResolutionCriteria(filter);
+        this.videoResolutionCriteria = newCriteria;
 
-        searchHelper.addCriteria(videoResolutionCriteria);
+        searchHelper.addCriteria(newCriteria);
+    }
+
+    @Override
+    public OperatorSearchInterface getSearch() {
+        final BinaryCondition.Op operation = this.videoResolutionCriteria.getSelectedOperator();
+        VideoResolutionSearch videoResolutionSearch = null;
+        final Enum<?> value = this.videoResolutionCriteria.getSelectedEnumValue();
+        if (operation != null && value instanceof VideoResolutionSearchEnum) {
+            final @NonNull VideoResolutionSearchEnum codecEnum = (VideoResolutionSearchEnum) value;
+            videoResolutionSearch = new VideoResolutionSearch(operation, codecEnum);
+        }
+        return videoResolutionSearch;
+    }
+
+    @Override
+    public void init() {
+        this.availableTypes = new ArrayList<>();
+        this.availableTypes.add(ConditionFilter.EQUALS);
+        this.availableTypes.add(ConditionFilter.GREATER_THAN);
+        this.availableTypes.add(ConditionFilter.GREATER_THAN_OR_EQUAL_TO);
+        this.availableTypes.add(ConditionFilter.LESS_THAN);
+        this.availableTypes.add(ConditionFilter.LESS_THAN_OR_EQUAL_TO);
+        this.availableTypes.add(ConditionFilter.NOT_EQUALS);
+
+        this.availableValues = new ArrayList<>(Arrays.asList(VideoResolutionSearchEnum.values()));
+    }
+
+    @Override
+    public AbstractInterface<?> getCriteria() {
+        return this.videoResolutionCriteria;
     }
 
 }

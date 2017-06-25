@@ -52,6 +52,7 @@
                                     </xs:sequence>
                                     <xs:attribute type="xs:string" name="type" use="required"/>
                                     <xs:attribute type="xs:boolean" name="selected" use="required"/>
+                                    <xs:attribute type="xs:boolean" name="required" use="required"/>
                                   </xs:complexType>
                                 </xs:element>
                               </xs:sequence>

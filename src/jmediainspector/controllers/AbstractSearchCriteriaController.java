@@ -9,15 +9,23 @@ import java.util.logging.Level;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
+import javafx.beans.value.ChangeListener;
+import javafx.concurrent.Worker.State;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.effect.BoxBlur;
+import javafx.scene.effect.Effect;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import jmediainspector.JMediaInspector;
 import jmediainspector.config.Configuration;
 import jmediainspector.config.Criteria;
@@ -37,6 +45,7 @@ import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 import jmediainspector.helpers.search.types.text.SearchTextEnum;
 import jmediainspector.helpers.search.types.video.SearchVideoEnum;
 import jmediainspector.listeners.ApplicationConfigurationsListener;
+import jmediainspector.services.RunSearchService;
 
 /**
  * Abstract class for SearchCriteria Controllers.
@@ -59,6 +68,8 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
     private Menu menuAudio;
     @FXML
     private Menu menuText;
+    @FXML
+    private Button runButton;
 
     private SearchHelper searchHelper;
     private PlexConfigurationHelper configurationHelper;
@@ -100,7 +111,7 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
     private void initMenuVideo() {
         try {
             for (final @NonNull SearchVideoEnum entry : SearchVideoEnum.values()) {
-                final AbstractInterface newInstance = entry.getFiltersInterface().newInstance();
+                final AbstractInterface<?> newInstance = entry.getFiltersInterface().newInstance();
                 assert newInstance != null;
                 final MenuItem menuItem = new MenuItem(newInstance.getFullName());
                 menuItem.setOnAction(new SearchEventHandler(this.searchHelper, newInstance, this));
@@ -114,7 +125,7 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
     private void initMenuGeneral() {
         try {
             for (final @NonNull SearchGeneralEnum entry : SearchGeneralEnum.values()) {
-                final AbstractInterface newInstance = entry.getFiltersInterface().newInstance();
+                final AbstractInterface<?> newInstance = entry.getFiltersInterface().newInstance();
                 assert newInstance != null;
                 final MenuItem menuItem = new MenuItem(newInstance.getFullName());
                 menuItem.setOnAction(new SearchEventHandler(this.searchHelper, newInstance, this));
@@ -128,7 +139,7 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
     private void initMenuAudio() {
         try {
             for (final @NonNull SearchAudioEnum entry : SearchAudioEnum.values()) {
-                final AbstractInterface newInstance = entry.getFiltersInterface().newInstance();
+                final AbstractInterface<?> newInstance = entry.getFiltersInterface().newInstance();
                 assert newInstance != null;
                 final MenuItem menuItem = new MenuItem(newInstance.getFullName());
                 menuItem.setOnAction(new SearchEventHandler(this.searchHelper, newInstance, this));
@@ -142,7 +153,7 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
     private void initMenuText() {
         try {
             for (final @NonNull SearchTextEnum entry : SearchTextEnum.values()) {
-                final AbstractInterface newInstance = entry.getFiltersInterface().newInstance();
+                final AbstractInterface<?> newInstance = entry.getFiltersInterface().newInstance();
                 assert newInstance != null;
                 final MenuItem menuItem = new MenuItem(newInstance.getFullName());
                 menuItem.setOnAction(new SearchEventHandler(this.searchHelper, newInstance, this));
@@ -203,8 +214,9 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
 
     @FXML
     private void runSearch() {
+        // PUT IN SERVICE, disable run button
         final List<@NonNull File> result = new ArrayList<>();
-        final List<@NonNull AbstractInterface> filterList = this.searchHelper.getFiltersList();
+        final List<@NonNull AbstractInterface<?>> filterList = this.searchHelper.getFiltersList();
         if (!filterList.isEmpty()) {
             @Nullable
             final Configuration selectedConfiguration = this.configurationHelper.getSelectedConfiguration();
@@ -217,17 +229,46 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
                     final Alert alert = DialogsHelper.getAlert(JMediaInspector.getPrimaryStage(), Alert.AlertType.ERROR, "No path(s) in the selected configuration!");
                     alert.showAndWait();
                 } else {
+                    final List<@NonNull String> pathsList = new ArrayList<>();
                     for (final String path : paths.getPath()) {
                         if (path != null && path.trim().length() > 0) {
-                            final List<@NonNull File> searchInPathResult = searchInPath(path);
-                            result.addAll(searchInPathResult);
+                            pathsList.add(path);
                         }
                     }
+                    callSearchService(pathsList);
                 }
             }
         }
+    }
 
-        handleSearchResult(result);
+    private void callSearchService(@NonNull final List<@NonNull String> pathsList) {
+        final List<@NonNull File> result = new ArrayList<>();
+        final RunSearchService service = new RunSearchService(pathsList, result, this.searchHelper.getFiltersList());
+
+        final Stage stage = (Stage) JMediaInspector.getPrimaryStage().getScene().getWindow();
+        assert stage != null;
+        final Dialog<String> progressDialog = DialogsHelper.createProgressRunSearchServiceDialog(service, stage);
+        final Effect parentEffect = new BoxBlur();
+
+        this.runButton.setDisable(true);
+        JMediaInspector.getPrimaryStage().getScene().getRoot().setEffect(parentEffect);
+        service.stateProperty().addListener((ChangeListener<State>) (observable, oldValue, newValue) -> {
+            if (newValue == State.CANCELLED || newValue == State.FAILED || newValue == State.SUCCEEDED) {
+                final Window window = progressDialog.getDialogPane().getScene().getWindow();
+                window.hide();
+                JMediaInspector.getPrimaryStage().getScene().getRoot().setEffect(null);
+            }
+        });
+        progressDialog.show();
+        service.reset();
+        service.setOnSucceeded(e -> {
+            final Window window = progressDialog.getDialogPane().getScene().getWindow();
+            window.hide();
+            JMediaInspector.getPrimaryStage().getScene().getRoot().setEffect(null);
+            handleSearchResult(result);
+        });
+        this.runButton.setDisable(false);
+        service.start();
     }
 
     /**
@@ -235,30 +276,7 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
      *
      * @param result list of matching criteria files
      */
-    abstract void handleSearchResult(List<@NonNull File> result);
-
-    @NonNull
-    private List<@NonNull File> searchInPath(@NonNull final String path) {
-        File file = null;
-        try {
-            file = new File(path);
-        } catch (final IllegalArgumentException e) {
-            final Alert alert = DialogsHelper.getAlert(JMediaInspector.getPrimaryStage(), Alert.AlertType.ERROR, "'" + path + "' is not reachable!");
-            alert.showAndWait();
-        }
-
-        return searchInPath(file);
-    }
-
-    private @NonNull List<@NonNull File> searchInPath(@Nullable final File file) {
-        final List<@NonNull File> result = new ArrayList<>();
-        if (file != null) {
-            final List<@NonNull AbstractInterface> filterList = this.searchHelper.getFiltersList();
-
-        }
-
-        return result;
-    }
+    abstract void handleSearchResult(@NonNull List<@NonNull File> result);
 
     @FXML
     private void saveSearch() {

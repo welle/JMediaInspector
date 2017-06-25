@@ -1,7 +1,13 @@
 package jmediainspector.helpers.search.types.interfaces;
 
-import org.eclipse.jdt.annotation.NonNull;
+import java.util.logging.Level;
 
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
+
+import com.healthmarketscience.sqlbuilder.BinaryCondition;
+
+import aka.jmetadataquery.main.types.search.operation.interfaces.OperatorSearchInterface;
 import javafx.beans.property.adapter.JavaBeanBooleanProperty;
 import javafx.beans.property.adapter.JavaBeanBooleanPropertyBuilder;
 import javafx.geometry.HPos;
@@ -12,6 +18,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.layout.GridPane;
 import jmediainspector.config.Criteria;
 import jmediainspector.config.ObjectFactory;
+import jmediainspector.context.ApplicationContext;
 import jmediainspector.controllers.AbstractSearchCriteriaController;
 import jmediainspector.helpers.search.SearchHelper;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
@@ -24,7 +31,7 @@ import jmediainspector.helpers.search.enums.SearchTypeEnum;
  *
  * @author Cha
  */
-public abstract class AbstractInterface {
+public abstract class AbstractInterface<T extends Enum<?>> {
 
     /**
      * Linked criteria.
@@ -32,8 +39,11 @@ public abstract class AbstractInterface {
     @NonNull
     protected final Criteria criteria;
     private JavaBeanBooleanProperty selectedProperty = null;
+    private JavaBeanBooleanProperty requiredProperty = null;
     @NonNull
-    private final CheckBox selectedCheckBox = new CheckBox();
+    private final CheckBox selectedCheckBox = new CheckBox("Use");
+    @NonNull
+    private final CheckBox requiredCheckBox = new CheckBox("Required");
     /**
      * Right pane.
      */
@@ -64,14 +74,17 @@ public abstract class AbstractInterface {
 
         this.rightPane.add(getSelectedCheckBox(), 0, 0);
         GridPane.setValignment(getSelectedCheckBox(), VPos.TOP);
+        this.rightPane.add(getRequiredCheckBox(), 1, 0);
+        GridPane.setValignment(getRequiredCheckBox(), VPos.TOP);
 
         try {
             this.selectedProperty = JavaBeanBooleanPropertyBuilder.create().bean(this.criteria).name("selected").build();
+            this.requiredProperty = JavaBeanBooleanPropertyBuilder.create().bean(this.criteria).name("required").build();
         } catch (final NoSuchMethodException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            ApplicationContext.getInstance().getLogger().logp(Level.SEVERE, "AbstractInterface", "AbstractInterface", e.getMessage(), e);
         }
         this.selectedCheckBox.selectedProperty().bindBidirectional(this.selectedProperty);
+        this.requiredCheckBox.selectedProperty().bindBidirectional(this.requiredProperty);
     }
 
     /**
@@ -85,7 +98,7 @@ public abstract class AbstractInterface {
         GridPane.setValignment(deleteButton, VPos.TOP);
         GridPane.setHalignment(deleteButton, HPos.RIGHT);
         deleteButton.setOnAction(e -> delete());
-        this.rightPane.add(deleteButton, 3, 0);
+        this.rightPane.add(deleteButton, 4, 0);
 
         return this.rightPane;
     }
@@ -111,15 +124,31 @@ public abstract class AbstractInterface {
     @NonNull
     public abstract String getFullName();
 
+    /**
+     * Handle event.
+     *
+     * @param searchHelper
+     * @param abstractSearchCriteriaController
+     */
     public abstract void handleEvent(final SearchHelper searchHelper, @NonNull AbstractSearchCriteriaController abstractSearchCriteriaController);
+
+    /**
+     * Get required checkbox.
+     *
+     * @return required checkbox.
+     */
+    @NonNull
+    public CheckBox getRequiredCheckBox() {
+        return this.requiredCheckBox;
+    }
 
     /**
      * Get selected checkbox.
      *
-     * @return pane containing choices to be includes in the screen.
+     * @return selected checbox.
      */
     @NonNull
-    public Node getSelectedCheckBox() {
+    public CheckBox getSelectedCheckBox() {
         return this.selectedCheckBox;
     }
 
@@ -131,4 +160,36 @@ public abstract class AbstractInterface {
     public void setListener(@NonNull final SearchCriteriaListener searchCriteriaListener) {
         this.searchCriteriaListener = searchCriteriaListener;
     }
+
+    /**
+     * @return search
+     */
+    public abstract OperatorSearchInterface getSearch();
+
+    /**
+     * Get condition operator.
+     *
+     * @return operator
+     */
+    public abstract BinaryCondition.Op getSelectedOperator();
+
+    /**
+     * Get condition operator.
+     *
+     * @return operator
+     */
+    public abstract Enum<?> getSelectedEnumValue();
+
+    /**
+     * Initialization.
+     */
+    public abstract void init();
+
+    /**
+     * Get linked criteria.
+     *
+     * @return Linked criteria
+     */
+    @Nullable
+    public abstract AbstractInterface<?> getCriteria();
 }

@@ -31,7 +31,7 @@
                         
                      </children>
                   </AnchorPane>
-                  <Button layoutX="724.0" layoutY="286.0" mnemonicParsing="false" onAction="#runSearch" text="Run" />
+                  <Button layoutX="724.0" layoutY="286.0" mnemonicParsing="false" onAction="#runSearch" text="Run" fx:id="runButton"/>
                         <Button layoutX="765.0" layoutY="286.0" mnemonicParsing="false" onAction="#saveSearch" text="Save as" />
                   <Button layoutX="824.0" layoutY="286.0" mnemonicParsing="false" onAction="#saveSearch" text="Save" />
                     </children>

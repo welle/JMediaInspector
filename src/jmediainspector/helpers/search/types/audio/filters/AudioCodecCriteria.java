@@ -1,16 +1,23 @@
 package jmediainspector.helpers.search.types.audio.filters;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+import com.healthmarketscience.sqlbuilder.BinaryCondition;
+
 import aka.jmetadata.main.constants.codecs.AudioMatroskaCodecIdEnum;
+import aka.jmetadata.main.constants.codecs.interfaces.CodecEnum;
+import aka.jmetadataquery.main.types.search.audio.AudioCodecIdSearch;
+import aka.jmetadataquery.main.types.search.operation.interfaces.OperatorSearchInterface;
 import jmediainspector.config.Criteria;
 import jmediainspector.controllers.AbstractSearchCriteriaController;
 import jmediainspector.helpers.search.SearchHelper;
 import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
 import jmediainspector.helpers.search.types.componenttype.AbstractComboboxCriteria;
+import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 
 /**
  * Criteria for Audio Codec.
@@ -19,11 +26,7 @@ import jmediainspector.helpers.search.types.componenttype.AbstractComboboxCriter
  */
 public class AudioCodecCriteria extends AbstractComboboxCriteria<AudioMatroskaCodecIdEnum> {
 
-    static {
-        AVAILABLE_TYPES = new ArrayList<>();
-        AVAILABLE_TYPES.add(ConditionFilter.EQUALS);
-        AVAILABLE_TYPES.add(ConditionFilter.NOT_EQUALS);
-    }
+    private AudioCodecCriteria audioCodecCriteria;
 
     /**
      * Default Constructor.
@@ -56,8 +59,36 @@ public class AudioCodecCriteria extends AbstractComboboxCriteria<AudioMatroskaCo
     @Override
     public void handleEvent(final SearchHelper searchHelper, @NonNull final AbstractSearchCriteriaController abstractSearchCriteriaController) {
         final Criteria filter = abstractSearchCriteriaController.getNewCriteria();
-        final AudioCodecCriteria audioCodecCriteria = new AudioCodecCriteria(filter);
+        final AudioCodecCriteria newCriteria = new AudioCodecCriteria(filter);
+        this.audioCodecCriteria = newCriteria;
 
-        searchHelper.addCriteria(audioCodecCriteria);
+        searchHelper.addCriteria(newCriteria);
     }
+
+    @Override
+    public OperatorSearchInterface getSearch() {
+        final BinaryCondition.Op operation = this.audioCodecCriteria.getSelectedOperator();
+        AudioCodecIdSearch audioCodecIdSearch = null;
+        final Enum<?> value = this.audioCodecCriteria.getSelectedEnumValue();
+        if (operation != null && value instanceof CodecEnum) {
+            final CodecEnum codecEnum = (CodecEnum) value;
+            audioCodecIdSearch = new AudioCodecIdSearch(operation, codecEnum);
+        }
+        return audioCodecIdSearch;
+    }
+
+    @Override
+    public void init() {
+        this.availableTypes = new ArrayList<>();
+        this.availableTypes.add(ConditionFilter.EQUALS);
+        this.availableTypes.add(ConditionFilter.NOT_EQUALS);
+
+        this.availableValues = new ArrayList<>(Arrays.asList(AudioMatroskaCodecIdEnum.values()));
+    }
+
+    @Override
+    public AbstractInterface<?> getCriteria() {
+        return this.audioCodecCriteria;
+    }
+
 }
