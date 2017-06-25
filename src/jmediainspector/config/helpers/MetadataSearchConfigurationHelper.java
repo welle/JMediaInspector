@@ -32,12 +32,29 @@ public class MetadataSearchConfigurationHelper extends AbstractConfigurationHelp
         /**
          * Search in Plex.
          */
-        Plex,
+        Plex("Plex"),
 
         /**
          * Search in files.
          */
-        File;
+        File("File");
+
+        @NonNull
+        private String name;
+
+        Type(@NonNull final String name) {
+            this.name = name;
+        }
+
+        /**
+         * Get name.
+         *
+         * @return name
+         */
+        @NonNull
+        public String getName() {
+            return this.name;
+        }
     }
 
     /**
@@ -111,10 +128,13 @@ public class MetadataSearchConfigurationHelper extends AbstractConfigurationHelp
      */
     @NonNull
     public List<Search> getSearchByType(@NonNull final Type type) {
-        List<Search> result = this.searchs.getSearch().stream()
-                .filter(search -> type.name().equals(search.getType()))
-                .collect(Collectors.toList());
+        List<Search> result = null;
 
+        if (this.searchs != null && this.searchs.getSearch() != null && !this.searchs.getSearch().isEmpty()) {
+            result = this.searchs.getSearch().stream()
+                    .filter(search -> type.getName().equals(search.getType()))
+                    .collect(Collectors.toList());
+        }
         if (result == null) {
             result = new ArrayList<>();
         }

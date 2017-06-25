@@ -1,37 +1,46 @@
 package jmediainspector.helpers.search.types.general;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jdt.annotation.NonNull;
 
-import jmediainspector.helpers.search.types.interfaces.SearchPanelInterface;
+import jmediainspector.helpers.search.types.general.filters.GeneralFileExtensionCriteria;
+import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
+import jmediainspector.helpers.search.types.interfaces.SearchInterface;
 
-public enum SearchGeneralEnum {
+/**
+ * General search criteria.
+ *
+ * @author Cha
+ */
+public enum SearchGeneralEnum implements SearchInterface {
     /**
-     * General.
+     * File Extension.
      */
-    GENERAL(new SearchGeneralHelper()),
+    EXTENSION(GeneralFileExtensionCriteria.class);
 
-    /**
-     * Video.
-     */
-    VIDEO(new SearchGeneralHelper()),
+    @NonNull
+    private Class<? extends AbstractInterface> filtersInterface;
+    private static @NonNull List<Class<? extends AbstractInterface>> ALL_VALUES = new ArrayList<>();
 
-    /**
-     * Audio.
-     */
-    AUDIO(new SearchGeneralHelper()),
-
-    /**
-     * Test.
-     */
-    TEXT(new SearchGeneralHelper());
-
-    private @NonNull SearchPanelInterface searchPanelInterface;
-
-    SearchGeneralEnum(@NonNull final SearchPanelInterface searchPanelInterface) {
-        this.searchPanelInterface = searchPanelInterface;
+    static {
+        for (final @NonNull SearchGeneralEnum searchGeneralEnum : SearchGeneralEnum.values()) {
+            ALL_VALUES.add(searchGeneralEnum.getFiltersInterface());
+        }
     }
 
-    public SearchPanelInterface getSearchPanelInterface() {
-        return this.searchPanelInterface;
+    SearchGeneralEnum(@NonNull final Class<? extends AbstractInterface> filtersInterface) {
+        this.filtersInterface = filtersInterface;
+    }
+
+    @Override
+    public Class<? extends AbstractInterface> getFiltersInterface() {
+        return this.filtersInterface;
+    }
+
+    @Override
+    public @NonNull List<Class<? extends AbstractInterface>> getAllValues() {
+        return ALL_VALUES;
     }
 }

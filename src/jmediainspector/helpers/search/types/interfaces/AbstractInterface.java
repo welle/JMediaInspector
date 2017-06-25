@@ -11,6 +11,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.GridPane;
 import jmediainspector.config.Criteria;
+import jmediainspector.config.ObjectFactory;
+import jmediainspector.controllers.AbstractSearchCriteriaController;
+import jmediainspector.helpers.search.SearchHelper;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
 
 /**
@@ -21,7 +24,7 @@ import jmediainspector.helpers.search.enums.SearchTypeEnum;
  *
  * @author Cha
  */
-public abstract class CriteriaInterface {
+public abstract class AbstractInterface {
 
     /**
      * Linked criteria.
@@ -30,13 +33,22 @@ public abstract class CriteriaInterface {
     protected final Criteria criteria;
     private JavaBeanBooleanProperty selectedProperty = null;
     @NonNull
-    private final CheckBox selectedCheckBox;
+    private final CheckBox selectedCheckBox = new CheckBox();
     /**
      * Right pane.
      */
     @NonNull
-    public final GridPane rightPane;
+    public final GridPane rightPane = new GridPane();
     private SearchCriteriaListener searchCriteriaListener;
+
+    /**
+     * Default constructor.
+     */
+    public AbstractInterface() {
+        final Criteria newCriteria = (new ObjectFactory()).createCriteria();
+        assert newCriteria != null;
+        this.criteria = newCriteria;
+    }
 
     /**
      * Constructor.
@@ -44,10 +56,8 @@ public abstract class CriteriaInterface {
      * @param criteria Linked Criteria
      * @see Criteria
      */
-    public CriteriaInterface(@NonNull final Criteria criteria) {
+    public AbstractInterface(@NonNull final Criteria criteria) {
         this.criteria = criteria;
-        this.selectedCheckBox = new CheckBox();
-        this.rightPane = new GridPane();
         this.rightPane.setHgap(2);
         this.rightPane.setVgap(3);
         this.rightPane.setMaxWidth(Double.MAX_VALUE);
@@ -92,6 +102,16 @@ public abstract class CriteriaInterface {
      */
     @NonNull
     public abstract SearchTypeEnum getType();
+
+    /**
+     * Get name.
+     *
+     * @return name.
+     */
+    @NonNull
+    public abstract String getFullName();
+
+    public abstract void handleEvent(final SearchHelper searchHelper, @NonNull AbstractSearchCriteriaController abstractSearchCriteriaController);
 
     /**
      * Get selected checkbox.

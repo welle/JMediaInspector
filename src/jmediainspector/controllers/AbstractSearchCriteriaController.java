@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.logging.Level;
 
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
@@ -29,12 +29,13 @@ import jmediainspector.config.helpers.MetadataSearchConfigurationHelper.Type;
 import jmediainspector.config.helpers.PlexConfigurationHelper;
 import jmediainspector.context.ApplicationContext;
 import jmediainspector.helpers.dialogs.DialogsHelper;
+import jmediainspector.helpers.search.SearchEventHandler;
 import jmediainspector.helpers.search.SearchHelper;
-import jmediainspector.helpers.search.commons.ConditionFilter;
-import jmediainspector.helpers.search.enums.SearchTypeEnum;
-import jmediainspector.helpers.search.types.audio.filters.AudioCodecCriteria;
-import jmediainspector.helpers.search.types.interfaces.CriteriaInterface;
-import jmediainspector.helpers.search.types.video.filters.VideoResolutionCriteria;
+import jmediainspector.helpers.search.types.audio.SearchAudioEnum;
+import jmediainspector.helpers.search.types.general.SearchGeneralEnum;
+import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
+import jmediainspector.helpers.search.types.text.SearchTextEnum;
+import jmediainspector.helpers.search.types.video.SearchVideoEnum;
 import jmediainspector.listeners.ApplicationConfigurationsListener;
 
 /**
@@ -51,7 +52,13 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
     @FXML
     private AnchorPane rightPane;
     @FXML
+    private Menu menuGeneral;
+    @FXML
     private Menu menuVideo;
+    @FXML
+    private Menu menuAudio;
+    @FXML
+    private Menu menuText;
 
     private SearchHelper searchHelper;
     private PlexConfigurationHelper configurationHelper;
@@ -80,6 +87,9 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
         this.existingSearchListView.setCellFactory(p -> new SearchCellListView(this.existingSearchListView));
 
         initMenuVideo();
+        initMenuGeneral();
+        initMenuAudio();
+        initMenuText();
 //        this.configurationsList.setButtonCell(new ConfigurationListCell());
 //        this.configurationsList.setCellFactory(p -> new ConfigurationListCell());
 //
@@ -88,15 +98,58 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
     }
 
     private void initMenuVideo() {
-        @NonNull
-        final List<Search> searchList = this.metadataSearchCriteriaHelper.getSearchByType(getSearchType());
-        final List<Search> result = searchList.stream()
-                .filter(search -> SearchTypeEnum.VIDEO.name().equals(search.getType()))
-                .collect(Collectors.toList());
+        try {
+            for (final @NonNull SearchVideoEnum entry : SearchVideoEnum.values()) {
+                final AbstractInterface newInstance = entry.getFiltersInterface().newInstance();
+                assert newInstance != null;
+                final MenuItem menuItem = new MenuItem(newInstance.getFullName());
+                menuItem.setOnAction(new SearchEventHandler(this.searchHelper, newInstance, this));
+                this.menuVideo.getItems().add(menuItem);
+            }
+        } catch (InstantiationException | IllegalAccessException e) {
+            ApplicationContext.getInstance().getLogger().logp(Level.SEVERE, "AbstractSearchCriteriaController", "initMenuVideo", e.getMessage(), e);
+        }
+    }
 
-        for (final Search searchs : result) {
-            final MenuItem menuItem = new MenuItem(searchs.getName());
-            this.menuVideo.getItems().add(menuItem);
+    private void initMenuGeneral() {
+        try {
+            for (final @NonNull SearchGeneralEnum entry : SearchGeneralEnum.values()) {
+                final AbstractInterface newInstance = entry.getFiltersInterface().newInstance();
+                assert newInstance != null;
+                final MenuItem menuItem = new MenuItem(newInstance.getFullName());
+                menuItem.setOnAction(new SearchEventHandler(this.searchHelper, newInstance, this));
+                this.menuGeneral.getItems().add(menuItem);
+            }
+        } catch (InstantiationException | IllegalAccessException e) {
+            ApplicationContext.getInstance().getLogger().logp(Level.SEVERE, "AbstractSearchCriteriaController", "initMenuGeneral", e.getMessage(), e);
+        }
+    }
+
+    private void initMenuAudio() {
+        try {
+            for (final @NonNull SearchAudioEnum entry : SearchAudioEnum.values()) {
+                final AbstractInterface newInstance = entry.getFiltersInterface().newInstance();
+                assert newInstance != null;
+                final MenuItem menuItem = new MenuItem(newInstance.getFullName());
+                menuItem.setOnAction(new SearchEventHandler(this.searchHelper, newInstance, this));
+                this.menuAudio.getItems().add(menuItem);
+            }
+        } catch (InstantiationException | IllegalAccessException e) {
+            ApplicationContext.getInstance().getLogger().logp(Level.SEVERE, "AbstractSearchCriteriaController", "initMenuAudio", e.getMessage(), e);
+        }
+    }
+
+    private void initMenuText() {
+        try {
+            for (final @NonNull SearchTextEnum entry : SearchTextEnum.values()) {
+                final AbstractInterface newInstance = entry.getFiltersInterface().newInstance();
+                assert newInstance != null;
+                final MenuItem menuItem = new MenuItem(newInstance.getFullName());
+                menuItem.setOnAction(new SearchEventHandler(this.searchHelper, newInstance, this));
+                this.menuText.getItems().add(menuItem);
+            }
+        } catch (InstantiationException | IllegalAccessException e) {
+            ApplicationContext.getInstance().getLogger().logp(Level.SEVERE, "AbstractSearchCriteriaController", "initMenuText", e.getMessage(), e);
         }
     }
 
@@ -135,25 +188,13 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
         }
     }
 
-    @FXML
-    private void addAudioCodecCriteria() {
-        final Criteria filter = getNewCriteria();
-        final AudioCodecCriteria audioCodecCriteria = new AudioCodecCriteria(filter);
-
-        this.searchHelper.addCriteria(audioCodecCriteria);
-    }
-
-    @FXML
-    private void addVideoResolutionCriteria() {
-        final Criteria filter = getNewCriteria();
-        filter.setType(ConditionFilter.GREATER_THAN.name());
-        final VideoResolutionCriteria videoResolutionCriteria = new VideoResolutionCriteria(filter);
-
-        this.searchHelper.addCriteria(videoResolutionCriteria);
-    }
-
+    /**
+     * Get new criteria.
+     *
+     * @return new criteria
+     */
     @NonNull
-    private Criteria getNewCriteria() {
+    public Criteria getNewCriteria() {
         final Criteria newCriteria = this.metadataSearchCriteriaHelper.getNewCriteria();
         assert newCriteria != null;
         newCriteria.setSelected(true);
@@ -163,7 +204,7 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
     @FXML
     private void runSearch() {
         final List<@NonNull File> result = new ArrayList<>();
-        final List<@NonNull CriteriaInterface> filterList = this.searchHelper.getFiltersList();
+        final List<@NonNull AbstractInterface> filterList = this.searchHelper.getFiltersList();
         if (!filterList.isEmpty()) {
             @Nullable
             final Configuration selectedConfiguration = this.configurationHelper.getSelectedConfiguration();
@@ -212,7 +253,7 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
     private @NonNull List<@NonNull File> searchInPath(@Nullable final File file) {
         final List<@NonNull File> result = new ArrayList<>();
         if (file != null) {
-            final List<@NonNull CriteriaInterface> filterList = this.searchHelper.getFiltersList();
+            final List<@NonNull AbstractInterface> filterList = this.searchHelper.getFiltersList();
 
         }
 

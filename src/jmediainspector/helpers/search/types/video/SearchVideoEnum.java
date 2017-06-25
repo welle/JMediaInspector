@@ -1,8 +1,12 @@
 package jmediainspector.helpers.search.types.video;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jdt.annotation.NonNull;
 
-import jmediainspector.helpers.search.types.interfaces.CriteriaInterface;
+import jmediainspector.helpers.search.types.general.SearchGeneralEnum;
+import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 import jmediainspector.helpers.search.types.interfaces.SearchInterface;
 import jmediainspector.helpers.search.types.video.filters.VideoResolutionCriteria;
 
@@ -19,14 +23,27 @@ public enum SearchVideoEnum implements SearchInterface {
     RESOLUTION(VideoResolutionCriteria.class);
 
     @NonNull
-    private Class<? extends CriteriaInterface> filtersInterface;
+    private Class<? extends AbstractInterface> filtersInterface;
+    private static @NonNull List<Class<? extends AbstractInterface>> ALL_VALUES = new ArrayList<>();
 
-    SearchVideoEnum(@NonNull final Class<? extends CriteriaInterface> filtersInterface) {
+    static {
+        for (final @NonNull SearchGeneralEnum searchGeneralEnum : SearchGeneralEnum.values()) {
+            ALL_VALUES.add(searchGeneralEnum.getFiltersInterface());
+        }
+    }
+
+    SearchVideoEnum(@NonNull final Class<? extends AbstractInterface> filtersInterface) {
         this.filtersInterface = filtersInterface;
     }
 
     @Override
-    public Class<? extends CriteriaInterface> getFiltersInterface() {
+    public Class<? extends AbstractInterface> getFiltersInterface() {
         return this.filtersInterface;
     }
+
+    @Override
+    public @NonNull List<Class<? extends AbstractInterface>> getAllValues() {
+        return ALL_VALUES;
+    }
+
 }

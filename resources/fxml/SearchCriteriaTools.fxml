@@ -20,17 +20,10 @@
                     <children>
                         <SplitMenuButton layoutX="816.0" layoutY="2.0" mnemonicParsing="false" style="-fx-font-weight: bold;" text="+">
                             <items>
-                                <Menu mnemonicParsing="false" text="Video" fx:id="menuVideo">
-                                    <items>
-                                        <MenuItem mnemonicParsing="false" onAction="#addVideoResolutionCriteria" text="Resolution" />
-                                        <MenuItem mnemonicParsing="false" text="Bitrate" />
-                                    </items>
-                                </Menu>
-                                <Menu mnemonicParsing="false" text="Audio">
-                                    <items>
-                                        <MenuItem mnemonicParsing="false" onAction="#addAudioCodecCriteria" text="Codec" />
-                                    </items>
-                                </Menu>
+                                <Menu mnemonicParsing="false" text="General" fx:id="menuGeneral"/>
+                                <Menu mnemonicParsing="false" text="Video" fx:id="menuVideo"/>
+                                <Menu mnemonicParsing="false" text="Audio" fx:id="menuAudio"/>
+                                <Menu mnemonicParsing="false" text="Text" fx:id="menuText"/>
                             </items>
                         </SplitMenuButton>
                   <AnchorPane fx:id="rightPane" prefHeight="282.0" prefWidth="812.0">

@@ -16,7 +16,7 @@ import jmediainspector.config.Criteria;
 import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.commons.ConditionFilterListCell;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
-import jmediainspector.helpers.search.types.interfaces.CriteriaInterface;
+import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 
 /**
  * Combobox Criteria.
@@ -24,21 +24,23 @@ import jmediainspector.helpers.search.types.interfaces.CriteriaInterface;
  * @author charlottew
  * @param <T> enum type
  */
-public abstract class ComboboxCriteria<T extends Enum<?>> extends CriteriaInterface {
+public abstract class AbstractComboboxCriteria<T extends Enum<?>> extends AbstractInterface {
 
-    private static List<@NonNull ConditionFilter> AVAILABLE_TYPES;
+    /**
+     * Available types.
+     */
+    protected static List<@NonNull ConditionFilter> AVAILABLE_TYPES;
     private static List<? extends Enum<?>> AVAILABLE_VALUES;
 
     static {
-        AVAILABLE_TYPES = new ArrayList<>();
-        AVAILABLE_TYPES.add(ConditionFilter.EQUALS);
-        AVAILABLE_TYPES.add(ConditionFilter.GREATER_THAN);
-        AVAILABLE_TYPES.add(ConditionFilter.GREATER_THAN_OR_EQUAL_TO);
-        AVAILABLE_TYPES.add(ConditionFilter.LESS_THAN);
-        AVAILABLE_TYPES.add(ConditionFilter.LESS_THAN_OR_EQUAL_TO);
-        AVAILABLE_TYPES.add(ConditionFilter.NOT_EQUALS);
-
         AVAILABLE_VALUES = new ArrayList<>(Arrays.asList(LanguageEnum.values()));
+    }
+
+    /**
+     * Default Constructor.
+     */
+    public AbstractComboboxCriteria() {
+        // Internal use, do not delete, used in reflection.
     }
 
     /**
@@ -47,7 +49,7 @@ public abstract class ComboboxCriteria<T extends Enum<?>> extends CriteriaInterf
      * @param criteria Linked Criteria
      * @see Criteria
      */
-    public ComboboxCriteria(@NonNull final Criteria criteria) {
+    public AbstractComboboxCriteria(@NonNull final Criteria criteria) {
         super(criteria);
 
         // TODO LINK WITH FILTER

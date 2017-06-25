@@ -1,5 +1,7 @@
 package jmediainspector.helpers.search.types.interfaces;
 
+import java.util.List;
+
 import org.eclipse.jdt.annotation.NonNull;
 
 /**
@@ -15,5 +17,14 @@ public interface SearchInterface {
      * @return FiltersInterface
      */
     @NonNull
-    public Class<? extends CriteriaInterface> getFiltersInterface();
+    public Class<? extends AbstractInterface> getFiltersInterface();
+
+    /**
+     * Get all values.
+     *
+     * @return All values
+     */
+    @NonNull
+    public List<Class<? extends AbstractInterface>> getAllValues();
+
 }

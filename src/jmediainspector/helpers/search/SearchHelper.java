@@ -21,7 +21,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import jmediainspector.config.Search;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
-import jmediainspector.helpers.search.types.interfaces.CriteriaInterface;
+import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 import jmediainspector.helpers.search.types.interfaces.SearchCriteriaListener;
 import jmediainspector.helpers.search.types.interfaces.SearchPanelInterface;
 
@@ -40,7 +40,7 @@ public class SearchHelper implements SearchCriteriaListener {
     private final AnchorPane rightPane;
     private @NonNull final Search search;
     @NonNull
-    private final List<@NonNull CriteriaInterface> filtersInterfaceList = new ArrayList<>();
+    private final List<@NonNull AbstractInterface> filtersInterfaceList = new ArrayList<>();
 
     /**
      * Constructor.
@@ -107,7 +107,7 @@ public class SearchHelper implements SearchCriteriaListener {
         return result;
     }
 
-    private class LinkedPanel {
+    public class LinkedPanel {
 
         private @NonNull final Node rightNode;
         private @NonNull final SearchPanelInterface leftNode;
@@ -179,7 +179,7 @@ public class SearchHelper implements SearchCriteriaListener {
      *
      * @param filtersInterface
      */
-    public void addCriteria(@NonNull final CriteriaInterface filtersInterface) {
+    public void addCriteria(@NonNull final AbstractInterface filtersInterface) {
         final GridPane rightGridPane = (GridPane) this.linkedPanelMap.get(filtersInterface.getType()).getRightNode();
         rightGridPane.setHgap(10); // horizontal gap in pixels => that's what you are asking for
         rightGridPane.setVgap(5); // vertical gap in pixels
@@ -204,7 +204,7 @@ public class SearchHelper implements SearchCriteriaListener {
     }
 
     @Override
-    public void delete(@NonNull final CriteriaInterface filtersInterface) {
+    public void delete(@NonNull final AbstractInterface filtersInterface) {
         final GridPane rightGridPane = (GridPane) this.linkedPanelMap.get(filtersInterface.getType()).getRightNode();
         final Integer index = GridPane.getRowIndex(filtersInterface.getRightPaneChoices());
         if (index != null) {
@@ -241,7 +241,17 @@ public class SearchHelper implements SearchCriteriaListener {
      * @return filters list
      */
     @NonNull
-    public List<@NonNull CriteriaInterface> getFiltersList() {
+    public List<@NonNull AbstractInterface> getFiltersList() {
         return this.filtersInterfaceList;
+    }
+
+    /**
+     * Get linked map.
+     *
+     * @return linked map
+     */
+    @NonNull
+    public Map<@NonNull SearchTypeEnum, LinkedPanel> getLinkedPanelMap() {
+        return this.linkedPanelMap;
     }
 }

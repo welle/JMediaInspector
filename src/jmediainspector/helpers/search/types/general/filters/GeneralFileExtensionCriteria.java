@@ -1,10 +1,10 @@
-package jmediainspector.helpers.search.types.audio.filters;
+package jmediainspector.helpers.search.types.general.filters;
 
 import java.util.ArrayList;
 
 import org.eclipse.jdt.annotation.NonNull;
 
-import aka.jmetadata.main.constants.codecs.AudioMatroskaCodecIdEnum;
+import aka.jmetadataquery.main.types.constants.file.FileExtensionSearchEnum;
 import jmediainspector.config.Criteria;
 import jmediainspector.controllers.AbstractSearchCriteriaController;
 import jmediainspector.helpers.search.SearchHelper;
@@ -13,11 +13,11 @@ import jmediainspector.helpers.search.enums.SearchTypeEnum;
 import jmediainspector.helpers.search.types.componenttype.AbstractComboboxCriteria;
 
 /**
- * Criteria for Audio Codec.
+ * Criteria for File extension.
  *
  * @author charlottew
  */
-public class AudioCodecCriteria extends AbstractComboboxCriteria<AudioMatroskaCodecIdEnum> {
+public class GeneralFileExtensionCriteria extends AbstractComboboxCriteria<FileExtensionSearchEnum> {
 
     static {
         AVAILABLE_TYPES = new ArrayList<>();
@@ -28,7 +28,7 @@ public class AudioCodecCriteria extends AbstractComboboxCriteria<AudioMatroskaCo
     /**
      * Default Constructor.
      */
-    public AudioCodecCriteria() {
+    public GeneralFileExtensionCriteria() {
         // Internal use, do not delete, used in reflection.
     }
 
@@ -38,26 +38,24 @@ public class AudioCodecCriteria extends AbstractComboboxCriteria<AudioMatroskaCo
      * @param filter Linked Filter
      * @see Criteria
      */
-    public AudioCodecCriteria(@NonNull final Criteria filter) {
+    public GeneralFileExtensionCriteria(@NonNull final Criteria filter) {
         super(filter);
     }
 
     @Override
     @NonNull
     public SearchTypeEnum getType() {
-        return SearchTypeEnum.AUDIO;
+        return SearchTypeEnum.GENERAL;
     }
 
     @Override
     public @NonNull String getFullName() {
-        return "Codec";
+        return "File extension";
     }
 
     @Override
     public void handleEvent(final SearchHelper searchHelper, @NonNull final AbstractSearchCriteriaController abstractSearchCriteriaController) {
-        final Criteria filter = abstractSearchCriteriaController.getNewCriteria();
-        final AudioCodecCriteria audioCodecCriteria = new AudioCodecCriteria(filter);
+        // TODO Auto-generated method stub
 
-        searchHelper.addCriteria(audioCodecCriteria);
     }
 }
