@@ -38,12 +38,12 @@
 	<classpathentry kind="lib" path="libs/sqlbuilder-2.1.7.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
-			<attribute name="annotationpath" value="/JMediaInspector/externalAnnotations"/>
+			<attribute name="annotationpath" value="/jmediainspector/externalAnnotations"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/JMetadata"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JMetadataQuery"/>
 	<classpathentry kind="lib" path="libs/JMetadata-1.2.jar"/>
-	<classpathentry kind="lib" path="libs/JMetadataQuery-1.1b.jar"/>
+	<classpathentry kind="lib" path="libs/JMetadataQuery-1.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
