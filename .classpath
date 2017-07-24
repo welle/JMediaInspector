@@ -43,7 +43,7 @@
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/JMetadata"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JMetadataQuery"/>
-	<classpathentry kind="lib" path="libs/JMetadata-1.2.jar"/>
+	<classpathentry kind="lib" path="libs/JMetadata-1.2.jar" sourcepath="/JMetadata/JMetadata/javasource"/>
 	<classpathentry kind="lib" path="libs/JMetadataQuery-1.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
