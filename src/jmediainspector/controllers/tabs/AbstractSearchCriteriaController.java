@@ -1,6 +1,5 @@
-package jmediainspector.controllers;
+package jmediainspector.controllers.tabs;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +9,7 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import javafx.beans.value.ChangeListener;
+import javafx.concurrent.Service;
 import javafx.concurrent.Worker.State;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -45,7 +45,6 @@ import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 import jmediainspector.helpers.search.types.text.SearchTextEnum;
 import jmediainspector.helpers.search.types.video.SearchVideoEnum;
 import jmediainspector.listeners.ApplicationConfigurationsListener;
-import jmediainspector.services.RunSearchService;
 
 /**
  * Abstract class for SearchCriteria Controllers.
@@ -71,7 +70,7 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
     @FXML
     private Button runButton;
 
-    private SearchHelper searchHelper;
+    protected SearchHelper searchHelper;
     private PlexConfigurationHelper configurationHelper;
 
     @FXML
@@ -215,7 +214,6 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
     @FXML
     private void runSearch() {
         // PUT IN SERVICE, disable run button
-        final List<@NonNull File> result = new ArrayList<>();
         final List<@NonNull AbstractInterface<?>> filterList = this.searchHelper.getFiltersList();
         if (!filterList.isEmpty()) {
             @Nullable
@@ -225,7 +223,7 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
                 alert.showAndWait();
             } else {
                 final Paths paths = selectedConfiguration.getPaths();
-                if (paths == null) {
+                if (paths == null || paths.getPath().size() == 0) {
                     final Alert alert = DialogsHelper.getAlert(JMediaInspector.getPrimaryStage(), Alert.AlertType.ERROR, "No path(s) in the selected configuration!");
                     alert.showAndWait();
                 } else {
@@ -235,15 +233,16 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
                             pathsList.add(path);
                         }
                     }
-                    callSearchService(pathsList);
+                    callSearchService(selectedConfiguration, pathsList);
                 }
             }
         }
     }
 
-    private void callSearchService(@NonNull final List<@NonNull String> pathsList) {
-        final List<@NonNull File> result = new ArrayList<>();
-        final RunSearchService service = new RunSearchService(pathsList, result, this.searchHelper.getFiltersList());
+    abstract Service<?> getSearchService(@Nullable Configuration selectedConfiguration, @NonNull final List<@NonNull String> pathsList);
+
+    private void callSearchService(@Nullable final Configuration selectedConfiguration, @NonNull final List<@NonNull String> pathsList) {
+        final Service<?> service = getSearchService(selectedConfiguration, pathsList);
 
         final Stage stage = (Stage) JMediaInspector.getPrimaryStage().getScene().getWindow();
         assert stage != null;
@@ -265,7 +264,7 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
             final Window window = progressDialog.getDialogPane().getScene().getWindow();
             window.hide();
             JMediaInspector.getPrimaryStage().getScene().getRoot().setEffect(null);
-            handleSearchResult(result);
+            handleSearchResult(service.getValue());
         });
         this.runButton.setDisable(false);
         service.start();
@@ -274,9 +273,9 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
     /**
      * Handle the result.
      *
-     * @param result list of matching criteria files
+     * @param object result of the service
      */
-    abstract void handleSearchResult(@NonNull List<@NonNull File> result);
+    abstract void handleSearchResult(Object object);
 
     @FXML
     private void saveSearch() {

@@ -19,7 +19,7 @@ import javafx.scene.layout.GridPane;
 import jmediainspector.config.Criteria;
 import jmediainspector.config.ObjectFactory;
 import jmediainspector.context.ApplicationContext;
-import jmediainspector.controllers.AbstractSearchCriteriaController;
+import jmediainspector.controllers.tabs.AbstractSearchCriteriaController;
 import jmediainspector.helpers.search.SearchHelper;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
 

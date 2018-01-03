@@ -4,7 +4,7 @@ import org.eclipse.jdt.annotation.NonNull;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import jmediainspector.controllers.AbstractSearchCriteriaController;
+import jmediainspector.controllers.tabs.AbstractSearchCriteriaController;
 import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 
 /**
@@ -13,7 +13,7 @@ import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 public class SearchEventHandler implements EventHandler<ActionEvent> {
 
     @NonNull
-    private final AbstractInterface abstractInterface;
+    private final AbstractInterface<?> abstractInterface;
     private final SearchHelper searchHelper;
     private @NonNull final AbstractSearchCriteriaController abstractSearchCriteriaController;
 
@@ -24,7 +24,7 @@ public class SearchEventHandler implements EventHandler<ActionEvent> {
      * @param abstractInterface
      * @param abstractSearchCriteriaController
      */
-    public SearchEventHandler(final SearchHelper searchHelper, @NonNull final AbstractInterface abstractInterface, @NonNull final AbstractSearchCriteriaController abstractSearchCriteriaController) {
+    public SearchEventHandler(final SearchHelper searchHelper, @NonNull final AbstractInterface<?> abstractInterface, @NonNull final AbstractSearchCriteriaController abstractSearchCriteriaController) {
         this.abstractInterface = abstractInterface;
         this.searchHelper = searchHelper;
         this.abstractSearchCriteriaController = abstractSearchCriteriaController;

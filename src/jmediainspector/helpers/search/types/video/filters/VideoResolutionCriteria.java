@@ -11,7 +11,7 @@ import aka.jmetadataquery.main.types.search.constants.video.VideoResolutionSearc
 import aka.jmetadataquery.main.types.search.operation.interfaces.OperatorSearchInterface;
 import aka.jmetadataquery.main.types.search.video.VideoResolutionSearch;
 import jmediainspector.config.Criteria;
-import jmediainspector.controllers.AbstractSearchCriteriaController;
+import jmediainspector.controllers.tabs.AbstractSearchCriteriaController;
 import jmediainspector.helpers.search.SearchHelper;
 import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
@@ -29,8 +29,6 @@ import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
  * @author charlottew
  */
 public class VideoResolutionCriteria extends AbstractComboboxCriteria<VideoResolutionSearchEnum> {
-
-    private VideoResolutionCriteria videoResolutionCriteria;
 
     /**
      * Default Constructor.
@@ -65,16 +63,15 @@ public class VideoResolutionCriteria extends AbstractComboboxCriteria<VideoResol
         final Criteria filter = abstractSearchCriteriaController.getNewCriteria();
         filter.setType(ConditionFilter.GREATER_THAN.name());
         final VideoResolutionCriteria newCriteria = new VideoResolutionCriteria(filter);
-        this.videoResolutionCriteria = newCriteria;
 
         searchHelper.addCriteria(newCriteria);
     }
 
     @Override
     public OperatorSearchInterface getSearch() {
-        final BinaryCondition.Op operation = this.videoResolutionCriteria.getSelectedOperator();
+        final BinaryCondition.Op operation = getSelectedOperator();
         VideoResolutionSearch videoResolutionSearch = null;
-        final Enum<?> value = this.videoResolutionCriteria.getSelectedEnumValue();
+        final Enum<?> value = getSelectedEnumValue();
         if (operation != null && value instanceof VideoResolutionSearchEnum) {
             final @NonNull VideoResolutionSearchEnum codecEnum = (VideoResolutionSearchEnum) value;
             videoResolutionSearch = new VideoResolutionSearch(operation, codecEnum);
@@ -97,7 +94,7 @@ public class VideoResolutionCriteria extends AbstractComboboxCriteria<VideoResol
 
     @Override
     public AbstractInterface<?> getCriteria() {
-        return this.videoResolutionCriteria;
+        return this;
     }
 
 }

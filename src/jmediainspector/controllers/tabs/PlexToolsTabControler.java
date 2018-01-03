@@ -1,4 +1,4 @@
-package jmediainspector.controllers;
+package jmediainspector.controllers.tabs;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +39,7 @@ import jmediainspector.config.Configuration;
 import jmediainspector.config.Configurations;
 import jmediainspector.config.helpers.PlexConfigurationHelper;
 import jmediainspector.context.ApplicationContext;
+import jmediainspector.controllers.ConfigurationListCell;
 import jmediainspector.helpers.database.PlexDBHelper;
 import jmediainspector.helpers.dialogs.DialogsHelper;
 import jmediainspector.helpers.dialogs.FileChooserHelper;
@@ -113,7 +114,7 @@ public class PlexToolsTabControler extends AnchorPane implements ApplicationConf
         this.copiedPlexFileDB = null;
         File configFile = null;
         try {
-            if (this.currentConfiguration != null) {
+            if (this.currentConfiguration != null && this.currentConfiguration.getFile() != null) {
                 configFile = new File(this.currentConfiguration.getFile());
             }
         } catch (final Exception e) {

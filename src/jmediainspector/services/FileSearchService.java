@@ -29,10 +29,9 @@ import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
  *
  * @author Cha
  */
-public final class RunSearchService extends Service<List<@NonNull File>> {
+public final class FileSearchService extends Service<List<@NonNull File>> {
 
     private @NonNull final List<@NonNull String> filePathList;
-    private @NonNull List<@NonNull File> fileMatchingList = new ArrayList<>();
     @NonNull
     private final List<@NonNull AbstractInterface<?>> filterList;
 
@@ -40,12 +39,10 @@ public final class RunSearchService extends Service<List<@NonNull File>> {
      * Constructor.
      *
      * @param filePathList
-     * @param result
      * @param filterList
      */
-    public RunSearchService(@NonNull final List<@NonNull String> filePathList, @NonNull final List<@NonNull File> result, @NonNull final List<@NonNull AbstractInterface<?>> filterList) {
+    public FileSearchService(@NonNull final List<@NonNull String> filePathList, @NonNull final List<@NonNull AbstractInterface<?>> filterList) {
         this.filePathList = filePathList;
-        this.fileMatchingList = result;
         this.filterList = filterList;
     }
 
@@ -57,23 +54,30 @@ public final class RunSearchService extends Service<List<@NonNull File>> {
 
             @Override
             protected List<@NonNull File> call() {
-                final long fileLength = RunSearchService.this.filePathList.size();
+                final List<@NonNull File> fileMatchingList = new ArrayList<>();
+                final long fileLength = FileSearchService.this.filePathList.size();
                 final List<@NonNull File> fileToProcessList = new ArrayList<>();
                 for (int i = 0; i < fileLength; i++) {
-                    final String path = RunSearchService.this.filePathList.get(i);
+                    final String path = FileSearchService.this.filePathList.get(i);
                     final List<@NonNull File> files = getFilesInPath(path);
                     fileToProcessList.addAll(files);
                 }
                 this.totalSize = fileToProcessList.size();
                 updateProgress(0, this.totalSize);
-                for (int i = 0; i < this.totalSize; i++) {
-                    final File file = fileToProcessList.get(i);
-                    RunSearchService.this.fileMatchingList.addAll(fileMatched(file));
+                final AndSearch rootSearch = getRootSearch();
+                int i = 0;
+                for (final File file : fileToProcessList) {
+                    final boolean isFileMatchingCriteria = rootSearch.isFileMatchingCriteria(file);
+                    System.err.println("[FileSearchService] " + file.getAbsolutePath() + " fileMatchingCriteria = " + isFileMatchingCriteria);
+                    if (isFileMatchingCriteria) {
+                        fileMatchingList.add(file);
+                    }
                     updateProgress(i, this.totalSize);
+                    i++;
                 }
                 updateMessage("Found all.");
 
-                return RunSearchService.this.fileMatchingList;
+                return fileMatchingList;
             }
 
             @NonNull
@@ -97,47 +101,48 @@ public final class RunSearchService extends Service<List<@NonNull File>> {
                 return result;
             }
 
-            private @NonNull List<@NonNull File> fileMatched(@Nullable final File file) {
-                final List<@NonNull File> result = new ArrayList<>();
-                if (file != null) {
-                    final Map<SearchTypeEnum, List<AbstractInterface<?>>> sublistMap = RunSearchService.this.filterList.stream()
-                            .collect(Collectors.groupingBy(AbstractInterface::getType, Collectors.toList()));
+            @NonNull
+            private AndSearch getRootSearch() {
+                final Map<SearchTypeEnum, List<AbstractInterface<?>>> sublistMap = FileSearchService.this.filterList.stream()
+                        .collect(Collectors.groupingBy(AbstractInterface::getType, Collectors.toList()));
 
-                    final AndSearch rootSearch = new AndSearch();
-                    for (final Entry<SearchTypeEnum, List<AbstractInterface<?>>> entry : sublistMap.entrySet()) {
-                        final List<AbstractInterface<?>> list = entry.getValue();
-                        if (!list.isEmpty()) {
-                            final AndSearch subRootAndSearch = new AndSearch(true);
-                            // Get all required
-                            @NonNull
-                            final OperatorSearchInterface @NonNull [] allSearch = getAllSearch(true, list);
-                            if (allSearch.length > 0) {
-                                final AndSearch andSearch = new AndSearch(true);
-                                for (final OperatorSearchInterface operatorSearchInterface : allSearch) {
-                                    andSearch.addSearch(operatorSearchInterface);
-                                }
-                                subRootAndSearch.addSearch(andSearch);
+                final AndSearch rootSearch = new AndSearch(true);
+                for (final Entry<SearchTypeEnum, List<AbstractInterface<?>>> entry : sublistMap.entrySet()) {
+                    final List<AbstractInterface<?>> list = entry.getValue();
+                    if (!list.isEmpty()) {
+                        // Get all required
+                        @NonNull
+                        final OperatorSearchInterface @NonNull [] allRequiredSearch = getAllSearch(true, list);
+                        if (allRequiredSearch.length > 0) {
+                            final AndSearch andSearch = new AndSearch(true);
+                            boolean added = false;
+                            for (final OperatorSearchInterface operatorSearchInterface : allRequiredSearch) {
+                                andSearch.addSearch(operatorSearchInterface);
+                                added = true;
                             }
+                            if (added) {
+                                rootSearch.addSearch(andSearch);
+                            }
+                        }
 
-                            // Get all not required
-                            @NonNull
-                            final OperatorSearchInterface @NonNull [] allSearch2 = getAllSearch(false, list);
-                            if (allSearch2.length > 0) {
-                                final OrSearch orSearch = new OrSearch();
-                                for (final OperatorSearchInterface operatorSearchInterface : allSearch2) {
-                                    orSearch.addSearch(operatorSearchInterface);
-                                }
-                                subRootAndSearch.addSearch(orSearch);
+                        // Get all not required
+                        @NonNull
+                        final OperatorSearchInterface @NonNull [] allNotRequiredSearch = getAllSearch(false, list);
+                        if (allNotRequiredSearch.length > 0) {
+                            final OrSearch orSearch = new OrSearch();
+                            boolean added = false;
+                            for (final OperatorSearchInterface operatorSearchInterface : allNotRequiredSearch) {
+                                orSearch.addSearch(operatorSearchInterface);
+                                added = true;
+                            }
+                            if (added) {
+                                rootSearch.addSearch(orSearch);
                             }
                         }
                     }
-
-                    if (rootSearch.isFileMatchingCriteria(file)) {
-                        result.add(file);
-                    }
                 }
 
-                return result;
+                return rootSearch;
             }
 
             private @NonNull OperatorSearchInterface @NonNull [] getAllSearch(final boolean required, final List<AbstractInterface<?>> list) {

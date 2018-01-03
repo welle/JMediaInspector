@@ -12,7 +12,7 @@ import aka.jmetadata.main.constants.codecs.interfaces.CodecEnum;
 import aka.jmetadataquery.main.types.search.audio.AudioCodecIdSearch;
 import aka.jmetadataquery.main.types.search.operation.interfaces.OperatorSearchInterface;
 import jmediainspector.config.Criteria;
-import jmediainspector.controllers.AbstractSearchCriteriaController;
+import jmediainspector.controllers.tabs.AbstractSearchCriteriaController;
 import jmediainspector.helpers.search.SearchHelper;
 import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
@@ -25,8 +25,6 @@ import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
  * @author charlottew
  */
 public class AudioCodecCriteria extends AbstractComboboxCriteria<AudioMatroskaCodecIdEnum> {
-
-    private AudioCodecCriteria audioCodecCriteria;
 
     /**
      * Default Constructor.
@@ -60,16 +58,15 @@ public class AudioCodecCriteria extends AbstractComboboxCriteria<AudioMatroskaCo
     public void handleEvent(final SearchHelper searchHelper, @NonNull final AbstractSearchCriteriaController abstractSearchCriteriaController) {
         final Criteria filter = abstractSearchCriteriaController.getNewCriteria();
         final AudioCodecCriteria newCriteria = new AudioCodecCriteria(filter);
-        this.audioCodecCriteria = newCriteria;
 
         searchHelper.addCriteria(newCriteria);
     }
 
     @Override
     public OperatorSearchInterface getSearch() {
-        final BinaryCondition.Op operation = this.audioCodecCriteria.getSelectedOperator();
+        final BinaryCondition.Op operation = getSelectedOperator();
         AudioCodecIdSearch audioCodecIdSearch = null;
-        final Enum<?> value = this.audioCodecCriteria.getSelectedEnumValue();
+        final Enum<?> value = getSelectedEnumValue();
         if (operation != null && value instanceof CodecEnum) {
             final CodecEnum codecEnum = (CodecEnum) value;
             audioCodecIdSearch = new AudioCodecIdSearch(operation, codecEnum);
@@ -88,7 +85,7 @@ public class AudioCodecCriteria extends AbstractComboboxCriteria<AudioMatroskaCo
 
     @Override
     public AbstractInterface<?> getCriteria() {
-        return this.audioCodecCriteria;
+        return this;
     }
 
 }

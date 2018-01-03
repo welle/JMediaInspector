@@ -1,4 +1,4 @@
-package jmediainspector.controllers;
+package jmediainspector.controllers.dialogs;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,6 +33,8 @@ import jmediainspector.config.Configuration;
 import jmediainspector.config.Configurations;
 import jmediainspector.config.helpers.PlexConfigurationHelper;
 import jmediainspector.context.ApplicationContext;
+import jmediainspector.controllers.ConfigurationListCell;
+import jmediainspector.controllers.ConfigurationPathListCell;
 import jmediainspector.helpers.dialogs.DialogsHelper;
 import jmediainspector.helpers.dialogs.FileChooserHelper;
 import jmediainspector.helpers.effects.ResizeHelper;
@@ -214,7 +216,7 @@ public class ConfigurationsDialogController extends AnchorPane {
     private void saveConfiguration() {
         // Check if name is not empty
         final Configuration currentConfig = this.configurationsList.getValue();
-        if (currentConfig.getName() == null || currentConfig.getName().trim().length() > 0) {
+        if (currentConfig.getName() == null || currentConfig.getName().trim().length() == 0) {
             final Stage currentPrimaryStageInitial = this.primaryStageInitial;
             assert currentPrimaryStageInitial != null;
             final Alert alert = DialogsHelper.getAlert(currentPrimaryStageInitial, Alert.AlertType.ERROR, "Configuration name can not be empty!");
@@ -280,6 +282,7 @@ public class ConfigurationsDialogController extends AnchorPane {
     private void addConfigButton() {
         final Configuration newConfiguration = this.configurationHelper.addNewConfiguration();
         refreshConfigurationList(newConfiguration);
+        setSelectedConfiguration();
         switchToEditable(true);
         this.configurationName.requestFocus();
     }

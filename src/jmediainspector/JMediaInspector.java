@@ -17,7 +17,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import jmediainspector.constants.ApplicationConstants;
-import jmediainspector.controllers.PlexToolsTabControler;
+import jmediainspector.controllers.tabs.PlexToolsTabControler;
 import jmediainspector.helpers.dialogs.DialogsHelper;
 import jmediainspector.helpers.effects.EffectUtilities;
 import jmediainspector.helpers.effects.ResizeHelper;

@@ -14,7 +14,6 @@ import javafx.scene.control.ComboBox;
 import jmediainspector.config.Criteria;
 import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.commons.ConditionFilterListCell;
-import jmediainspector.helpers.search.enums.SearchTypeEnum;
 import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 
 /**
@@ -78,12 +77,6 @@ public abstract class AbstractComboboxCriteria<T extends Enum<?>> extends Abstra
         final ObservableList<? extends Enum<?>> observableList2 = FXCollections.observableArrayList(this.availableValues);
         this.valueCombobox = new ComboBox<>(observableList2);
         this.rightPane.add(this.valueCombobox, 3, 0);
-    }
-
-    @Override
-    @NonNull
-    public SearchTypeEnum getType() {
-        return SearchTypeEnum.VIDEO;
     }
 
     @Override

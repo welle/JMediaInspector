@@ -11,7 +11,7 @@ import aka.jmetadataquery.main.types.constants.LanguageEnum;
 import aka.jmetadataquery.main.types.search.operation.interfaces.OperatorSearchInterface;
 import aka.jmetadataquery.main.types.search.text.TextLanguageSearch;
 import jmediainspector.config.Criteria;
-import jmediainspector.controllers.AbstractSearchCriteriaController;
+import jmediainspector.controllers.tabs.AbstractSearchCriteriaController;
 import jmediainspector.helpers.search.SearchHelper;
 import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
@@ -29,8 +29,6 @@ import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
  * @author charlottew
  */
 public class TextLanguageCriteria extends AbstractComboboxCriteria<LanguageEnum> {
-
-    private TextLanguageCriteria textLanguageCriteria;
 
     /**
      * Default Constructor.
@@ -64,16 +62,15 @@ public class TextLanguageCriteria extends AbstractComboboxCriteria<LanguageEnum>
     public void handleEvent(final SearchHelper searchHelper, @NonNull final AbstractSearchCriteriaController abstractSearchCriteriaController) {
         final Criteria filter = abstractSearchCriteriaController.getNewCriteria();
         final TextLanguageCriteria newCriteria = new TextLanguageCriteria(filter);
-        this.textLanguageCriteria = newCriteria;
 
         searchHelper.addCriteria(newCriteria);
     }
 
     @Override
     public OperatorSearchInterface getSearch() {
-        final BinaryCondition.Op operation = this.textLanguageCriteria.getSelectedOperator();
+        final BinaryCondition.Op operation = getSelectedOperator();
         TextLanguageSearch textLanguageSearch = null;
-        final Enum<?> value = this.textLanguageCriteria.getSelectedEnumValue();
+        final Enum<?> value = getSelectedEnumValue();
         if (operation != null && value instanceof LanguageEnum) {
             final LanguageEnum codecEnum = (LanguageEnum) value;
             textLanguageSearch = new TextLanguageSearch(operation, codecEnum);
@@ -92,6 +89,6 @@ public class TextLanguageCriteria extends AbstractComboboxCriteria<LanguageEnum>
 
     @Override
     public AbstractInterface<?> getCriteria() {
-        return this.textLanguageCriteria;
+        return this;
     }
 }

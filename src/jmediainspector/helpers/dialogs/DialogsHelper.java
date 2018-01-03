@@ -2,7 +2,6 @@ package jmediainspector.helpers.dialogs;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNull;
 
@@ -23,7 +22,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import jmediainspector.constants.ApplicationConstants;
-import jmediainspector.controllers.ConfigurationsDialogController;
+import jmediainspector.controllers.dialogs.ConfigurationsDialogController;
 
 /**
  * Dialogs helper.
@@ -90,7 +89,7 @@ public final class DialogsHelper {
      * @return process run search service dialog
      */
     @NonNull
-    public static Dialog<String> createProgressRunSearchServiceDialog(@NonNull final Service<List<@NonNull File>> service, @NonNull final Stage owner) {
+    public static Dialog<String> createProgressRunSearchServiceDialog(@NonNull final Service<?> service, @NonNull final Stage owner) {
         final Dialog<String> dialog = new Dialog<>();
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.initStyle(StageStyle.UNDECORATED);
