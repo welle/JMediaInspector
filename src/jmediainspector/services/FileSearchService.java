@@ -68,7 +68,6 @@ public final class FileSearchService extends Service<List<@NonNull File>> {
                 int i = 0;
                 for (final File file : fileToProcessList) {
                     final boolean isFileMatchingCriteria = rootSearch.isFileMatchingCriteria(file);
-                    System.err.println("[FileSearchService] " + file.getAbsolutePath() + " fileMatchingCriteria = " + isFileMatchingCriteria);
                     if (isFileMatchingCriteria) {
                         fileMatchingList.add(file);
                     }
