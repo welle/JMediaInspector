@@ -10,6 +10,8 @@ import com.healthmarketscience.sqlbuilder.BinaryCondition;
 
 import aka.jmetadataquery.main.types.constants.LanguageEnum;
 import aka.jmetadataquery.main.types.search.audio.AudioLanguageSearch;
+import aka.jmetadataquery.main.types.search.audio.AudioNumberOfStreamSearch;
+import aka.jmetadataquery.main.types.search.operation.AndSearch;
 import aka.jmetadataquery.main.types.search.operation.interfaces.OperatorSearchInterface;
 import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
@@ -67,13 +69,23 @@ public class AudioLanguageCriteria extends AbstractComboboxCriteria<LanguageEnum
     @Override
     public OperatorSearchInterface getSearch() {
         final BinaryCondition.Op operation = getSelectedOperator();
-        AudioLanguageSearch audioLanguageSearch = null;
+        OperatorSearchInterface result = null;
         final Enum<?> value = getSelectedEnumValue();
+        AudioLanguageSearch audioLanguageSearch;
         if (operation != null && value instanceof LanguageEnum) {
             final LanguageEnum languageEnum = (LanguageEnum) value;
             audioLanguageSearch = new AudioLanguageSearch(operation, languageEnum);
+            if (getConditionFilter() == ConditionFilter.CONTAINS_ONLY) {
+                final AndSearch andSearch = new AndSearch(false);
+                andSearch.addSearch(audioLanguageSearch);
+                final AudioNumberOfStreamSearch audioNumberOfStreamSearch = new AudioNumberOfStreamSearch(operation, Long.valueOf(1));
+                andSearch.addSearch(audioNumberOfStreamSearch);
+                result = andSearch;
+            } else {
+                result = audioLanguageSearch;
+            }
         }
-        return audioLanguageSearch;
+        return result;
     }
 
     @Override
@@ -81,6 +93,7 @@ public class AudioLanguageCriteria extends AbstractComboboxCriteria<LanguageEnum
         this.availableTypes = new ArrayList<>();
         this.availableTypes.add(ConditionFilter.EQUALS);
         this.availableTypes.add(ConditionFilter.NOT_EQUALS);
+        this.availableTypes.add(ConditionFilter.CONTAINS_ONLY);
 
         this.availableValues = new ArrayList<>(Arrays.asList(LanguageEnum.values()));
     }

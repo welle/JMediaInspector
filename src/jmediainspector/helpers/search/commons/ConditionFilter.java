@@ -14,44 +14,49 @@ import com.healthmarketscience.sqlbuilder.BinaryCondition.Op;
 public enum ConditionFilter {
 
     /**
+     * Contains only.
+     */
+    CONTAINS_ONLY(BinaryCondition.Op.EQUAL_TO, "Contains only"),
+
+    /**
      * Less than.
      */
-    LESS_THAN(BinaryCondition.Op.LESS_THAN, "less than"),
+    LESS_THAN(BinaryCondition.Op.LESS_THAN, "Less than"),
 
     /**
      * Less than or equal to.
      */
-    LESS_THAN_OR_EQUAL_TO(BinaryCondition.Op.LESS_THAN_OR_EQUAL_TO, "less than or equal to"),
+    LESS_THAN_OR_EQUAL_TO(BinaryCondition.Op.LESS_THAN_OR_EQUAL_TO, "Less than or equal to"),
 
     /**
      * Greater than.
      */
-    GREATER_THAN(BinaryCondition.Op.GREATER_THAN, "greater than"),
+    GREATER_THAN(BinaryCondition.Op.GREATER_THAN, "Greater than"),
 
     /**
      * Greater than or equal to.
      */
-    GREATER_THAN_OR_EQUAL_TO(BinaryCondition.Op.GREATER_THAN_OR_EQUAL_TO, "greater than or equal to"),
+    GREATER_THAN_OR_EQUAL_TO(BinaryCondition.Op.GREATER_THAN_OR_EQUAL_TO, "Greater than or equal to"),
 
     /**
      * Like.
      */
-    LIKE(BinaryCondition.Op.LIKE, "like"),
+    LIKE(BinaryCondition.Op.LIKE, "Like"),
 
     /**
      * Not like.
      */
-    NOT_LIKE(BinaryCondition.Op.NOT_LIKE, "not like"),
+    NOT_LIKE(BinaryCondition.Op.NOT_LIKE, "Not like"),
 
     /**
      * Equal to.
      */
-    EQUALS(BinaryCondition.Op.EQUAL_TO, "equal to"),
+    EQUALS(BinaryCondition.Op.EQUAL_TO, "Equal to"),
 
     /**
      * Not equal to.
      */
-    NOT_EQUALS(BinaryCondition.Op.NOT_EQUAL_TO, "not equal to");
+    NOT_EQUALS(BinaryCondition.Op.NOT_EQUAL_TO, "Not equal to");
 
     private Op operation;
     private @NonNull String readableName;

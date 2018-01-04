@@ -21,6 +21,7 @@ import jmediainspector.config.ObjectFactory;
 import jmediainspector.context.ApplicationContext;
 import jmediainspector.controllers.tabs.AbstractSearchCriteriaController;
 import jmediainspector.helpers.search.SearchHelper;
+import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
 
 /**
@@ -115,6 +116,15 @@ public abstract class AbstractInterface<T extends Enum<?>> {
      */
     @NonNull
     public abstract SearchTypeEnum getType();
+
+    /**
+     * Get selected condition filter.
+     *
+     * @return select condition filter.
+     * @see ConditionFilter
+     */
+    @Nullable
+    public abstract ConditionFilter getConditionFilter();
 
     /**
      * Get name.

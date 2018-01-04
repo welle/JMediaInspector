@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.sun.javafx.collections.ObservableListWrapper;
@@ -88,6 +89,15 @@ public abstract class AbstractComboboxCriteria<T extends Enum<?>> extends Abstra
             result = conditionFilter.getOperation();
         }
         return result;
+    }
+
+    @Override
+    @Nullable
+    public ConditionFilter getConditionFilter() {
+        final String value = this.comboboxFiltersType.getSelectionModel().getSelectedItem();
+        final ConditionFilter conditionFilter = ConditionFilter.getConditionFilter(value);
+
+        return conditionFilter;
     }
 
     @Override
