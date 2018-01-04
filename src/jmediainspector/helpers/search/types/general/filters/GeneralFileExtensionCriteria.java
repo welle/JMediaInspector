@@ -10,10 +10,13 @@ import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import aka.jmetadataquery.main.types.constants.file.FileExtensionSearchEnum;
 import aka.jmetadataquery.main.types.search.file.FileExtensionSearch;
 import aka.jmetadataquery.main.types.search.operation.interfaces.OperatorSearchInterface;
+import javafx.scene.control.ComboBox;
+import javafx.util.StringConverter;
 import jmediainspector.config.Criteria;
 import jmediainspector.controllers.tabs.AbstractSearchCriteriaController;
 import jmediainspector.helpers.search.SearchHelper;
 import jmediainspector.helpers.search.commons.ConditionFilter;
+import jmediainspector.helpers.search.comparators.EnumByNameComparator;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
 import jmediainspector.helpers.search.types.componenttype.AbstractComboboxCriteria;
 import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
@@ -85,6 +88,29 @@ public class GeneralFileExtensionCriteria extends AbstractComboboxCriteria<FileE
     @Override
     public AbstractInterface<?> getCriteria() {
         return this;
+    }
+
+    @Override
+    public ComboBox<? extends Enum<?>> getCombobox() {
+        final ComboBox<FileExtensionSearchEnum> result = new ComboBox<>();
+        final StringConverter<FileExtensionSearchEnum> converter = new StringConverter<FileExtensionSearchEnum>() {
+            @Override
+            public String toString(final FileExtensionSearchEnum object) {
+                final String name = object.name();
+                return name;
+            }
+
+            @Override
+            public FileExtensionSearchEnum fromString(final String string) {
+                return null;
+            }
+        };
+        result.setConverter(converter);
+        final FileExtensionSearchEnum[] values = FileExtensionSearchEnum.values();
+        Arrays.sort(values, EnumByNameComparator.INSTANCE);
+        result.getItems().setAll(values);
+
+        return result;
     }
 
 }

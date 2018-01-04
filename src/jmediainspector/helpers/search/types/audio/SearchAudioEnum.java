@@ -6,7 +6,7 @@ import java.util.List;
 import org.eclipse.jdt.annotation.NonNull;
 
 import jmediainspector.helpers.search.types.audio.filters.AudioCodecCriteria;
-import jmediainspector.helpers.search.types.general.SearchGeneralEnum;
+import jmediainspector.helpers.search.types.audio.filters.AudioLanguageCriteria;
 import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 import jmediainspector.helpers.search.types.interfaces.SearchInterface;
 
@@ -16,18 +16,24 @@ import jmediainspector.helpers.search.types.interfaces.SearchInterface;
  * @author Cha
  */
 public enum SearchAudioEnum implements SearchInterface {
+
     /**
      * Codec.
      */
-    CODEC(AudioCodecCriteria.class);
+    CODEC(AudioCodecCriteria.class),
+
+    /**
+     * Language.
+     */
+    Language(AudioLanguageCriteria.class);
 
     @NonNull
     private Class<? extends AbstractInterface> filtersInterface;
     private static @NonNull List<Class<? extends AbstractInterface>> ALL_VALUES = new ArrayList<>();
 
     static {
-        for (final @NonNull SearchGeneralEnum searchGeneralEnum : SearchGeneralEnum.values()) {
-            ALL_VALUES.add(searchGeneralEnum.getFiltersInterface());
+        for (final @NonNull SearchAudioEnum searchAudioEnum : SearchAudioEnum.values()) {
+            ALL_VALUES.add(searchAudioEnum.getFiltersInterface());
         }
     }
 

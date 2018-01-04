@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNull;
 
-import jmediainspector.helpers.search.types.general.SearchGeneralEnum;
 import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 import jmediainspector.helpers.search.types.interfaces.SearchInterface;
 import jmediainspector.helpers.search.types.video.filters.VideoResolutionCriteria;
@@ -27,8 +26,8 @@ public enum SearchVideoEnum implements SearchInterface {
     private static @NonNull List<Class<? extends AbstractInterface>> ALL_VALUES = new ArrayList<>();
 
     static {
-        for (final @NonNull SearchGeneralEnum searchGeneralEnum : SearchGeneralEnum.values()) {
-            ALL_VALUES.add(searchGeneralEnum.getFiltersInterface());
+        for (final @NonNull SearchVideoEnum searchVideoEnum : SearchVideoEnum.values()) {
+            ALL_VALUES.add(searchVideoEnum.getFiltersInterface());
         }
     }
 

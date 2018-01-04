@@ -8,7 +8,6 @@ import org.eclipse.jdt.annotation.NonNull;
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 import com.sun.javafx.collections.ObservableListWrapper;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import jmediainspector.config.Criteria;
@@ -74,10 +73,11 @@ public abstract class AbstractComboboxCriteria<T extends Enum<?>> extends Abstra
         this.rightPane.add(this.comboboxFiltersType, 2, 0);
 
         // link value
-        final ObservableList<? extends Enum<?>> observableList2 = FXCollections.observableArrayList(this.availableValues);
-        this.valueCombobox = new ComboBox<>(observableList2);
+        this.valueCombobox = getCombobox();
         this.rightPane.add(this.valueCombobox, 3, 0);
     }
+
+    public abstract ComboBox<? extends Enum<?>> getCombobox();
 
     @Override
     public BinaryCondition.Op getSelectedOperator() {

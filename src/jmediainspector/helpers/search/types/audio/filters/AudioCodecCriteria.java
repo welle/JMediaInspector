@@ -3,6 +3,7 @@ package jmediainspector.helpers.search.types.audio.filters;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.eclipse.jdt.annotation.NonNull;
 
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
@@ -11,10 +12,13 @@ import aka.jmetadata.main.constants.codecs.AudioMatroskaCodecIdEnum;
 import aka.jmetadata.main.constants.codecs.interfaces.CodecEnum;
 import aka.jmetadataquery.main.types.search.audio.AudioCodecIdSearch;
 import aka.jmetadataquery.main.types.search.operation.interfaces.OperatorSearchInterface;
+import javafx.scene.control.ComboBox;
+import javafx.util.StringConverter;
 import jmediainspector.config.Criteria;
 import jmediainspector.controllers.tabs.AbstractSearchCriteriaController;
 import jmediainspector.helpers.search.SearchHelper;
 import jmediainspector.helpers.search.commons.ConditionFilter;
+import jmediainspector.helpers.search.comparators.EnumByNameComparator;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
 import jmediainspector.helpers.search.types.componenttype.AbstractComboboxCriteria;
 import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
@@ -88,4 +92,38 @@ public class AudioCodecCriteria extends AbstractComboboxCriteria<AudioMatroskaCo
         return this;
     }
 
+    @Override
+    public ComboBox<? extends Enum<?>> getCombobox() {
+        final ComboBox<AudioMatroskaCodecIdEnum> result = new ComboBox<>();
+        final StringConverter<AudioMatroskaCodecIdEnum> converter = new StringConverter<AudioMatroskaCodecIdEnum>() {
+            @Override
+            public String toString(final AudioMatroskaCodecIdEnum object) {
+                String name = object.name();
+                if (name != null && name.trim().length() > 0) {
+                    if (name.startsWith("A_")) {
+                        name = name.substring(2, name.length());
+                    }
+                    name = name.replace("_", " ");
+                    name = WordUtils.capitalizeFully(name);
+                    final int firstSpaceIndex = name.indexOf(" ");
+                    if (firstSpaceIndex == -1) {
+                        name = name.toUpperCase();
+                    } else {
+                        name = name.substring(0, firstSpaceIndex).toUpperCase() + name.substring(firstSpaceIndex);
+                    }
+                }
+                return name;
+            }
+
+            @Override
+            public AudioMatroskaCodecIdEnum fromString(final String string) {
+                return null;
+            }
+        };
+        result.setConverter(converter);
+        final AudioMatroskaCodecIdEnum[] values = AudioMatroskaCodecIdEnum.values();
+        Arrays.sort(values, EnumByNameComparator.INSTANCE);
+        result.getItems().setAll(values);
+        return result;
+    }
 }
