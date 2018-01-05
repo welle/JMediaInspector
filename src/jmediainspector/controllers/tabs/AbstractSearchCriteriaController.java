@@ -1,8 +1,12 @@
 package jmediainspector.controllers.tabs;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.logging.Level;
 
 import org.eclipse.jdt.annotation.NonNull;
@@ -42,6 +46,7 @@ import jmediainspector.helpers.search.SearchHelper;
 import jmediainspector.helpers.search.types.audio.SearchAudioEnum;
 import jmediainspector.helpers.search.types.general.SearchGeneralEnum;
 import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
+import jmediainspector.helpers.search.types.interfaces.SearchInterface;
 import jmediainspector.helpers.search.types.text.SearchTextEnum;
 import jmediainspector.helpers.search.types.video.SearchVideoEnum;
 import jmediainspector.listeners.ApplicationConfigurationsListener;
@@ -109,10 +114,14 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
 
     private void initMenuVideo() {
         try {
-            for (final @NonNull SearchVideoEnum entry : SearchVideoEnum.values()) {
-                final AbstractInterface<?> newInstance = entry.getFiltersInterface().newInstance();
+            // Sort by items full name
+            final Map<String, AbstractInterface<?>> map = getSearchItemMenuMap(SearchVideoEnum.values());
+            final SortedSet<String> keys = new TreeSet<>(map.keySet());
+            for (final String key : keys) {
+                final AbstractInterface<?> newInstance = map.get(key);
+                // do something
                 assert newInstance != null;
-                final MenuItem menuItem = new MenuItem(newInstance.getFullName());
+                final MenuItem menuItem = new MenuItem(key);
                 menuItem.setOnAction(new SearchEventHandler(this.searchHelper, newInstance, this));
                 this.menuVideo.getItems().add(menuItem);
             }
@@ -123,10 +132,14 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
 
     private void initMenuGeneral() {
         try {
-            for (final @NonNull SearchGeneralEnum entry : SearchGeneralEnum.values()) {
-                final AbstractInterface<?> newInstance = entry.getFiltersInterface().newInstance();
+            // Sort by items full name
+            final Map<String, AbstractInterface<?>> map = getSearchItemMenuMap(SearchGeneralEnum.values());
+            final SortedSet<String> keys = new TreeSet<>(map.keySet());
+            for (final String key : keys) {
+                final AbstractInterface<?> newInstance = map.get(key);
+                // do something
                 assert newInstance != null;
-                final MenuItem menuItem = new MenuItem(newInstance.getFullName());
+                final MenuItem menuItem = new MenuItem(key);
                 menuItem.setOnAction(new SearchEventHandler(this.searchHelper, newInstance, this));
                 this.menuGeneral.getItems().add(menuItem);
             }
@@ -135,12 +148,28 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
         }
     }
 
+    @NonNull
+    private Map<String, AbstractInterface<?>> getSearchItemMenuMap(final SearchInterface[] searchInterfaceArray) throws InstantiationException, IllegalAccessException {
+        final Map<String, AbstractInterface<?>> map = new HashMap<>();
+        for (final @NonNull SearchInterface entry : searchInterfaceArray) {
+            final AbstractInterface<?> newInstance = entry.getFiltersInterface().newInstance();
+            assert newInstance != null;
+            final String fullName = newInstance.getFullName();
+            map.put(fullName, newInstance);
+        }
+        return map;
+    }
+
     private void initMenuAudio() {
         try {
-            for (final @NonNull SearchAudioEnum entry : SearchAudioEnum.values()) {
-                final AbstractInterface<?> newInstance = entry.getFiltersInterface().newInstance();
+            // Sort by items full name
+            final Map<String, AbstractInterface<?>> map = getSearchItemMenuMap(SearchAudioEnum.values());
+            final SortedSet<String> keys = new TreeSet<>(map.keySet());
+            for (final String key : keys) {
+                final AbstractInterface<?> newInstance = map.get(key);
+                // do something
                 assert newInstance != null;
-                final MenuItem menuItem = new MenuItem(newInstance.getFullName());
+                final MenuItem menuItem = new MenuItem(key);
                 menuItem.setOnAction(new SearchEventHandler(this.searchHelper, newInstance, this));
                 this.menuAudio.getItems().add(menuItem);
             }
@@ -151,10 +180,14 @@ public abstract class AbstractSearchCriteriaController extends AnchorPane implem
 
     private void initMenuText() {
         try {
-            for (final @NonNull SearchTextEnum entry : SearchTextEnum.values()) {
-                final AbstractInterface<?> newInstance = entry.getFiltersInterface().newInstance();
+            // Sort by items full name
+            final Map<String, AbstractInterface<?>> map = getSearchItemMenuMap(SearchTextEnum.values());
+            final SortedSet<String> keys = new TreeSet<>(map.keySet());
+            for (final String key : keys) {
+                final AbstractInterface<?> newInstance = map.get(key);
+                // do something
                 assert newInstance != null;
-                final MenuItem menuItem = new MenuItem(newInstance.getFullName());
+                final MenuItem menuItem = new MenuItem(key);
                 menuItem.setOnAction(new SearchEventHandler(this.searchHelper, newInstance, this));
                 this.menuText.getItems().add(menuItem);
             }

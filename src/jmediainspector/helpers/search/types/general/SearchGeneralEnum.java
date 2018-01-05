@@ -15,6 +15,7 @@ import jmediainspector.helpers.search.types.interfaces.SearchInterface;
  * @author Cha
  */
 public enum SearchGeneralEnum implements SearchInterface {
+
     /**
      * File Extension.
      */
@@ -42,5 +43,11 @@ public enum SearchGeneralEnum implements SearchInterface {
     @Override
     public @NonNull List<Class<? extends AbstractInterface>> getAllValues() {
         return ALL_VALUES;
+    }
+
+    @Override
+    @NonNull
+    public SearchInterface @NonNull [] getALL() {
+        return values();
     }
 }

@@ -71,11 +71,11 @@ public abstract class AbstractComboboxCriteria<T extends Enum<?>> extends Abstra
         }
         this.comboboxFiltersType.setValue(value);
 
-        this.rightPane.add(this.comboboxFiltersType, 2, 0);
+        this.rightPane.add(this.comboboxFiltersType, 3, 0);
 
         // link value
         this.valueCombobox = getCombobox();
-        this.rightPane.add(this.valueCombobox, 3, 0);
+        this.rightPane.add(this.valueCombobox, 4, 0);
     }
 
     public abstract ComboBox<? extends Enum<?>> getCombobox();

@@ -107,7 +107,7 @@ public abstract class AbstractInterface<T> {
         GridPane.setValignment(deleteButton, VPos.TOP);
         GridPane.setHalignment(deleteButton, HPos.RIGHT);
         deleteButton.setOnAction(e -> delete());
-        this.rightPane.add(deleteButton, 4, 0);
+        this.rightPane.add(deleteButton, 5, 0);
 
         return this.rightPane;
     }

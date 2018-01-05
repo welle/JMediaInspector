@@ -27,4 +27,7 @@ public interface SearchInterface {
     @NonNull
     public List<Class<? extends AbstractInterface>> getAllValues();
 
+    @NonNull
+    public SearchInterface @NonNull [] getALL();
+
 }

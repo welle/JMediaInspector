@@ -45,4 +45,9 @@ public enum SearchVideoEnum implements SearchInterface {
         return ALL_VALUES;
     }
 
+    @Override
+    @NonNull
+    public SearchInterface @NonNull [] getALL() {
+        return values();
+    }
 }

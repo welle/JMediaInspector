@@ -43,4 +43,9 @@ public enum SearchTextEnum implements SearchInterface {
     public @NonNull List<Class<? extends AbstractInterface>> getAllValues() {
         return ALL_VALUES;
     }
+
+    @Override
+    public @NonNull SearchInterface @NonNull [] getALL() {
+        return values();
+    }
 }
