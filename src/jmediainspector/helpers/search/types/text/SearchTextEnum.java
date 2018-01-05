@@ -8,6 +8,7 @@ import org.eclipse.jdt.annotation.NonNull;
 import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 import jmediainspector.helpers.search.types.interfaces.SearchInterface;
 import jmediainspector.helpers.search.types.text.filters.TextLanguageCriteria;
+import jmediainspector.helpers.search.types.text.filters.TextNumberOfStreamCriteria;
 
 /**
  * Search Text(subtitles) enumeration.
@@ -15,10 +16,16 @@ import jmediainspector.helpers.search.types.text.filters.TextLanguageCriteria;
  * @author charlottew
  */
 public enum SearchTextEnum implements SearchInterface {
+
     /**
      * Language.
      */
-    LANGUAGE(TextLanguageCriteria.class);
+    LANGUAGE(TextLanguageCriteria.class),
+
+    /**
+     * Number of streams.
+     */
+    NUMBER_OF_STREAMS(TextNumberOfStreamCriteria.class);
 
     @NonNull
     private Class<? extends AbstractInterface> filtersInterface;
