@@ -11,6 +11,7 @@ import com.sun.javafx.collections.ObservableListWrapper;
 
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import jmediainspector.config.Criteria;
 import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.commons.ConditionFilterListCell;
@@ -22,7 +23,7 @@ import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
  * @author charlottew
  * @param <T> enum type
  */
-public abstract class AbstractComboboxCriteria<T extends Enum<?>> extends AbstractInterface<T> {
+public abstract class AbstractInputCriteria<T> extends AbstractInterface<T> {
 
     /**
      * Available types.
@@ -31,15 +32,17 @@ public abstract class AbstractComboboxCriteria<T extends Enum<?>> extends Abstra
     /**
      * Available values.
      */
-    protected List<? extends Enum<?>> availableValues;
+    protected List<?> availableValues;
 
-    private ComboBox<? extends Enum<?>> valueCombobox;
+    private TextField valueTextField;
     private ComboBox<String> comboboxFiltersType;
+    private final @NonNull Class<T> clazz;
 
     /**
      * Default Constructor.
      */
-    public AbstractComboboxCriteria() {
+    public AbstractInputCriteria(@NonNull final Class<T> clazz) {
+        this.clazz = clazz;
         // Internal use, do not delete, used in reflection.
         init();
     }
@@ -48,13 +51,16 @@ public abstract class AbstractComboboxCriteria<T extends Enum<?>> extends Abstra
      * Constructor.
      *
      * @param criteria Linked Criteria
+     * @param clazz
      * @see Criteria
      */
-    public AbstractComboboxCriteria(@NonNull final Criteria criteria) {
+    public AbstractInputCriteria(@NonNull final Criteria criteria, @NonNull final Class<T> clazz) {
         super(criteria);
         init();
         // TODO LINK WITH FILTER
         // Link type
+
+        this.clazz = clazz;
 
         final List<String> list = new ArrayList<>();
         for (final ConditionFilter filterType : this.availableTypes) {
@@ -71,14 +77,14 @@ public abstract class AbstractComboboxCriteria<T extends Enum<?>> extends Abstra
         }
         this.comboboxFiltersType.setValue(value);
 
-        this.rightPane.add(this.comboboxFiltersType, 2, 0);
+        this.rightPane.add(this.comboboxFiltersType, 3, 0);
 
         // link value
-        this.valueCombobox = getCombobox();
-        this.rightPane.add(this.valueCombobox, 3, 0);
+        this.valueTextField = getTextField();
+        this.rightPane.add(this.valueTextField, 4, 0);
     }
 
-    public abstract ComboBox<? extends Enum<?>> getCombobox();
+    public abstract TextField getTextField();
 
     @Override
     public BinaryCondition.Op getSelectedOperator() {
@@ -102,13 +108,19 @@ public abstract class AbstractComboboxCriteria<T extends Enum<?>> extends Abstra
 
     @Override
     public Enum<?> getSelectedEnumValue() {
-        final Enum<?> value = this.valueCombobox.getSelectionModel().getSelectedItem();
-
-        return value;
+        return null;
     }
 
     @Override
     public T getSelectedValue() {
-        return null;
+        T result = null;
+        final String value = this.valueTextField.getText();
+        if (this.clazz.isInstance(String.class)) {
+            result = (T) value;
+        } else if (this.clazz.equals(Long.class)) {
+            result = (T) Long.valueOf(value);
+        }
+
+        return result;
     }
 }

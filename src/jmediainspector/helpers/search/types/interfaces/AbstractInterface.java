@@ -11,10 +11,12 @@ import aka.jmetadataquery.main.types.search.operation.interfaces.OperatorSearchI
 import javafx.beans.property.adapter.JavaBeanBooleanProperty;
 import javafx.beans.property.adapter.JavaBeanBooleanPropertyBuilder;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import jmediainspector.config.Criteria;
 import jmediainspector.config.ObjectFactory;
@@ -32,7 +34,7 @@ import jmediainspector.helpers.search.enums.SearchTypeEnum;
  *
  * @author Cha
  */
-public abstract class AbstractInterface<T extends Enum<?>> {
+public abstract class AbstractInterface<T> {
 
     /**
      * Linked criteria.
@@ -73,9 +75,15 @@ public abstract class AbstractInterface<T extends Enum<?>> {
         this.rightPane.setVgap(3);
         this.rightPane.setMaxWidth(Double.MAX_VALUE);
 
-        this.rightPane.add(getSelectedCheckBox(), 0, 0);
+        final Label label = new Label(getFullName() + "");
+        label.setStyle("-fx-font-weight: bold");
+        label.setUnderline(true);
+        label.setPadding(new Insets(0, 10, 0, 0));
+        GridPane.setValignment(label, VPos.TOP);
+        this.rightPane.add(label, 0, 0);
+        this.rightPane.add(getSelectedCheckBox(), 1, 0);
         GridPane.setValignment(getSelectedCheckBox(), VPos.TOP);
-        this.rightPane.add(getRequiredCheckBox(), 1, 0);
+        this.rightPane.add(getRequiredCheckBox(), 2, 0);
         GridPane.setValignment(getRequiredCheckBox(), VPos.TOP);
 
         try {
@@ -184,11 +192,18 @@ public abstract class AbstractInterface<T extends Enum<?>> {
     public abstract BinaryCondition.Op getSelectedOperator();
 
     /**
-     * Get condition operator.
+     * Get condition value.
      *
      * @return operator
      */
     public abstract Enum<?> getSelectedEnumValue();
+
+    /**
+     * Get condition value.
+     *
+     * @return operator
+     */
+    public abstract T getSelectedValue();
 
     /**
      * Initialization.

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+import jmediainspector.helpers.search.types.audio.filters.AudioBitRateCriteria;
 import jmediainspector.helpers.search.types.audio.filters.AudioCodecCriteria;
 import jmediainspector.helpers.search.types.audio.filters.AudioLanguageCriteria;
 import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
@@ -18,6 +19,11 @@ import jmediainspector.helpers.search.types.interfaces.SearchInterface;
 public enum SearchAudioEnum implements SearchInterface {
 
     /**
+     * Bitrate.
+     */
+    BITRATE(AudioBitRateCriteria.class),
+
+    /**
      * Codec.
      */
     CODEC(AudioCodecCriteria.class),
@@ -25,7 +31,7 @@ public enum SearchAudioEnum implements SearchInterface {
     /**
      * Language.
      */
-    Language(AudioLanguageCriteria.class);
+    LANGUAGE(AudioLanguageCriteria.class);
 
     @NonNull
     private Class<? extends AbstractInterface> filtersInterface;

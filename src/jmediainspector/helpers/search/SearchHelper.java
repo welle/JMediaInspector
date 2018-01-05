@@ -33,9 +33,9 @@ import jmediainspector.helpers.search.types.interfaces.SearchPanelInterface;
 public class SearchHelper implements SearchCriteriaListener {
 
     @NonNull
-    private final Map<@NonNull SearchTypeEnum, LinkedPanel> linkedPanelMap = new LinkedHashMap<>();
+    private final Map<@NonNull SearchTypeEnum, SearchLinkedPanel> linkedPanelMap = new LinkedHashMap<>();
     @NonNull
-    private final ListView<LinkedPanel> listLeftPanel = new ListView<>();
+    private final ListView<SearchLinkedPanel> listLeftPanel = new ListView<>();
     private final AnchorPane leftPane;
     private final AnchorPane rightPane;
     private @NonNull final Search search;
@@ -57,14 +57,14 @@ public class SearchHelper implements SearchCriteriaListener {
         for (final SearchTypeEnum type : SearchTypeEnum.values()) {
             final SearchPanelInterface searchPanelInterface = type.getSearchPanelInterface();
             final GridPane gridPane = createGridPane();
-            final LinkedPanel linkedPanel = new LinkedPanel(type, searchPanelInterface, gridPane);
+            final SearchLinkedPanel linkedPanel = new SearchLinkedPanel(type, searchPanelInterface, gridPane);
             this.linkedPanelMap.put(type, linkedPanel);
         }
 
         initLeftPanel();
         initRightPanels();
         // Simulate a click on general
-        final LinkedPanel generalLinkedPanel = this.linkedPanelMap.get(SearchTypeEnum.GENERAL);
+        final SearchLinkedPanel generalLinkedPanel = this.linkedPanelMap.get(SearchTypeEnum.GENERAL);
         generalLinkedPanel.rightNode.setVisible(true);
 
         final ColumnConstraints columnConstraints = new ColumnConstraints(10.0, 812.0, 812.0);
@@ -72,26 +72,30 @@ public class SearchHelper implements SearchCriteriaListener {
     }
 
     private void initRightPanels() {
-        for (final LinkedPanel linkedPanel : this.linkedPanelMap.values()) {
+        for (final SearchLinkedPanel linkedPanel : this.linkedPanelMap.values()) {
             this.rightPane.getChildren().add(linkedPanel.getRightNode());
         }
     }
 
     private void initLeftPanel() {
-        final ObservableList<LinkedPanel> observableList = FXCollections.observableArrayList(this.linkedPanelMap.values());
+        final ObservableList<SearchLinkedPanel> observableList = FXCollections.observableArrayList(this.linkedPanelMap.values());
         this.listLeftPanel.setItems(observableList);
         this.listLeftPanel.setCellFactory(p -> new PanelListCell());
 
         this.listLeftPanel.setOnMouseClicked(event -> {
             // Set all right panels to not visible
-            for (final LinkedPanel linkedPanel : observableList) {
+            for (final SearchLinkedPanel linkedPanel : observableList) {
                 linkedPanel.rightNode.setVisible(false);
             }
 
             // set current right panel to visible
-            final LinkedPanel currentLinkedPanel = SearchHelper.this.listLeftPanel.getSelectionModel().getSelectedItem();
+            final SearchLinkedPanel currentLinkedPanel = SearchHelper.this.listLeftPanel.getSelectionModel().getSelectedItem();
             currentLinkedPanel.rightNode.setVisible(true);
+            this.listLeftPanel.getSelectionModel().select(currentLinkedPanel);
         });
+
+        final SearchLinkedPanel generalLinkedPanel = this.linkedPanelMap.get(SearchTypeEnum.GENERAL);
+        this.listLeftPanel.getSelectionModel().select(generalLinkedPanel);
 
         this.leftPane.getChildren().add(this.listLeftPanel);
     }
@@ -107,68 +111,15 @@ public class SearchHelper implements SearchCriteriaListener {
         return result;
     }
 
-    public class LinkedPanel {
-
-        private @NonNull final Node rightNode;
-        private @NonNull final SearchPanelInterface leftNode;
-        private @NonNull final SearchTypeEnum searchTypeEnum;
-
-        /**
-         * Constructor.
-         *
-         * @param searchTypeEnum type of the linked panel
-         * @param leftSearchPanelInterface left node
-         * @param rightNode right node
-         */
-        public LinkedPanel(@NonNull final SearchTypeEnum searchTypeEnum, @NonNull final SearchPanelInterface leftSearchPanelInterface, @NonNull final Node rightNode) {
-            this.searchTypeEnum = searchTypeEnum;
-            this.leftNode = leftSearchPanelInterface;
-            this.rightNode = rightNode;
-        }
-
-        /**
-         * @return the searchTypeEnum
-         */
-        @NonNull
-        public final SearchTypeEnum getSearchTypeEnum() {
-            return this.searchTypeEnum;
-        }
-
-        /**
-         * @return the rightNode
-         */
-        @NonNull
-        public final Node getRightNode() {
-            return this.rightNode;
-        }
-
-        /**
-         * @return the leftNode
-         */
-        @NonNull
-        public final SearchPanelInterface getLeftSearchPanelInterface() {
-            return this.leftNode;
-        }
-    }
-
-    private final class PanelListCell extends ListCell<LinkedPanel> {
-
-        @Override
-        protected void updateItem(final LinkedPanel item, final boolean empty) {
-            super.updateItem(item, empty);
-            if (item != null) {
-                setGraphic(item.getLeftSearchPanelInterface().getLeftPanelItem());
-            }
-        }
-    }
-
     private void setSelectedPanels(@NonNull final SearchTypeEnum type) {
-        final LinkedPanel selectedLinkedPanel = this.linkedPanelMap.get(type);
-        final List<LinkedPanel> observableList = this.listLeftPanel.getItems();
+        final SearchLinkedPanel selectedLinkedPanel = this.linkedPanelMap.get(type);
+        final List<SearchLinkedPanel> observableList = this.listLeftPanel.getItems();
         // Set all right panels to not visible
-        for (final LinkedPanel linkedPanel : observableList) {
+        for (final SearchLinkedPanel linkedPanel : observableList) {
             linkedPanel.rightNode.setVisible(false);
         }
+
+        this.listLeftPanel.getSelectionModel().select(selectedLinkedPanel);
 
         // set current right panel to visible
         selectedLinkedPanel.rightNode.setVisible(true);
@@ -251,7 +202,62 @@ public class SearchHelper implements SearchCriteriaListener {
      * @return linked map
      */
     @NonNull
-    public Map<@NonNull SearchTypeEnum, LinkedPanel> getLinkedPanelMap() {
+    public Map<@NonNull SearchTypeEnum, SearchLinkedPanel> getLinkedPanelMap() {
         return this.linkedPanelMap;
+    }
+
+    private class SearchLinkedPanel {
+
+        private @NonNull final Node rightNode;
+        private @NonNull final SearchPanelInterface leftNode;
+        private @NonNull final SearchTypeEnum searchTypeEnum;
+
+        /**
+         * Constructor.
+         *
+         * @param searchTypeEnum type of the linked panel
+         * @param leftSearchPanelInterface left node
+         * @param rightNode right node
+         */
+        public SearchLinkedPanel(@NonNull final SearchTypeEnum searchTypeEnum, @NonNull final SearchPanelInterface leftSearchPanelInterface, @NonNull final Node rightNode) {
+            this.searchTypeEnum = searchTypeEnum;
+            this.leftNode = leftSearchPanelInterface;
+            this.rightNode = rightNode;
+        }
+
+        /**
+         * @return the searchTypeEnum
+         */
+        @NonNull
+        public final SearchTypeEnum getSearchTypeEnum() {
+            return this.searchTypeEnum;
+        }
+
+        /**
+         * @return the rightNode
+         */
+        @NonNull
+        public final Node getRightNode() {
+            return this.rightNode;
+        }
+
+        /**
+         * @return the leftNode
+         */
+        @NonNull
+        public final SearchPanelInterface getLeftSearchPanelInterface() {
+            return this.leftNode;
+        }
+    }
+
+    private final class PanelListCell extends ListCell<SearchLinkedPanel> {
+
+        @Override
+        protected void updateItem(final SearchLinkedPanel item, final boolean empty) {
+            super.updateItem(item, empty);
+            if (item != null) {
+                setGraphic(item.getLeftSearchPanelInterface().getLeftPanelItem());
+            }
+        }
     }
 }
