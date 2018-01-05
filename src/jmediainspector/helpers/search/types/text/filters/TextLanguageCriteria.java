@@ -74,7 +74,7 @@ public class TextLanguageCriteria extends AbstractComboboxCriteria<LanguageEnum>
     public OperatorSearchInterface getSearch() {
         final BinaryCondition.Op operation = getSelectedOperator();
         TextLanguageSearch textLanguageSearch = null;
-        final Enum<?> value = getSelectedEnumValue();
+        final Enum<?> value = getSelectedComboboxEnumValue();
         if (operation != null && value instanceof LanguageEnum) {
             final LanguageEnum codecEnum = (LanguageEnum) value;
             textLanguageSearch = new TextLanguageSearch(operation, codecEnum);

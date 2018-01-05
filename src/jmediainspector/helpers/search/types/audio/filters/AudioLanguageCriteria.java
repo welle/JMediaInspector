@@ -70,7 +70,7 @@ public class AudioLanguageCriteria extends AbstractComboboxCriteria<LanguageEnum
     public OperatorSearchInterface getSearch() {
         final BinaryCondition.Op operation = getSelectedOperator();
         OperatorSearchInterface result = null;
-        final Enum<?> value = getSelectedEnumValue();
+        final Enum<?> value = getSelectedComboboxEnumValue();
         AudioLanguageSearch audioLanguageSearch;
         if (operation != null && value instanceof LanguageEnum) {
             final LanguageEnum languageEnum = (LanguageEnum) value;

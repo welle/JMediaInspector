@@ -75,7 +75,7 @@ public class VideoResolutionCriteria extends AbstractComboboxCriteria<VideoResol
     public OperatorSearchInterface getSearch() {
         final BinaryCondition.Op operation = getSelectedOperator();
         VideoResolutionSearch videoResolutionSearch = null;
-        final Enum<?> value = getSelectedEnumValue();
+        final Enum<?> value = getSelectedComboboxEnumValue();
         if (operation != null && value instanceof VideoResolutionSearchEnum) {
             final @NonNull VideoResolutionSearchEnum codecEnum = (VideoResolutionSearchEnum) value;
             videoResolutionSearch = new VideoResolutionSearch(operation, codecEnum);

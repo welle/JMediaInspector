@@ -69,7 +69,7 @@ public class AudioCompressionModeCriteria extends AbstractComboboxCriteria<Compr
     public OperatorSearchInterface getSearch() {
         final BinaryCondition.Op operation = getSelectedOperator();
         AudioCompressionModeSearch audioCompressionModeSearch = null;
-        final Enum<?> value = getSelectedEnumValue();
+        final Enum<?> value = getSelectedComboboxEnumValue();
         if (operation != null && value instanceof CompressionModeEnum) {
             final CompressionModeEnum codecEnum = (CompressionModeEnum) value;
             audioCompressionModeSearch = new AudioCompressionModeSearch(operation, codecEnum);

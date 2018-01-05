@@ -68,7 +68,7 @@ public class GeneralFileExtensionCriteria extends AbstractComboboxCriteria<FileE
     public OperatorSearchInterface getSearch() {
         final BinaryCondition.Op operation = getSelectedOperator();
         FileExtensionSearch fileExtensionSearch = null;
-        final Enum<?> value = getSelectedEnumValue();
+        final Enum<?> value = getSelectedComboboxEnumValue();
         if (operation != null && value instanceof FileExtensionSearchEnum) {
             final FileExtensionSearchEnum codecEnum = (FileExtensionSearchEnum) value;
             fileExtensionSearch = new FileExtensionSearch(operation, codecEnum);

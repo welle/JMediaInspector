@@ -70,7 +70,7 @@ public class AudioCodecCriteria extends AbstractComboboxCriteria<AudioMatroskaCo
     public OperatorSearchInterface getSearch() {
         final BinaryCondition.Op operation = getSelectedOperator();
         AudioCodecIdSearch audioCodecIdSearch = null;
-        final Enum<?> value = getSelectedEnumValue();
+        final Enum<?> value = getSelectedComboboxEnumValue();
         if (operation != null && value instanceof CodecEnum) {
             final CodecEnum codecEnum = (CodecEnum) value;
             audioCodecIdSearch = new AudioCodecIdSearch(operation, codecEnum);

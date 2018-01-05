@@ -71,7 +71,7 @@ public class AudioLanguageTagCriteria extends AbstractComboboxCriteria<LanguageT
     public OperatorSearchInterface getSearch() {
         final BinaryCondition.Op operation = getSelectedOperator();
         final OrSearch orSearch = new OrSearch();
-        final Enum<?> value = getSelectedEnumValue();
+        final Enum<?> value = getSelectedComboboxEnumValue();
         if (operation != null && value instanceof LanguageTagSearchEnum) {
             final LanguageTagSearchEnum languageTagSearchEnum = (LanguageTagSearchEnum) value;
             final AudioLanguageTagSearch audioLanguageTagSearch;

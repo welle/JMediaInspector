@@ -102,7 +102,7 @@ public abstract class AbstractInputTimeCriteria extends AbstractInterface<Long> 
     }
 
     @Override
-    public Enum<?> getSelectedEnumValue() {
+    public Enum<?> getSelectedComboboxEnumValue() {
         return null;
     }
 
@@ -125,5 +125,10 @@ public abstract class AbstractInputTimeCriteria extends AbstractInterface<Long> 
         }
 
         return result;
+    }
+
+    @Override
+    public Long getSelectedComboboxValue() {
+        return null;
     }
 }

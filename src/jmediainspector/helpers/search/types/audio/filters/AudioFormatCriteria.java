@@ -69,7 +69,7 @@ public class AudioFormatCriteria extends AbstractComboboxCriteria<FormatEnum> {
     public OperatorSearchInterface getSearch() {
         final BinaryCondition.Op operation = getSelectedOperator();
         AudioFormatSearch audioFormatSearch = null;
-        final Enum<?> value = getSelectedEnumValue();
+        final Enum<?> value = getSelectedComboboxEnumValue();
         if (operation != null && value instanceof FormatEnum) {
             final FormatEnum formatEnum = (FormatEnum) value;
             audioFormatSearch = new AudioFormatSearch(operation, formatEnum);

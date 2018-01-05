@@ -69,7 +69,7 @@ public class AudioProfileCriteria extends AbstractComboboxCriteria<AudioProfileE
     public OperatorSearchInterface getSearch() {
         final BinaryCondition.Op operation = getSelectedOperator();
         AudioProfileSearch audioProfileSearch = null;
-        final Enum<?> value = getSelectedEnumValue();
+        final Enum<?> value = getSelectedComboboxEnumValue();
         if (operation != null && value instanceof AudioProfileEnum) {
             final AudioProfileEnum codecEnum = (AudioProfileEnum) value;
             audioProfileSearch = new AudioProfileSearch(operation, codecEnum);

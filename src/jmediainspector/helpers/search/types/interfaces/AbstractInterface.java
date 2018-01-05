@@ -196,7 +196,14 @@ public abstract class AbstractInterface<T> {
      *
      * @return operator
      */
-    public abstract Enum<?> getSelectedEnumValue();
+    public abstract Enum<?> getSelectedComboboxEnumValue();
+
+    /**
+     * Get condition value.
+     *
+     * @return operator
+     */
+    public abstract T getSelectedComboboxValue();
 
     /**
      * Get condition value.

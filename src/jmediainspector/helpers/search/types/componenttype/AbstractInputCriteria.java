@@ -107,7 +107,7 @@ public abstract class AbstractInputCriteria<T> extends AbstractInterface<T> {
     }
 
     @Override
-    public Enum<?> getSelectedEnumValue() {
+    public Enum<?> getSelectedComboboxEnumValue() {
         return null;
     }
 
@@ -122,5 +122,10 @@ public abstract class AbstractInputCriteria<T> extends AbstractInterface<T> {
         }
 
         return result;
+    }
+
+    @Override
+    public T getSelectedComboboxValue() {
+        return null;
     }
 }

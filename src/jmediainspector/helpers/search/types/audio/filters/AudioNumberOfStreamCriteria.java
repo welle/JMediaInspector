@@ -9,14 +9,19 @@ import com.healthmarketscience.sqlbuilder.BinaryCondition;
 
 import aka.jmetadataquery.main.types.search.audio.AudioNumberOfStreamSearch;
 import aka.jmetadataquery.main.types.search.operation.interfaces.OperatorSearchInterface;
-import javafx.scene.control.TextField;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import jmediainspector.config.Criteria;
 import jmediainspector.controllers.tabs.AbstractSearchCriteriaController;
 import jmediainspector.helpers.search.SearchHelper;
 import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
-import jmediainspector.helpers.search.types.componenttype.AbstractInputCriteria;
+import jmediainspector.helpers.search.types.componenttype.AbstractEditableComboboxCriteria;
 import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 
 /**
@@ -24,14 +29,23 @@ import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
  *
  * @author charlottew
  */
-public class AudioNumberOfStreamCriteria extends AbstractInputCriteria<Long> {
+public class AudioNumberOfStreamCriteria extends AbstractEditableComboboxCriteria<Long> {
+
+    @NonNull
+    private static ObservableList<@NonNull Long> VALUES_LIST;
+    static {
+        VALUES_LIST = FXCollections.observableArrayList(
+                Long.valueOf(0),
+                Long.valueOf(1),
+                Long.valueOf(2));
+    }
 
     /**
      * Default Constructor.
      */
     public AudioNumberOfStreamCriteria() {
         // Internal use, do not delete, used in reflection.
-        super(Long.class);
+        super();
     }
 
     /**
@@ -41,7 +55,7 @@ public class AudioNumberOfStreamCriteria extends AbstractInputCriteria<Long> {
      * @see Criteria
      */
     public AudioNumberOfStreamCriteria(@NonNull final Criteria filter) {
-        super(filter, Long.class);
+        super(filter);
     }
 
     @Override
@@ -67,7 +81,9 @@ public class AudioNumberOfStreamCriteria extends AbstractInputCriteria<Long> {
     public OperatorSearchInterface getSearch() {
         final BinaryCondition.Op operation = getSelectedOperator();
         AudioNumberOfStreamSearch audioNumberOfStreamSearch = null;
-        final Long value = getSelectedValue();
+        System.err.println("[AudioNumberOfStreamCriteria] getSearch - ddddd ");
+        final Long value = getSelectedComboboxValue();
+        System.err.println("[AudioNumberOfStreamCriteria] getSearch - " + value);
         if (operation != null && value != null) {
             audioNumberOfStreamSearch = new AudioNumberOfStreamSearch(operation, value);
         }
@@ -91,8 +107,8 @@ public class AudioNumberOfStreamCriteria extends AbstractInputCriteria<Long> {
     }
 
     @Override
-    public TextField getTextField() {
-        final TextField result = new TextField();
+    public ComboBox<Long> getCombobox() {
+        final ComboBox<Long> result = new ComboBox<>();
         final UnaryOperator<TextFormatter.Change> filter = new UnaryOperator<TextFormatter.Change>() {
             @Override
             public TextFormatter.Change apply(final TextFormatter.Change change) {
@@ -105,7 +121,23 @@ public class AudioNumberOfStreamCriteria extends AbstractInputCriteria<Long> {
                 return change;
             }
         };
-        result.setTextFormatter(new TextFormatter<String>(filter));
+        result.setT.setConverter(new TextFormatter<Long>(filter));
+        result.setEditable(true);
+        result.addEventHandler(KeyEvent.KEY_RELEASED, e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                final Long valueLong = Long.valueOf(result.getValue());
+                if (!result.getItems().contains(valueLong)) {
+                    result.getItems().add(valueLong);
+                }
+            }
+        });
+        result.addEventHandler(MouseEvent.MOUSE_EXITED, e -> {
+            final Long valueLong = Long.valueOf(result.getValue());
+            if (!result.getItems().contains(valueLong)) {
+                result.getItems().add(valueLong);
+            }
+        });
+        result.getItems().setAll(AudioNumberOfStreamCriteria.VALUES_LIST);
         return result;
     }
 }
