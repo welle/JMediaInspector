@@ -16,6 +16,11 @@ public enum ConditionFilter {
     /**
      * Contains only.
      */
+    CONTAINS(BinaryCondition.Op.LIKE, "Contains"),
+
+    /**
+     * Contains only.
+     */
     CONTAINS_ONLY(BinaryCondition.Op.EQUAL_TO, "Contains only"),
 
     /**

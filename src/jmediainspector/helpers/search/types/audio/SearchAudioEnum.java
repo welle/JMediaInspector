@@ -9,7 +9,9 @@ import jmediainspector.helpers.search.types.audio.filters.AudioBitRateCriteria;
 import jmediainspector.helpers.search.types.audio.filters.AudioChannelCriteria;
 import jmediainspector.helpers.search.types.audio.filters.AudioCodecCriteria;
 import jmediainspector.helpers.search.types.audio.filters.AudioCompressionModeCriteria;
+import jmediainspector.helpers.search.types.audio.filters.AudioFormatCriteria;
 import jmediainspector.helpers.search.types.audio.filters.AudioLanguageCriteria;
+import jmediainspector.helpers.search.types.audio.filters.AudioLanguageTagCriteria;
 import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 import jmediainspector.helpers.search.types.interfaces.SearchInterface;
 
@@ -39,6 +41,16 @@ public enum SearchAudioEnum implements SearchInterface {
      * Compression mode.
      */
     COMPRESSION_MODE(AudioCompressionModeCriteria.class),
+
+    /**
+     * Format.
+     */
+    FORMAT(AudioFormatCriteria.class),
+
+    /**
+     * Language tag.
+     */
+    LANGUAGE_TAG(AudioLanguageTagCriteria.class),
 
     /**
      * Language.
