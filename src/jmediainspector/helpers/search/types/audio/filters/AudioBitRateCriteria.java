@@ -1,14 +1,12 @@
 package jmediainspector.helpers.search.types.audio.filters;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.function.UnaryOperator;
 
 import org.eclipse.jdt.annotation.NonNull;
 
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 
-import aka.jmetadata.main.constants.codecs.AudioMatroskaCodecIdEnum;
 import aka.jmetadataquery.main.types.search.audio.AudioBitRateSearch;
 import aka.jmetadataquery.main.types.search.operation.interfaces.OperatorSearchInterface;
 import javafx.scene.control.TextField;
@@ -54,7 +52,7 @@ public class AudioBitRateCriteria extends AbstractInputCriteria<Long> {
 
     @Override
     public @NonNull String getFullName() {
-        return "Bit Rate (in bit/s)";
+        return "Bit Rate (in kbit/s)";
     }
 
     @Override
@@ -86,8 +84,6 @@ public class AudioBitRateCriteria extends AbstractInputCriteria<Long> {
         this.availableTypes.add(ConditionFilter.LESS_THAN);
         this.availableTypes.add(ConditionFilter.LESS_THAN_OR_EQUAL_TO);
         this.availableTypes.add(ConditionFilter.NOT_EQUALS);
-
-        this.availableValues = new ArrayList<>(Arrays.asList(AudioMatroskaCodecIdEnum.values()));
     }
 
     @Override

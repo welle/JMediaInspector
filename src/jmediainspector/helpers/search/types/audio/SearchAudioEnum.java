@@ -12,6 +12,9 @@ import jmediainspector.helpers.search.types.audio.filters.AudioCompressionModeCr
 import jmediainspector.helpers.search.types.audio.filters.AudioFormatCriteria;
 import jmediainspector.helpers.search.types.audio.filters.AudioLanguageCriteria;
 import jmediainspector.helpers.search.types.audio.filters.AudioLanguageTagCriteria;
+import jmediainspector.helpers.search.types.audio.filters.AudioMaxBitRateCriteria;
+import jmediainspector.helpers.search.types.audio.filters.AudioNumberOfStreamCriteria;
+import jmediainspector.helpers.search.types.audio.filters.AudioProfileCriteria;
 import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 import jmediainspector.helpers.search.types.interfaces.SearchInterface;
 
@@ -26,6 +29,21 @@ public enum SearchAudioEnum implements SearchInterface {
      * Bitrate.
      */
     BITRATE(AudioBitRateCriteria.class),
+
+    /**
+     * Bitrate Max.
+     */
+    BITRATE_MAX(AudioMaxBitRateCriteria.class),
+
+    /**
+     * Number of streams.
+     */
+    NUMBER_OF_STREAMS(AudioNumberOfStreamCriteria.class),
+
+    /**
+     * Profile.
+     */
+    PROFILE(AudioProfileCriteria.class),
 
     /**
      * Channel.

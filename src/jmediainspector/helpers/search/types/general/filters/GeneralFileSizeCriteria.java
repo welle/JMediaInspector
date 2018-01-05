@@ -1,4 +1,4 @@
-package jmediainspector.helpers.search.types.audio.filters;
+package jmediainspector.helpers.search.types.general.filters;
 
 import java.util.ArrayList;
 import java.util.function.UnaryOperator;
@@ -7,7 +7,7 @@ import org.eclipse.jdt.annotation.NonNull;
 
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 
-import aka.jmetadataquery.main.types.search.audio.AudioChannelSearch;
+import aka.jmetadataquery.main.types.search.file.FileSizeSearch;
 import aka.jmetadataquery.main.types.search.operation.interfaces.OperatorSearchInterface;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -20,16 +20,16 @@ import jmediainspector.helpers.search.types.componenttype.AbstractInputCriteria;
 import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 
 /**
- * Criteria for Audio Channel.
+ * Criteria for Audio BitRate.
  *
  * @author charlottew
  */
-public class AudioChannelCriteria extends AbstractInputCriteria<Long> {
+public class GeneralFileSizeCriteria extends AbstractInputCriteria<Long> {
 
     /**
      * Default Constructor.
      */
-    public AudioChannelCriteria() {
+    public GeneralFileSizeCriteria() {
         // Internal use, do not delete, used in reflection.
         super(Long.class);
     }
@@ -40,25 +40,25 @@ public class AudioChannelCriteria extends AbstractInputCriteria<Long> {
      * @param filter Linked Filter
      * @see Criteria
      */
-    public AudioChannelCriteria(@NonNull final Criteria filter) {
+    public GeneralFileSizeCriteria(@NonNull final Criteria filter) {
         super(filter, Long.class);
     }
 
     @Override
     @NonNull
     public SearchTypeEnum getType() {
-        return SearchTypeEnum.AUDIO;
+        return SearchTypeEnum.GENERAL;
     }
 
     @Override
     public @NonNull String getFullName() {
-        return "Number of channels";
+        return "File size (in Mb)";
     }
 
     @Override
     public void handleEvent(final SearchHelper searchHelper, @NonNull final AbstractSearchCriteriaController abstractSearchCriteriaController) {
         final Criteria filter = abstractSearchCriteriaController.getNewCriteria();
-        final AudioChannelCriteria newCriteria = new AudioChannelCriteria(filter);
+        final GeneralFileSizeCriteria newCriteria = new GeneralFileSizeCriteria(filter);
 
         searchHelper.addCriteria(newCriteria);
     }
@@ -66,12 +66,13 @@ public class AudioChannelCriteria extends AbstractInputCriteria<Long> {
     @Override
     public OperatorSearchInterface getSearch() {
         final BinaryCondition.Op operation = getSelectedOperator();
-        AudioChannelSearch audioChannelSearch = null;
-        final Long value = getSelectedValue();
+        FileSizeSearch fileSizeSearch = null;
+        Long value = getSelectedValue();
         if (operation != null && value != null) {
-            audioChannelSearch = new AudioChannelSearch(operation, value);
+            value = Long.valueOf(value.longValue() * (1024 * 1024));
+            fileSizeSearch = new FileSizeSearch(operation, value);
         }
-        return audioChannelSearch;
+        return fileSizeSearch;
     }
 
     @Override

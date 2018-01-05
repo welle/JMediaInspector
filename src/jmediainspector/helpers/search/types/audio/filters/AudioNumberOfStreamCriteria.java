@@ -7,7 +7,7 @@ import org.eclipse.jdt.annotation.NonNull;
 
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 
-import aka.jmetadataquery.main.types.search.audio.AudioChannelSearch;
+import aka.jmetadataquery.main.types.search.audio.AudioNumberOfStreamSearch;
 import aka.jmetadataquery.main.types.search.operation.interfaces.OperatorSearchInterface;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -20,16 +20,16 @@ import jmediainspector.helpers.search.types.componenttype.AbstractInputCriteria;
 import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 
 /**
- * Criteria for Audio Channel.
+ * Criteria for Audio Number of Stream.
  *
  * @author charlottew
  */
-public class AudioChannelCriteria extends AbstractInputCriteria<Long> {
+public class AudioNumberOfStreamCriteria extends AbstractInputCriteria<Long> {
 
     /**
      * Default Constructor.
      */
-    public AudioChannelCriteria() {
+    public AudioNumberOfStreamCriteria() {
         // Internal use, do not delete, used in reflection.
         super(Long.class);
     }
@@ -40,7 +40,7 @@ public class AudioChannelCriteria extends AbstractInputCriteria<Long> {
      * @param filter Linked Filter
      * @see Criteria
      */
-    public AudioChannelCriteria(@NonNull final Criteria filter) {
+    public AudioNumberOfStreamCriteria(@NonNull final Criteria filter) {
         super(filter, Long.class);
     }
 
@@ -52,13 +52,13 @@ public class AudioChannelCriteria extends AbstractInputCriteria<Long> {
 
     @Override
     public @NonNull String getFullName() {
-        return "Number of channels";
+        return "Number of streams";
     }
 
     @Override
     public void handleEvent(final SearchHelper searchHelper, @NonNull final AbstractSearchCriteriaController abstractSearchCriteriaController) {
         final Criteria filter = abstractSearchCriteriaController.getNewCriteria();
-        final AudioChannelCriteria newCriteria = new AudioChannelCriteria(filter);
+        final AudioNumberOfStreamCriteria newCriteria = new AudioNumberOfStreamCriteria(filter);
 
         searchHelper.addCriteria(newCriteria);
     }
@@ -66,12 +66,12 @@ public class AudioChannelCriteria extends AbstractInputCriteria<Long> {
     @Override
     public OperatorSearchInterface getSearch() {
         final BinaryCondition.Op operation = getSelectedOperator();
-        AudioChannelSearch audioChannelSearch = null;
+        AudioNumberOfStreamSearch audioNumberOfStreamSearch = null;
         final Long value = getSelectedValue();
         if (operation != null && value != null) {
-            audioChannelSearch = new AudioChannelSearch(operation, value);
+            audioNumberOfStreamSearch = new AudioNumberOfStreamSearch(operation, value);
         }
-        return audioChannelSearch;
+        return audioNumberOfStreamSearch;
     }
 
     @Override

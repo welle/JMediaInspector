@@ -1,37 +1,35 @@
-package jmediainspector.helpers.search.types.audio.filters;
+package jmediainspector.helpers.search.types.general.filters;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.function.UnaryOperator;
 
 import org.eclipse.jdt.annotation.NonNull;
 
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 
-import aka.jmetadataquery.main.types.search.audio.AudioChannelSearch;
+import aka.jmetadataquery.main.types.search.general.GeneralDurationSearch;
 import aka.jmetadataquery.main.types.search.operation.interfaces.OperatorSearchInterface;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import jmediainspector.config.Criteria;
 import jmediainspector.controllers.tabs.AbstractSearchCriteriaController;
 import jmediainspector.helpers.search.SearchHelper;
 import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
-import jmediainspector.helpers.search.types.componenttype.AbstractInputCriteria;
+import jmediainspector.helpers.search.types.componenttype.AbstractInputTimeCriteria;
+import jmediainspector.helpers.search.types.componenttype.customs.UITimeSpinner;
 import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 
 /**
- * Criteria for Audio Channel.
+ * Criteria for File extension.
  *
  * @author charlottew
  */
-public class AudioChannelCriteria extends AbstractInputCriteria<Long> {
+public class GeneralDurationCriteria extends AbstractInputTimeCriteria {
 
     /**
      * Default Constructor.
      */
-    public AudioChannelCriteria() {
+    public GeneralDurationCriteria() {
         // Internal use, do not delete, used in reflection.
-        super(Long.class);
     }
 
     /**
@@ -40,25 +38,25 @@ public class AudioChannelCriteria extends AbstractInputCriteria<Long> {
      * @param filter Linked Filter
      * @see Criteria
      */
-    public AudioChannelCriteria(@NonNull final Criteria filter) {
-        super(filter, Long.class);
+    public GeneralDurationCriteria(@NonNull final Criteria filter) {
+        super(filter);
     }
 
     @Override
     @NonNull
     public SearchTypeEnum getType() {
-        return SearchTypeEnum.AUDIO;
+        return SearchTypeEnum.GENERAL;
     }
 
     @Override
     public @NonNull String getFullName() {
-        return "Number of channels";
+        return "Duration";
     }
 
     @Override
     public void handleEvent(final SearchHelper searchHelper, @NonNull final AbstractSearchCriteriaController abstractSearchCriteriaController) {
         final Criteria filter = abstractSearchCriteriaController.getNewCriteria();
-        final AudioChannelCriteria newCriteria = new AudioChannelCriteria(filter);
+        final GeneralDurationCriteria newCriteria = new GeneralDurationCriteria(filter);
 
         searchHelper.addCriteria(newCriteria);
     }
@@ -66,12 +64,12 @@ public class AudioChannelCriteria extends AbstractInputCriteria<Long> {
     @Override
     public OperatorSearchInterface getSearch() {
         final BinaryCondition.Op operation = getSelectedOperator();
-        AudioChannelSearch audioChannelSearch = null;
+        GeneralDurationSearch generalDurationSearch = null;
         final Long value = getSelectedValue();
         if (operation != null && value != null) {
-            audioChannelSearch = new AudioChannelSearch(operation, value);
+            generalDurationSearch = new GeneralDurationSearch(operation, value);
         }
-        return audioChannelSearch;
+        return generalDurationSearch;
     }
 
     @Override
@@ -91,21 +89,9 @@ public class AudioChannelCriteria extends AbstractInputCriteria<Long> {
     }
 
     @Override
-    public TextField getTextField() {
-        final TextField result = new TextField();
-        final UnaryOperator<TextFormatter.Change> filter = new UnaryOperator<TextFormatter.Change>() {
-            @Override
-            public TextFormatter.Change apply(final TextFormatter.Change change) {
-                final String text = change.getText();
-                for (int i = 0; i < text.length(); i++) {
-                    if (!Character.isDigit(text.charAt(i))) {
-                        return null;
-                    }
-                }
-                return change;
-            }
-        };
-        result.setTextFormatter(new TextFormatter<String>(filter));
-        return result;
+    public UITimeSpinner getTimeSpinner() {
+        final UITimeSpinner timeSpinner = new UITimeSpinner(LocalTime.of(1, 30));
+        return timeSpinner;
     }
+
 }

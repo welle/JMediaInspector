@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+import jmediainspector.helpers.search.types.general.filters.GeneralDurationCriteria;
 import jmediainspector.helpers.search.types.general.filters.GeneralFileExtensionCriteria;
+import jmediainspector.helpers.search.types.general.filters.GeneralFileSizeCriteria;
 import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 import jmediainspector.helpers.search.types.interfaces.SearchInterface;
 
@@ -17,9 +19,19 @@ import jmediainspector.helpers.search.types.interfaces.SearchInterface;
 public enum SearchGeneralEnum implements SearchInterface {
 
     /**
+     * File Size.
+     */
+    FILE_SIZE(GeneralFileSizeCriteria.class),
+
+    /**
+     * Duration.
+     */
+    DURATION(GeneralDurationCriteria.class),
+
+    /**
      * File Extension.
      */
-    EXTENSION(GeneralFileExtensionCriteria.class);
+    FILE_EXTENSION(GeneralFileExtensionCriteria.class);
 
     @NonNull
     private Class<? extends AbstractInterface> filtersInterface;

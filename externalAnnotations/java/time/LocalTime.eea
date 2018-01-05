@@ -1,0 +1,4 @@
+class java/time/LocalTime
+of
+ (II)Ljava/time/LocalTime;
+ (II)L1java/time/LocalTime;

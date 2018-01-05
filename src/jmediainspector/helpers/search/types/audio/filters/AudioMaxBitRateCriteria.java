@@ -7,7 +7,7 @@ import org.eclipse.jdt.annotation.NonNull;
 
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 
-import aka.jmetadataquery.main.types.search.audio.AudioChannelSearch;
+import aka.jmetadataquery.main.types.search.audio.AudioMaxBitRateSearch;
 import aka.jmetadataquery.main.types.search.operation.interfaces.OperatorSearchInterface;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -20,16 +20,16 @@ import jmediainspector.helpers.search.types.componenttype.AbstractInputCriteria;
 import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 
 /**
- * Criteria for Audio Channel.
+ * Criteria for Maximum Audio BitRate.
  *
  * @author charlottew
  */
-public class AudioChannelCriteria extends AbstractInputCriteria<Long> {
+public class AudioMaxBitRateCriteria extends AbstractInputCriteria<Long> {
 
     /**
      * Default Constructor.
      */
-    public AudioChannelCriteria() {
+    public AudioMaxBitRateCriteria() {
         // Internal use, do not delete, used in reflection.
         super(Long.class);
     }
@@ -40,7 +40,7 @@ public class AudioChannelCriteria extends AbstractInputCriteria<Long> {
      * @param filter Linked Filter
      * @see Criteria
      */
-    public AudioChannelCriteria(@NonNull final Criteria filter) {
+    public AudioMaxBitRateCriteria(@NonNull final Criteria filter) {
         super(filter, Long.class);
     }
 
@@ -52,13 +52,13 @@ public class AudioChannelCriteria extends AbstractInputCriteria<Long> {
 
     @Override
     public @NonNull String getFullName() {
-        return "Number of channels";
+        return "Bit Rate Max (in kbit/s)";
     }
 
     @Override
     public void handleEvent(final SearchHelper searchHelper, @NonNull final AbstractSearchCriteriaController abstractSearchCriteriaController) {
         final Criteria filter = abstractSearchCriteriaController.getNewCriteria();
-        final AudioChannelCriteria newCriteria = new AudioChannelCriteria(filter);
+        final AudioMaxBitRateCriteria newCriteria = new AudioMaxBitRateCriteria(filter);
 
         searchHelper.addCriteria(newCriteria);
     }
@@ -66,12 +66,13 @@ public class AudioChannelCriteria extends AbstractInputCriteria<Long> {
     @Override
     public OperatorSearchInterface getSearch() {
         final BinaryCondition.Op operation = getSelectedOperator();
-        AudioChannelSearch audioChannelSearch = null;
-        final Long value = getSelectedValue();
+        AudioMaxBitRateSearch audioMaxBitRateSearch = null;
+        Long value = getSelectedValue();
         if (operation != null && value != null) {
-            audioChannelSearch = new AudioChannelSearch(operation, value);
+            value = Long.valueOf(value.longValue() * 1000);
+            audioMaxBitRateSearch = new AudioMaxBitRateSearch(operation, value);
         }
-        return audioChannelSearch;
+        return audioMaxBitRateSearch;
     }
 
     @Override
