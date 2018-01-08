@@ -12,7 +12,7 @@ import java.util.Comparator;
 public class EnumByNumberComparator implements Comparator<Enum<?>> {
 
     /**
-     * Get instance of EnumByNameAndNumberComparator.
+     * Get instance of EnumByNumberComparator.
      */
     public static final Comparator<Enum<?>> INSTANCE = new EnumByNumberComparator();
 

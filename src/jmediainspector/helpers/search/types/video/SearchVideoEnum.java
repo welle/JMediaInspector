@@ -7,6 +7,8 @@ import org.eclipse.jdt.annotation.NonNull;
 
 import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 import jmediainspector.helpers.search.types.interfaces.SearchInterface;
+import jmediainspector.helpers.search.types.video.filters.VideoAspectRatioCriteria;
+import jmediainspector.helpers.search.types.video.filters.VideoBitRateCriteria;
 import jmediainspector.helpers.search.types.video.filters.VideoResolutionCriteria;
 
 /**
@@ -19,7 +21,17 @@ public enum SearchVideoEnum implements SearchInterface {
     /**
      * Resolution.
      */
-    RESOLUTION(VideoResolutionCriteria.class);
+    RESOLUTION(VideoResolutionCriteria.class),
+
+    /**
+     * Aspect ratio.
+     */
+    ASPECT_RATIO(VideoAspectRatioCriteria.class),
+
+    /**
+     * Bit rate.
+     */
+    BIT_RATE(VideoBitRateCriteria.class);
 
     @NonNull
     private Class<? extends AbstractInterface> filtersInterface;
