@@ -1,4 +1,4 @@
-package jmediainspector.helpers.search.types.audio.filters;
+package jmediainspector.helpers.search.types.video.filters;
 
 import java.util.ArrayList;
 
@@ -6,8 +6,8 @@ import org.eclipse.jdt.annotation.NonNull;
 
 import com.healthmarketscience.sqlbuilder.BinaryCondition;
 
-import aka.jmetadataquery.main.types.search.audio.AudioMaxBitRateSearch;
 import aka.jmetadataquery.main.types.search.operation.interfaces.OperatorSearchInterface;
+import aka.jmetadataquery.main.types.search.video.VideoMaxBitRateSearch;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import jmediainspector.config.Criteria;
@@ -20,16 +20,16 @@ import jmediainspector.helpers.search.types.componenttype.converters.DigitOnlyTe
 import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 
 /**
- * Criteria for Maximum Audio BitRate.
+ * Criteria for Maximum Video BitRate.
  *
  * @author charlottew
  */
-public class AudioMaxBitRateCriteria extends AbstractInputCriteria<Long> {
+public class VideoMaxBitRateCriteria extends AbstractInputCriteria<Long> {
 
     /**
      * Default Constructor.
      */
-    public AudioMaxBitRateCriteria() {
+    public VideoMaxBitRateCriteria() {
         // Internal use, do not delete, used in reflection.
         super(Long.class);
     }
@@ -40,14 +40,14 @@ public class AudioMaxBitRateCriteria extends AbstractInputCriteria<Long> {
      * @param filter Linked Filter
      * @see Criteria
      */
-    public AudioMaxBitRateCriteria(@NonNull final Criteria filter) {
+    public VideoMaxBitRateCriteria(@NonNull final Criteria filter) {
         super(filter, Long.class);
     }
 
     @Override
     @NonNull
     public SearchTypeEnum getType() {
-        return SearchTypeEnum.AUDIO;
+        return SearchTypeEnum.VIDEO;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class AudioMaxBitRateCriteria extends AbstractInputCriteria<Long> {
     @Override
     public void handleEvent(final SearchHelper searchHelper, @NonNull final AbstractSearchCriteriaController abstractSearchCriteriaController) {
         final Criteria filter = abstractSearchCriteriaController.getNewCriteria();
-        final AudioMaxBitRateCriteria newCriteria = new AudioMaxBitRateCriteria(filter);
+        final VideoMaxBitRateCriteria newCriteria = new VideoMaxBitRateCriteria(filter);
 
         searchHelper.addCriteria(newCriteria);
     }
@@ -66,13 +66,13 @@ public class AudioMaxBitRateCriteria extends AbstractInputCriteria<Long> {
     @Override
     public OperatorSearchInterface getSearch() {
         final BinaryCondition.Op operation = getSelectedOperator();
-        AudioMaxBitRateSearch audioMaxBitRateSearch = null;
+        VideoMaxBitRateSearch videoMaxBitRateSearch = null;
         Long value = getSelectedValue();
         if (operation != null && value != null) {
             value = Long.valueOf(value.longValue() * 1000);
-            audioMaxBitRateSearch = new AudioMaxBitRateSearch(operation, value);
+            videoMaxBitRateSearch = new VideoMaxBitRateSearch(operation, value);
         }
-        return audioMaxBitRateSearch;
+        return videoMaxBitRateSearch;
     }
 
     @Override

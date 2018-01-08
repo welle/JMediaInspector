@@ -1,7 +1,6 @@
 package jmediainspector.helpers.search.types.general.filters;
 
 import java.util.ArrayList;
-import java.util.function.UnaryOperator;
 
 import org.eclipse.jdt.annotation.NonNull;
 
@@ -17,6 +16,7 @@ import jmediainspector.helpers.search.SearchHelper;
 import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
 import jmediainspector.helpers.search.types.componenttype.AbstractInputCriteria;
+import jmediainspector.helpers.search.types.componenttype.converters.DigitOnlyTextFormatter;
 import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 
 /**
@@ -94,18 +94,7 @@ public class GeneralFileSizeCriteria extends AbstractInputCriteria<Long> {
     @Override
     public TextField getTextField() {
         final TextField result = new TextField();
-        final UnaryOperator<TextFormatter.Change> filter = new UnaryOperator<TextFormatter.Change>() {
-            @Override
-            public TextFormatter.Change apply(final TextFormatter.Change change) {
-                final String text = change.getText();
-                for (int i = 0; i < text.length(); i++) {
-                    if (!Character.isDigit(text.charAt(i))) {
-                        return null;
-                    }
-                }
-                return change;
-            }
-        };
+        final DigitOnlyTextFormatter filter = new DigitOnlyTextFormatter();
         result.setTextFormatter(new TextFormatter<String>(filter));
         return result;
     }

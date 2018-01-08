@@ -25,7 +25,7 @@ import jmediainspector.helpers.search.types.componenttype.AbstractComboboxCriter
 import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 
 /**
- * Criteria for Audio Format.
+ * Criteria for Audio language tag.
  *
  * @author charlottew
  */

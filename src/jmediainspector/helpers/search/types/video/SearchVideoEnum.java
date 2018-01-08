@@ -9,6 +9,7 @@ import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 import jmediainspector.helpers.search.types.interfaces.SearchInterface;
 import jmediainspector.helpers.search.types.video.filters.VideoAspectRatioCriteria;
 import jmediainspector.helpers.search.types.video.filters.VideoBitRateCriteria;
+import jmediainspector.helpers.search.types.video.filters.VideoCodecCriteria;
 import jmediainspector.helpers.search.types.video.filters.VideoResolutionCriteria;
 
 /**
@@ -22,6 +23,11 @@ public enum SearchVideoEnum implements SearchInterface {
      * Resolution.
      */
     RESOLUTION(VideoResolutionCriteria.class),
+
+    /**
+     * Codec.
+     */
+    CODEC(VideoCodecCriteria.class),
 
     /**
      * Aspect ratio.
