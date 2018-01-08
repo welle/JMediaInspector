@@ -8,14 +8,16 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import javafx.concurrent.Service;
 import javafx.fxml.FXML;
+import javafx.scene.web.WebView;
 import jmediainspector.config.Configuration;
 import jmediainspector.config.helpers.MetadataSearchConfigurationHelper;
 import jmediainspector.config.helpers.MetadataSearchConfigurationHelper.Type;
 import jmediainspector.services.FileSearchService;
 
-public class SearchCriteriaControler extends AbstractSearchCriteriaController {
+public class SearchCriteriaPlexController extends AbstractSearchCriteriaController {
 
     private MetadataSearchConfigurationHelper metadataSearchCriteriaHelper;
+    private WebView webView;
 
     /**
      * Initialize component.
@@ -26,12 +28,7 @@ public class SearchCriteriaControler extends AbstractSearchCriteriaController {
     public void initialize() {
         super.initialize();
 
-        initExistingSearches(Type.File);
-    }
-
-    @Override
-    Service getSearchService(@Nullable final Configuration selectedConfiguration, @NonNull final List<@NonNull String> pathsList) {
-        return new FileSearchService(pathsList, this.searchHelper.getFiltersList());
+        initExistingSearches(Type.Plex);
     }
 
     @Override
@@ -45,6 +42,15 @@ public class SearchCriteriaControler extends AbstractSearchCriteriaController {
             }
         }
 
+    }
+
+    @Override
+    Service<List<@NonNull File>> getSearchService(@Nullable final Configuration selectedConfiguration, @NonNull final List<@NonNull String> pathsList) {
+        return new FileSearchService(pathsList, this.searchHelper.getFiltersList());
+    }
+
+    public void setResultWebView(final WebView webView) {
+        this.webView = webView;
     }
 
 }

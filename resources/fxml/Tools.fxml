@@ -17,7 +17,7 @@
 <?import javafx.scene.text.TextFlow?>
 <?import javafx.scene.web.WebView?>
 
-<SplitPane fx:id="anchorPaneRoot" dividerPositions="0.55" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="800.0" prefWidth="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jmediainspector.controllers.tabs.PlexToolsTabControler">
+<SplitPane fx:id="anchorPaneRoot" dividerPositions="0.55" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="800.0" prefWidth="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jmediainspector.controllers.tabs.ToolsTabControler">
 	<items>
 		<AnchorPane prefHeight="400.0" prefWidth="1278.0">
 			<children>
@@ -63,12 +63,12 @@
 						</Tab>
                   <Tab text="Search in Plex">
                     <content>
-                      <fx:include source="SearchCriteriaPlexTools.fxml" />
+                      <fx:include fx:id="searchCriteriaPlexTools" source="SearchCriteriaPlexTools.fxml" />
                     </content>
                   </Tab>
                   <Tab text="Search in files">
                     <content>
-                      <fx:include source="SearchCriteriaTools.fxml" />
+                      <fx:include fx:id="searchCriteriaTools" source="SearchCriteriaTools.fxml" />
                     </content>
                   </Tab>
 					</tabs>
@@ -77,7 +77,7 @@
 		</AnchorPane>
 		<ScrollPane fitToWidth="true" prefHeight="400.0" prefWidth="1278.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
 			<content>
-			<WebView fx:id="resultArea" style="-fx-padding:10px" />
+				<WebView fx:id="resultArea" style="-fx-padding:10px" />
 			</content>
 		</ScrollPane>
 	</items>

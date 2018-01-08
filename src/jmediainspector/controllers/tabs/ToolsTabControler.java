@@ -51,7 +51,7 @@ import jmediainspector.services.CopyFileService;
  *
  * @author Welle Charlotte
  */
-public class PlexToolsTabControler extends AnchorPane implements ApplicationConfigurationsListener {
+public class ToolsTabControler extends AnchorPane implements ApplicationConfigurationsListener {
 
     @Nullable
     private File copiedPlexFileDB = null;
@@ -72,6 +72,11 @@ public class PlexToolsTabControler extends AnchorPane implements ApplicationConf
 
     private Configuration currentConfiguration;
 
+    @FXML
+    private SearchCriteriaController searchCriteriaToolsController;
+    @FXML
+    private SearchCriteriaPlexController searchCriteriaPlexToolsController;
+
     /**
      * Initialize component.
      * Internal use only.
@@ -85,6 +90,9 @@ public class PlexToolsTabControler extends AnchorPane implements ApplicationConf
 
         refreshConfigurationList();
         setSelectedConfiguration();
+
+        this.searchCriteriaToolsController.setResultWebView(this.resultArea);
+        this.searchCriteriaPlexToolsController.setResultWebView(this.resultArea);
     }
 
     private void refreshConfigurationList() {
@@ -278,7 +286,7 @@ public class PlexToolsTabControler extends AnchorPane implements ApplicationConf
                 final List<@NonNull MediaPartsEntity> mediaItemsList = PlexDBHelper.getMediaParts(file);
                 final String htmlResult = SearchFileHelper.processResultFileInformationSearch(mediaItemsList, file);
                 // load new results
-
+                webEngine.loadContent(htmlResult);
 //                this.resultArea.getChildren().addAll(resultList);
             }
         } catch (final Exception e) {

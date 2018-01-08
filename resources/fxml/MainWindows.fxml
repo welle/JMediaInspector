@@ -49,7 +49,7 @@
 			AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
 			AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
 			<children>
-				<fx:include source="PlexTools.fxml" />
+				<fx:include source="Tools.fxml" />
 			</children>
 		</AnchorPane>
 	</children>

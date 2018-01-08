@@ -1,13 +1,4 @@
-package jmediainspector.helpers.nodes;
-
-import static j2html.TagCreator.attrs;
-import static j2html.TagCreator.body;
-import static j2html.TagCreator.h1;
-import static j2html.TagCreator.head;
-import static j2html.TagCreator.html;
-import static j2html.TagCreator.link;
-import static j2html.TagCreator.main;
-import static j2html.TagCreator.title;
+package jmediainspector.helpers.html;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -24,13 +15,11 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import aka.plexdb.bean.LibrarySectionsEntity;
-import aka.plexdb.bean.MediaItemsEntity;
-import aka.plexdb.bean.MediaPartsEntity;
 import aka.plexdb.bean.MetadataItemsEntity;
+import j2html.TagCreator;
 import j2html.tags.ContainerTag;
 import javafx.scene.Node;
 import javafx.scene.control.Hyperlink;
-import javafx.scene.text.Text;
 import jmediainspector.constants.PlexConstants;
 import jmediainspector.context.ApplicationContext;
 
@@ -39,62 +28,32 @@ import jmediainspector.context.ApplicationContext;
  *
  * @author charlottew
  */
-public final class SearchFileHelper {
+public final class SearchFileResultHelper {
 
     /**
-     * Get HTML to display related to given MediaPartsEntity list and file.
+     * Get HTML to display related to given files.
      *
-     * @param mediaPartsList list of MediaPartsEntity
-     * @param file related file
-     * @return list of node to display
-     * @throws SQLException
+     * @param fileList related file
+     * @return HTML string
      */
     @NonNull
-    public static String processResultFileInformationSearch(@NonNull final List<@NonNull MediaPartsEntity> mediaPartsList, @NonNull final File file) throws SQLException {
-        final LinkedList<@NonNull Node> resultList = new LinkedList<>();
-        if (mediaPartsList.isEmpty()) {
-            final Text text1 = new Text("No match found in plex database for file: ");
-            text1.setStyle("-fx-font-weight: bold; -fx-fill: #FFFFFF");
-            final Text text2 = new Text(file.getAbsolutePath() + "\n");
-            text2.setStyle("-fx-fill: #FFFFFF");
-        } else {
-            final int i = 1;
-            Text text = new Text("Result(s) founded for:");
-            text.setStyle("-fx-font-weight: bold; -fx-fill: #FFFFFF; -fx-underline: true;");
-            resultList.add(text);
-            text = new Text(file.getAbsolutePath() + "\n\n");
-            text.setStyle("-fx-font-style: italic; -fx-fill: #FFFFFF; ");
-            resultList.add(text);
-            for (final @NonNull MediaPartsEntity mediaParts : mediaPartsList) {
-                text = new Text(i + ") ");
-                text.setStyle("-fx-fill: #FFFFFF; -fx-font-weight: bold; -fx-text-origin: top;");
-                resultList.add(text);
-                final MediaItemsEntity mediaItemsEntity = mediaParts.getMediaItem();
-                if (mediaItemsEntity != null) {
-                    final MetadataItemsEntity metadataItemsEntity = mediaItemsEntity.getMetadataItem();
-                    if (metadataItemsEntity != null) {
-                        final String guid = metadataItemsEntity.getGuid();
-                        final String title = metadataItemsEntity.getTitle();
-                        final Hyperlink hyperlink = addLinkInformation(resultList, guid, title);
-                        addImage(resultList, metadataItemsEntity, hyperlink);
-                    }
-                }
-            }
+    public static String processResultFileInformationSearch(@NonNull final List<File> fileList) {
+        final ContainerTag result = TagCreator.html();
 
-            text = new Text("\n---------------------------------------------------------\n");
-            text.setStyle("-fx-font-style: italic; -fx-fill: #FFFFFF; ");
-            resultList.add(text);
+        result.with(TagCreator.head("Result"));
+        final ContainerTag body = TagCreator.body();
+
+        final ContainerTag ulList = TagCreator.ul();
+        for (final File file : fileList) {
+            final ContainerTag link = TagCreator.a(file.getName());
+            link.withHref(file.getAbsolutePath());
+            final ContainerTag item = TagCreator.li(link);
+            ulList.with(item);
         }
 
-        final ContainerTag result = html(
-                head(
-                        title("Title"),
-                        link().withRel("stylesheet").withHref("/css/main.css")),
-                body(
-                        main(attrs("#main.content"),
-                                h1("Heading!"))));
+        body.with(ulList);
+        result.with(body);
 
-//        return resultList;
         return result.render();
     }
 

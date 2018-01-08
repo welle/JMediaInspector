@@ -17,7 +17,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import jmediainspector.constants.ApplicationConstants;
-import jmediainspector.controllers.tabs.PlexToolsTabControler;
+import jmediainspector.controllers.tabs.ToolsTabControler;
 import jmediainspector.helpers.dialogs.DialogsHelper;
 import jmediainspector.helpers.effects.EffectUtilities;
 import jmediainspector.helpers.effects.ResizeHelper;
@@ -34,7 +34,7 @@ public class JMediaInspector extends Application {
     private static Stage primaryStage;
     private AnchorPane rootLayout;
     @FXML
-    private final PlexToolsTabControler plexToolsTabPage = new PlexToolsTabControler();
+    private final ToolsTabControler plexToolsTabPage = new ToolsTabControler();
 
     private Node menuBar;
 
