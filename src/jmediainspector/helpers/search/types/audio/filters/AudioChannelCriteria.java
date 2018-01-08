@@ -1,7 +1,6 @@
 package jmediainspector.helpers.search.types.audio.filters;
 
 import java.util.ArrayList;
-import java.util.function.UnaryOperator;
 
 import org.eclipse.jdt.annotation.NonNull;
 
@@ -9,14 +8,14 @@ import com.healthmarketscience.sqlbuilder.BinaryCondition;
 
 import aka.jmetadataquery.main.types.search.audio.AudioChannelSearch;
 import aka.jmetadataquery.main.types.search.operation.interfaces.OperatorSearchInterface;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
+import javafx.scene.control.Spinner;
 import jmediainspector.config.Criteria;
 import jmediainspector.controllers.tabs.AbstractSearchCriteriaController;
 import jmediainspector.helpers.search.SearchHelper;
 import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
-import jmediainspector.helpers.search.types.componenttype.AbstractInputCriteria;
+import jmediainspector.helpers.search.types.componenttype.AbstractInputSpinnerCriteria;
+import jmediainspector.helpers.search.types.componenttype.customs.UIIntegerSpinner;
 import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
 
 /**
@@ -24,14 +23,14 @@ import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
  *
  * @author charlottew
  */
-public class AudioChannelCriteria extends AbstractInputCriteria<Long> {
+public class AudioChannelCriteria extends AbstractInputSpinnerCriteria<Integer> {
 
     /**
      * Default Constructor.
      */
     public AudioChannelCriteria() {
         // Internal use, do not delete, used in reflection.
-        super(Long.class);
+        super();
     }
 
     /**
@@ -41,7 +40,7 @@ public class AudioChannelCriteria extends AbstractInputCriteria<Long> {
      * @see Criteria
      */
     public AudioChannelCriteria(@NonNull final Criteria filter) {
-        super(filter, Long.class);
+        super();
     }
 
     @Override
@@ -67,9 +66,10 @@ public class AudioChannelCriteria extends AbstractInputCriteria<Long> {
     public OperatorSearchInterface getSearch() {
         final BinaryCondition.Op operation = getSelectedOperator();
         AudioChannelSearch audioChannelSearch = null;
-        final Long value = getSelectedValue();
+        final Integer value = getSelectedValue();
         if (operation != null && value != null) {
-            audioChannelSearch = new AudioChannelSearch(operation, value);
+            final Long valueLong = Long.valueOf(value.intValue());
+            audioChannelSearch = new AudioChannelSearch(operation, valueLong);
         }
         return audioChannelSearch;
     }
@@ -91,21 +91,10 @@ public class AudioChannelCriteria extends AbstractInputCriteria<Long> {
     }
 
     @Override
-    public TextField getTextField() {
-        final TextField result = new TextField();
-        final UnaryOperator<TextFormatter.Change> filter = new UnaryOperator<TextFormatter.Change>() {
-            @Override
-            public TextFormatter.Change apply(final TextFormatter.Change change) {
-                final String text = change.getText();
-                for (int i = 0; i < text.length(); i++) {
-                    if (!Character.isDigit(text.charAt(i))) {
-                        return null;
-                    }
-                }
-                return change;
-            }
-        };
-        result.setTextFormatter(new TextFormatter<String>(filter));
+    public Spinner<Integer> getSpinner() {
+        final UIIntegerSpinner result = new UIIntegerSpinner(1, 20, 1);
+        result.setEditable(true);
+
         return result;
     }
 }

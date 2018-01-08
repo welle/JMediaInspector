@@ -11,6 +11,7 @@ import com.sun.javafx.collections.ObservableListWrapper;
 
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Spinner;
 import jmediainspector.config.Criteria;
 import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.commons.ConditionFilterListCell;
@@ -20,9 +21,8 @@ import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
  * Combobox Criteria.
  *
  * @author charlottew
- * @param <T> enum type
  */
-public abstract class AbstractEditableComboboxCriteria<T> extends AbstractInterface<T> {
+public abstract class AbstractInputSpinnerCriteria<T> extends AbstractInterface<T> {
 
     /**
      * Available types.
@@ -31,15 +31,15 @@ public abstract class AbstractEditableComboboxCriteria<T> extends AbstractInterf
     /**
      * Available values.
      */
-    protected List<T> availableValues;
+    protected List<?> availableValues;
 
-    private ComboBox<T> valueCombobox;
+    private Spinner<T> valueSpinnerField;
     private ComboBox<String> comboboxFiltersType;
 
     /**
      * Default Constructor.
      */
-    public AbstractEditableComboboxCriteria() {
+    public AbstractInputSpinnerCriteria() {
         // Internal use, do not delete, used in reflection.
         init();
     }
@@ -50,7 +50,7 @@ public abstract class AbstractEditableComboboxCriteria<T> extends AbstractInterf
      * @param criteria Linked Criteria
      * @see Criteria
      */
-    public AbstractEditableComboboxCriteria(@NonNull final Criteria criteria) {
+    public AbstractInputSpinnerCriteria(@NonNull final Criteria criteria) {
         super(criteria);
         init();
         // TODO LINK WITH FILTER
@@ -74,11 +74,12 @@ public abstract class AbstractEditableComboboxCriteria<T> extends AbstractInterf
         this.rightPane.add(this.comboboxFiltersType, 3, 0);
 
         // link value
-        this.valueCombobox = getCombobox();
-        this.rightPane.add(this.valueCombobox, 4, 0);
+        this.valueSpinnerField = getSpinner();
+        this.rightPane.add(this.valueSpinnerField, 4, 0);
     }
 
-    public abstract ComboBox<T> getCombobox();
+    @NonNull
+    public abstract Spinner<T> getSpinner();
 
     @Override
     public BinaryCondition.Op getSelectedOperator() {
@@ -107,15 +108,13 @@ public abstract class AbstractEditableComboboxCriteria<T> extends AbstractInterf
 
     @Override
     public T getSelectedValue() {
-        return null;
+        final T result = this.valueSpinnerField.getValue();
+
+        return result;
     }
 
     @Override
     public T getSelectedComboboxValue() {
-        System.err.println("[AbstractEditableComboboxCriteria] getSelectedComboboxValue - " + this.valueCombobox);
-        System.err.println("[AbstractEditableComboboxCriteria] getSelectedComboboxValue - " + this.valueCombobox.getSelectionModel());
-        final T result = this.valueCombobox.getSelectionModel().getSelectedItem();
-
-        return result;
+        return null;
     }
 }
