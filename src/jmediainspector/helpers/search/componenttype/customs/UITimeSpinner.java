@@ -1,4 +1,4 @@
-package jmediainspector.helpers.search.types.componenttype.customs;
+package jmediainspector.helpers.search.componenttype.customs;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;

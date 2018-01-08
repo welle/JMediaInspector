@@ -18,9 +18,9 @@ import jmediainspector.controllers.tabs.AbstractSearchCriteriaController;
 import jmediainspector.helpers.search.SearchHelper;
 import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.comparators.EnumByNameComparator;
+import jmediainspector.helpers.search.componenttype.AbstractComboboxCriteria;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
-import jmediainspector.helpers.search.types.componenttype.AbstractComboboxCriteria;
-import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
+import jmediainspector.helpers.search.interfaces.AbstractInterface;
 
 /**
  * Criteria for subtitles language.

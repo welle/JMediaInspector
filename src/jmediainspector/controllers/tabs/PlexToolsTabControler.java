@@ -9,7 +9,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -21,7 +20,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Worker.State;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -30,7 +28,8 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.effect.Effect;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.TextFlow;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -45,7 +44,7 @@ import jmediainspector.helpers.dialogs.DialogsHelper;
 import jmediainspector.helpers.dialogs.FileChooserHelper;
 import jmediainspector.helpers.nodes.SearchFileHelper;
 import jmediainspector.listeners.ApplicationConfigurationsListener;
-import jmediainspector.services.CopyPlexDBService;
+import jmediainspector.services.CopyFileService;
 
 /**
  * Controler for the Plex tools tab.
@@ -63,7 +62,7 @@ public class PlexToolsTabControler extends AnchorPane implements ApplicationConf
     @FXML
     private SplitPane anchorPaneRoot;
     @FXML
-    private TextFlow resultArea;
+    private WebView resultArea;
 
     private File plexFileDB;
     @FXML
@@ -125,7 +124,7 @@ public class PlexToolsTabControler extends AnchorPane implements ApplicationConf
             // first copy db file as it can be used and so it is locked
             try {
                 final File target = File.createTempFile("plex", ".db");
-                final CopyPlexDBService service = new CopyPlexDBService(file, target);
+                final CopyFileService service = new CopyFileService(file, target);
 
                 final Stage stage = (Stage) this.anchorPaneRoot.getScene().getWindow();
                 assert stage != null;
@@ -270,11 +269,17 @@ public class PlexToolsTabControler extends AnchorPane implements ApplicationConf
 
     private void processFileInformationSearch(@NonNull final List<@NonNull File> files) {
         try {
-            this.resultArea.getChildren().clear();
+            final WebEngine webEngine = this.resultArea.getEngine();
+            // Delete cache for navigate back
+            webEngine.load("about:blank");
+            // Delete cookies
+            java.net.CookieHandler.setDefault(new java.net.CookieManager());
             for (final File file : files) {
                 final List<@NonNull MediaPartsEntity> mediaItemsList = PlexDBHelper.getMediaParts(file);
-                final LinkedList<@NonNull Node> resultList = SearchFileHelper.processResultFileInformationSearch(mediaItemsList, file);
-                this.resultArea.getChildren().addAll(resultList);
+                final String htmlResult = SearchFileHelper.processResultFileInformationSearch(mediaItemsList, file);
+                // load new results
+
+//                this.resultArea.getChildren().addAll(resultList);
             }
         } catch (final Exception e) {
             ApplicationContext.getInstance().getLogger().logp(Level.SEVERE, "PlexToolsTabControler", "searchMissingMediaButton", e.getMessage(), e);

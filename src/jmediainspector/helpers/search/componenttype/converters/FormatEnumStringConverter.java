@@ -1,24 +1,21 @@
-package jmediainspector.helpers.search.types.componenttype.converters;
+package jmediainspector.helpers.search.componenttype.converters;
 
 import org.apache.commons.lang3.text.WordUtils;
 
-import aka.jmetadata.main.constants.codecs.interfaces.CodecEnum;
+import aka.jmetadata.main.constants.format.FormatEnum;
 import javafx.util.StringConverter;
 
 /**
- * Video codec string converter.
+ * FormatEnum string converter.
  *
  * @author charlottew
  */
-public class VideoCodecStringConverter extends StringConverter<CodecEnum> {
+public class FormatEnumStringConverter extends StringConverter<FormatEnum> {
 
     @Override
-    public String toString(final CodecEnum object) {
-        String name = object.toString();
+    public String toString(final FormatEnum object) {
+        String name = object.name();
         if (name != null && name.trim().length() > 0) {
-            if (name.startsWith("V_")) {
-                name = name.substring(2, name.length());
-            }
             name = name.replace("_", " ");
             name = WordUtils.capitalizeFully(name);
             final int firstSpaceIndex = name.indexOf(" ");
@@ -32,7 +29,7 @@ public class VideoCodecStringConverter extends StringConverter<CodecEnum> {
     }
 
     @Override
-    public CodecEnum fromString(final String string) {
+    public FormatEnum fromString(final String string) {
         return null;
     }
 

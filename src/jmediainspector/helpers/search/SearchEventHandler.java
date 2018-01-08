@@ -5,7 +5,7 @@ import org.eclipse.jdt.annotation.NonNull;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import jmediainspector.controllers.tabs.AbstractSearchCriteriaController;
-import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
+import jmediainspector.helpers.search.interfaces.AbstractInterface;
 
 /**
  * @author Cha

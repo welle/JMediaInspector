@@ -1,4 +1,4 @@
-package jmediainspector.helpers.search.types.componenttype.customs;
+package jmediainspector.helpers.search.componenttype.customs;
 
 import javafx.collections.ObservableList;
 import javafx.scene.control.Spinner;

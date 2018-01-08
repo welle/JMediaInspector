@@ -13,10 +13,10 @@ import jmediainspector.config.Criteria;
 import jmediainspector.controllers.tabs.AbstractSearchCriteriaController;
 import jmediainspector.helpers.search.SearchHelper;
 import jmediainspector.helpers.search.commons.ConditionFilter;
+import jmediainspector.helpers.search.componenttype.AbstractInputSpinnerCriteria;
+import jmediainspector.helpers.search.componenttype.customs.UIIntegerSpinner;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
-import jmediainspector.helpers.search.types.componenttype.AbstractInputSpinnerCriteria;
-import jmediainspector.helpers.search.types.componenttype.customs.UIIntegerSpinner;
-import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
+import jmediainspector.helpers.search.interfaces.AbstractInterface;
 
 /**
  * Criteria for Audio Channel.

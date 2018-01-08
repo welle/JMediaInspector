@@ -1,4 +1,4 @@
-package jmediainspector.helpers.search.types.componenttype;
+package jmediainspector.helpers.search.componenttype;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,18 +11,18 @@ import com.sun.javafx.collections.ObservableListWrapper;
 
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Spinner;
 import jmediainspector.config.Criteria;
 import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.commons.ConditionFilterListCell;
-import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
+import jmediainspector.helpers.search.interfaces.AbstractInterface;
 
 /**
  * Combobox Criteria.
  *
  * @author charlottew
+ * @param <T> enum type
  */
-public abstract class AbstractInputSpinnerCriteria<T> extends AbstractInterface<T> {
+public abstract class AbstractComboboxCriteria<T extends Enum<?>> extends AbstractInterface<T> {
 
     /**
      * Available types.
@@ -31,15 +31,15 @@ public abstract class AbstractInputSpinnerCriteria<T> extends AbstractInterface<
     /**
      * Available values.
      */
-    protected List<?> availableValues;
+    protected List<? extends Enum<?>> availableValues;
 
-    private Spinner<T> valueSpinnerField;
+    private ComboBox<? extends Enum<?>> valueCombobox;
     private ComboBox<String> comboboxFiltersType;
 
     /**
      * Default Constructor.
      */
-    public AbstractInputSpinnerCriteria() {
+    public AbstractComboboxCriteria() {
         // Internal use, do not delete, used in reflection.
         init();
     }
@@ -50,7 +50,7 @@ public abstract class AbstractInputSpinnerCriteria<T> extends AbstractInterface<
      * @param criteria Linked Criteria
      * @see Criteria
      */
-    public AbstractInputSpinnerCriteria(@NonNull final Criteria criteria) {
+    public AbstractComboboxCriteria(@NonNull final Criteria criteria) {
         super(criteria);
         init();
         // TODO LINK WITH FILTER
@@ -74,12 +74,11 @@ public abstract class AbstractInputSpinnerCriteria<T> extends AbstractInterface<
         this.rightPane.add(this.comboboxFiltersType, 3, 0);
 
         // link value
-        this.valueSpinnerField = getSpinner();
-        this.rightPane.add(this.valueSpinnerField, 4, 0);
+        this.valueCombobox = getCombobox();
+        this.rightPane.add(this.valueCombobox, 4, 0);
     }
 
-    @NonNull
-    public abstract Spinner<T> getSpinner();
+    public abstract ComboBox<? extends Enum<?>> getCombobox();
 
     @Override
     public BinaryCondition.Op getSelectedOperator() {
@@ -103,14 +102,14 @@ public abstract class AbstractInputSpinnerCriteria<T> extends AbstractInterface<
 
     @Override
     public Enum<?> getSelectedComboboxEnumValue() {
-        return null;
+        final Enum<?> value = this.valueCombobox.getSelectionModel().getSelectedItem();
+
+        return value;
     }
 
     @Override
     public T getSelectedValue() {
-        final T result = this.valueSpinnerField.getValue();
-
-        return result;
+        return null;
     }
 
     @Override

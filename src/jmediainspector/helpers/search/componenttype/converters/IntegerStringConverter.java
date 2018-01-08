@@ -1,4 +1,4 @@
-package jmediainspector.helpers.search.types.componenttype.converters;
+package jmediainspector.helpers.search.componenttype.converters;
 
 import javafx.util.StringConverter;
 

@@ -21,9 +21,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import jmediainspector.config.Search;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
-import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
-import jmediainspector.helpers.search.types.interfaces.SearchCriteriaListener;
-import jmediainspector.helpers.search.types.interfaces.SearchPanelInterface;
+import jmediainspector.helpers.search.interfaces.AbstractInterface;
+import jmediainspector.helpers.search.interfaces.SearchCriteriaListener;
+import jmediainspector.helpers.search.interfaces.SearchPanelInterface;
 
 /**
  * SearchHelper handle the right panel with a related search in the XML config file.

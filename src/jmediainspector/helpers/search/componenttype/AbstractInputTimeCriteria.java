@@ -1,5 +1,6 @@
-package jmediainspector.helpers.search.types.componenttype;
+package jmediainspector.helpers.search.componenttype;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,15 +15,15 @@ import javafx.scene.control.ComboBox;
 import jmediainspector.config.Criteria;
 import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.commons.ConditionFilterListCell;
-import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
+import jmediainspector.helpers.search.componenttype.customs.UITimeSpinner;
+import jmediainspector.helpers.search.interfaces.AbstractInterface;
 
 /**
- * Combobox multiple Criteria.
+ * Combobox Criteria.
  *
  * @author charlottew
- * @param <T> enum type
  */
-public abstract class AbstractComboboxMultipleCriteria<T> extends AbstractInterface<T> {
+public abstract class AbstractInputTimeCriteria extends AbstractInterface<Long> {
 
     /**
      * Available types.
@@ -31,15 +32,15 @@ public abstract class AbstractComboboxMultipleCriteria<T> extends AbstractInterf
     /**
      * Available values.
      */
-    protected List<T> availableValues;
+    protected List<?> availableValues;
 
-    private ComboBox<T> valueCombobox;
+    private UITimeSpinner valueTimeField;
     private ComboBox<String> comboboxFiltersType;
 
     /**
      * Default Constructor.
      */
-    public AbstractComboboxMultipleCriteria() {
+    public AbstractInputTimeCriteria() {
         // Internal use, do not delete, used in reflection.
         init();
     }
@@ -50,7 +51,7 @@ public abstract class AbstractComboboxMultipleCriteria<T> extends AbstractInterf
      * @param criteria Linked Criteria
      * @see Criteria
      */
-    public AbstractComboboxMultipleCriteria(@NonNull final Criteria criteria) {
+    public AbstractInputTimeCriteria(@NonNull final Criteria criteria) {
         super(criteria);
         init();
         // TODO LINK WITH FILTER
@@ -74,11 +75,11 @@ public abstract class AbstractComboboxMultipleCriteria<T> extends AbstractInterf
         this.rightPane.add(this.comboboxFiltersType, 3, 0);
 
         // link value
-        this.valueCombobox = getCombobox();
-        this.rightPane.add(this.valueCombobox, 4, 0);
+        this.valueTimeField = getTimeSpinner();
+        this.rightPane.add(this.valueTimeField, 4, 0);
     }
 
-    public abstract ComboBox<T> getCombobox();
+    public abstract UITimeSpinner getTimeSpinner();
 
     @Override
     public BinaryCondition.Op getSelectedOperator() {
@@ -106,14 +107,28 @@ public abstract class AbstractComboboxMultipleCriteria<T> extends AbstractInterf
     }
 
     @Override
-    public T getSelectedValue() {
-        return null;
+    public Long getSelectedValue() {
+        Long result = null;
+        final LocalTime value = this.valueTimeField.getValue();
+        if (value != null) {
+            final int hours = value.getHour();
+            final int minutes = value.getMinute();
+            final int seconds = value.getSecond();
+
+            final int hoursInMs = hours * 60 * 60 * 1000;
+            final int minutesInMs = minutes * 60 * 1000;
+            final int secondsInMs = seconds * 1000;
+
+            final int total = hoursInMs + minutesInMs + secondsInMs;
+
+            result = Long.valueOf(total);
+        }
+
+        return result;
     }
 
     @Override
-    public T getSelectedComboboxValue() {
-        final T value = this.valueCombobox.getSelectionModel().getSelectedItem();
-
-        return value;
+    public Long getSelectedComboboxValue() {
+        return null;
     }
 }

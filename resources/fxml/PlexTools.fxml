@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.TextFlow?>
+<?import javafx.scene.web.WebView?>
 
 <SplitPane fx:id="anchorPaneRoot" dividerPositions="0.55" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="800.0" prefWidth="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jmediainspector.controllers.tabs.PlexToolsTabControler">
 	<items>
@@ -76,7 +77,7 @@
 		</AnchorPane>
 		<ScrollPane fitToWidth="true" prefHeight="400.0" prefWidth="1278.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
 			<content>
-				<TextFlow fx:id="resultArea" style="-fx-padding:10px" />
+			<WebView fx:id="resultArea" style="-fx-padding:10px" />
 			</content>
 		</ScrollPane>
 	</items>

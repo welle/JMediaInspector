@@ -20,10 +20,10 @@ import jmediainspector.controllers.tabs.AbstractSearchCriteriaController;
 import jmediainspector.helpers.search.SearchHelper;
 import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.comparators.CodecEnumComparator;
+import jmediainspector.helpers.search.componenttype.AbstractComboboxMultipleCriteria;
+import jmediainspector.helpers.search.componenttype.converters.VideoCodecStringConverter;
 import jmediainspector.helpers.search.enums.SearchTypeEnum;
-import jmediainspector.helpers.search.types.componenttype.AbstractComboboxMultipleCriteria;
-import jmediainspector.helpers.search.types.componenttype.converters.VideoCodecStringConverter;
-import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
+import jmediainspector.helpers.search.interfaces.AbstractInterface;
 
 /**
  * Criteria for Video Codec.

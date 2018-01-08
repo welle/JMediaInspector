@@ -1,4 +1,4 @@
-package jmediainspector.helpers.search.types.componenttype;
+package jmediainspector.helpers.search.componenttype;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,19 +11,18 @@ import com.sun.javafx.collections.ObservableListWrapper;
 
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Spinner;
 import jmediainspector.config.Criteria;
 import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.commons.ConditionFilterListCell;
-import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
+import jmediainspector.helpers.search.interfaces.AbstractInterface;
 
 /**
  * Combobox Criteria.
  *
  * @author charlottew
- * @param <T> enum type
  */
-public abstract class AbstractInputCriteria<T> extends AbstractInterface<T> {
+public abstract class AbstractInputSpinnerCriteria<T> extends AbstractInterface<T> {
 
     /**
      * Available types.
@@ -34,15 +33,13 @@ public abstract class AbstractInputCriteria<T> extends AbstractInterface<T> {
      */
     protected List<?> availableValues;
 
-    private TextField valueTextField;
+    private Spinner<T> valueSpinnerField;
     private ComboBox<String> comboboxFiltersType;
-    private final @NonNull Class<T> clazz;
 
     /**
      * Default Constructor.
      */
-    public AbstractInputCriteria(@NonNull final Class<T> clazz) {
-        this.clazz = clazz;
+    public AbstractInputSpinnerCriteria() {
         // Internal use, do not delete, used in reflection.
         init();
     }
@@ -51,16 +48,13 @@ public abstract class AbstractInputCriteria<T> extends AbstractInterface<T> {
      * Constructor.
      *
      * @param criteria Linked Criteria
-     * @param clazz
      * @see Criteria
      */
-    public AbstractInputCriteria(@NonNull final Criteria criteria, @NonNull final Class<T> clazz) {
+    public AbstractInputSpinnerCriteria(@NonNull final Criteria criteria) {
         super(criteria);
         init();
         // TODO LINK WITH FILTER
         // Link type
-
-        this.clazz = clazz;
 
         final List<String> list = new ArrayList<>();
         for (final ConditionFilter filterType : this.availableTypes) {
@@ -80,11 +74,12 @@ public abstract class AbstractInputCriteria<T> extends AbstractInterface<T> {
         this.rightPane.add(this.comboboxFiltersType, 3, 0);
 
         // link value
-        this.valueTextField = getTextField();
-        this.rightPane.add(this.valueTextField, 4, 0);
+        this.valueSpinnerField = getSpinner();
+        this.rightPane.add(this.valueSpinnerField, 4, 0);
     }
 
-    public abstract TextField getTextField();
+    @NonNull
+    public abstract Spinner<T> getSpinner();
 
     @Override
     public BinaryCondition.Op getSelectedOperator() {
@@ -113,13 +108,7 @@ public abstract class AbstractInputCriteria<T> extends AbstractInterface<T> {
 
     @Override
     public T getSelectedValue() {
-        T result = null;
-        final String value = this.valueTextField.getText();
-        if (this.clazz.isInstance(String.class)) {
-            result = (T) value;
-        } else if (this.clazz.equals(Long.class)) {
-            result = (T) Long.valueOf(value);
-        }
+        final T result = this.valueSpinnerField.getValue();
 
         return result;
     }

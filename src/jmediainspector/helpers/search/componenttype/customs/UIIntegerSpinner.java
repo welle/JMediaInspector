@@ -1,8 +1,8 @@
-package jmediainspector.helpers.search.types.componenttype.customs;
+package jmediainspector.helpers.search.componenttype.customs;
 
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.util.StringConverter;
-import jmediainspector.helpers.search.types.componenttype.converters.IntegerStringConverter;
+import jmediainspector.helpers.search.componenttype.converters.IntegerStringConverter;
 
 /**
  * Integer Spinner.

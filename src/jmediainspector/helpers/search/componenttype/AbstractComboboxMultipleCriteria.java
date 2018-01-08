@@ -1,4 +1,4 @@
-package jmediainspector.helpers.search.types.componenttype;
+package jmediainspector.helpers.search.componenttype;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,15 +14,15 @@ import javafx.scene.control.ComboBox;
 import jmediainspector.config.Criteria;
 import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.commons.ConditionFilterListCell;
-import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
+import jmediainspector.helpers.search.interfaces.AbstractInterface;
 
 /**
- * Combobox Criteria.
+ * Combobox multiple Criteria.
  *
  * @author charlottew
  * @param <T> enum type
  */
-public abstract class AbstractComboboxCriteria<T extends Enum<?>> extends AbstractInterface<T> {
+public abstract class AbstractComboboxMultipleCriteria<T> extends AbstractInterface<T> {
 
     /**
      * Available types.
@@ -31,15 +31,15 @@ public abstract class AbstractComboboxCriteria<T extends Enum<?>> extends Abstra
     /**
      * Available values.
      */
-    protected List<? extends Enum<?>> availableValues;
+    protected List<T> availableValues;
 
-    private ComboBox<? extends Enum<?>> valueCombobox;
+    private ComboBox<T> valueCombobox;
     private ComboBox<String> comboboxFiltersType;
 
     /**
      * Default Constructor.
      */
-    public AbstractComboboxCriteria() {
+    public AbstractComboboxMultipleCriteria() {
         // Internal use, do not delete, used in reflection.
         init();
     }
@@ -50,7 +50,7 @@ public abstract class AbstractComboboxCriteria<T extends Enum<?>> extends Abstra
      * @param criteria Linked Criteria
      * @see Criteria
      */
-    public AbstractComboboxCriteria(@NonNull final Criteria criteria) {
+    public AbstractComboboxMultipleCriteria(@NonNull final Criteria criteria) {
         super(criteria);
         init();
         // TODO LINK WITH FILTER
@@ -78,7 +78,7 @@ public abstract class AbstractComboboxCriteria<T extends Enum<?>> extends Abstra
         this.rightPane.add(this.valueCombobox, 4, 0);
     }
 
-    public abstract ComboBox<? extends Enum<?>> getCombobox();
+    public abstract ComboBox<T> getCombobox();
 
     @Override
     public BinaryCondition.Op getSelectedOperator() {
@@ -102,9 +102,7 @@ public abstract class AbstractComboboxCriteria<T extends Enum<?>> extends Abstra
 
     @Override
     public Enum<?> getSelectedComboboxEnumValue() {
-        final Enum<?> value = this.valueCombobox.getSelectionModel().getSelectedItem();
-
-        return value;
+        return null;
     }
 
     @Override
@@ -114,6 +112,8 @@ public abstract class AbstractComboboxCriteria<T extends Enum<?>> extends Abstra
 
     @Override
     public T getSelectedComboboxValue() {
-        return null;
+        final T value = this.valueCombobox.getSelectionModel().getSelectedItem();
+
+        return value;
     }
 }

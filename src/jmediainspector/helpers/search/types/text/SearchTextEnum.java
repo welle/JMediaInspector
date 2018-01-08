@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNull;
 
-import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
-import jmediainspector.helpers.search.types.interfaces.SearchInterface;
+import jmediainspector.helpers.search.interfaces.AbstractInterface;
+import jmediainspector.helpers.search.interfaces.SearchInterface;
 import jmediainspector.helpers.search.types.text.filters.TextLanguageCriteria;
 import jmediainspector.helpers.search.types.text.filters.TextNumberOfStreamCriteria;
 

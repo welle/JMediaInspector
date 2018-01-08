@@ -1,6 +1,5 @@
-package jmediainspector.helpers.search.types.componenttype;
+package jmediainspector.helpers.search.componenttype;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,18 +11,19 @@ import com.sun.javafx.collections.ObservableListWrapper;
 
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import jmediainspector.config.Criteria;
 import jmediainspector.helpers.search.commons.ConditionFilter;
 import jmediainspector.helpers.search.commons.ConditionFilterListCell;
-import jmediainspector.helpers.search.types.componenttype.customs.UITimeSpinner;
-import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
+import jmediainspector.helpers.search.interfaces.AbstractInterface;
 
 /**
  * Combobox Criteria.
  *
  * @author charlottew
+ * @param <T> enum type
  */
-public abstract class AbstractInputTimeCriteria extends AbstractInterface<Long> {
+public abstract class AbstractInputCriteria<T> extends AbstractInterface<T> {
 
     /**
      * Available types.
@@ -34,13 +34,15 @@ public abstract class AbstractInputTimeCriteria extends AbstractInterface<Long> 
      */
     protected List<?> availableValues;
 
-    private UITimeSpinner valueTimeField;
+    private TextField valueTextField;
     private ComboBox<String> comboboxFiltersType;
+    private final @NonNull Class<T> clazz;
 
     /**
      * Default Constructor.
      */
-    public AbstractInputTimeCriteria() {
+    public AbstractInputCriteria(@NonNull final Class<T> clazz) {
+        this.clazz = clazz;
         // Internal use, do not delete, used in reflection.
         init();
     }
@@ -49,13 +51,16 @@ public abstract class AbstractInputTimeCriteria extends AbstractInterface<Long> 
      * Constructor.
      *
      * @param criteria Linked Criteria
+     * @param clazz
      * @see Criteria
      */
-    public AbstractInputTimeCriteria(@NonNull final Criteria criteria) {
+    public AbstractInputCriteria(@NonNull final Criteria criteria, @NonNull final Class<T> clazz) {
         super(criteria);
         init();
         // TODO LINK WITH FILTER
         // Link type
+
+        this.clazz = clazz;
 
         final List<String> list = new ArrayList<>();
         for (final ConditionFilter filterType : this.availableTypes) {
@@ -75,11 +80,11 @@ public abstract class AbstractInputTimeCriteria extends AbstractInterface<Long> 
         this.rightPane.add(this.comboboxFiltersType, 3, 0);
 
         // link value
-        this.valueTimeField = getTimeSpinner();
-        this.rightPane.add(this.valueTimeField, 4, 0);
+        this.valueTextField = getTextField();
+        this.rightPane.add(this.valueTextField, 4, 0);
     }
 
-    public abstract UITimeSpinner getTimeSpinner();
+    public abstract TextField getTextField();
 
     @Override
     public BinaryCondition.Op getSelectedOperator() {
@@ -107,28 +112,20 @@ public abstract class AbstractInputTimeCriteria extends AbstractInterface<Long> 
     }
 
     @Override
-    public Long getSelectedValue() {
-        Long result = null;
-        final LocalTime value = this.valueTimeField.getValue();
-        if (value != null) {
-            final int hours = value.getHour();
-            final int minutes = value.getMinute();
-            final int seconds = value.getSecond();
-
-            final int hoursInMs = hours * 60 * 60 * 1000;
-            final int minutesInMs = minutes * 60 * 1000;
-            final int secondsInMs = seconds * 1000;
-
-            final int total = hoursInMs + minutesInMs + secondsInMs;
-
-            result = Long.valueOf(total);
+    public T getSelectedValue() {
+        T result = null;
+        final String value = this.valueTextField.getText();
+        if (this.clazz.isInstance(String.class)) {
+            result = (T) value;
+        } else if (this.clazz.equals(Long.class)) {
+            result = (T) Long.valueOf(value);
         }
 
         return result;
     }
 
     @Override
-    public Long getSelectedComboboxValue() {
+    public T getSelectedComboboxValue() {
         return null;
     }
 }

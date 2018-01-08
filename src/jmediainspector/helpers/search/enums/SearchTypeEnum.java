@@ -2,9 +2,9 @@ package jmediainspector.helpers.search.enums;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+import jmediainspector.helpers.search.interfaces.SearchPanelInterface;
 import jmediainspector.helpers.search.types.audio.SearchAudioHelper;
 import jmediainspector.helpers.search.types.general.SearchGeneralHelper;
-import jmediainspector.helpers.search.types.interfaces.SearchPanelInterface;
 import jmediainspector.helpers.search.types.text.SearchTextHelper;
 import jmediainspector.helpers.search.types.video.SearchVideoHelper;
 

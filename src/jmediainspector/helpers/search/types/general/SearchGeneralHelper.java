@@ -3,7 +3,7 @@ package jmediainspector.helpers.search.types.general;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import jmediainspector.helpers.search.types.interfaces.SearchPanelInterface;
+import jmediainspector.helpers.search.interfaces.SearchPanelInterface;
 
 public class SearchGeneralHelper implements SearchPanelInterface {
 

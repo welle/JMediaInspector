@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+import jmediainspector.helpers.search.interfaces.AbstractInterface;
+import jmediainspector.helpers.search.interfaces.SearchInterface;
 import jmediainspector.helpers.search.types.audio.filters.AudioBitRateCriteria;
 import jmediainspector.helpers.search.types.audio.filters.AudioChannelCriteria;
 import jmediainspector.helpers.search.types.audio.filters.AudioCodecCriteria;
@@ -15,8 +17,6 @@ import jmediainspector.helpers.search.types.audio.filters.AudioLanguageTagCriter
 import jmediainspector.helpers.search.types.audio.filters.AudioMaxBitRateCriteria;
 import jmediainspector.helpers.search.types.audio.filters.AudioNumberOfStreamCriteria;
 import jmediainspector.helpers.search.types.audio.filters.AudioProfileCriteria;
-import jmediainspector.helpers.search.types.interfaces.AbstractInterface;
-import jmediainspector.helpers.search.types.interfaces.SearchInterface;
 
 /**
  * Search audio enumeration.

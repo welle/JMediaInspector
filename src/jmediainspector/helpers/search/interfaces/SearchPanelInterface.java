@@ -1,4 +1,4 @@
-package jmediainspector.helpers.search.types.interfaces;
+package jmediainspector.helpers.search.interfaces;
 
 import org.eclipse.jdt.annotation.NonNull;
 

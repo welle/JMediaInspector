@@ -32,7 +32,7 @@ import jmediainspector.context.ApplicationContext;
 public final class SearchFileHelper {
 
     /**
-     * Get list of node to display related to given MediaPartsEntity list and file.
+     * Get HTML to display related to given MediaPartsEntity list and file.
      *
      * @param mediaPartsList list of MediaPartsEntity
      * @param file related file
@@ -40,7 +40,7 @@ public final class SearchFileHelper {
      * @throws SQLException
      */
     @NonNull
-    public static LinkedList<@NonNull Node> processResultFileInformationSearch(@NonNull final List<@NonNull MediaPartsEntity> mediaPartsList, @NonNull final File file) throws SQLException {
+    public static String processResultFileInformationSearch(@NonNull final List<@NonNull MediaPartsEntity> mediaPartsList, @NonNull final File file) throws SQLException {
         final LinkedList<@NonNull Node> resultList = new LinkedList<>();
         if (mediaPartsList.isEmpty()) {
             final Text text1 = new Text("No match found in plex database for file: ");
@@ -76,7 +76,8 @@ public final class SearchFileHelper {
             resultList.add(text);
         }
 
-        return resultList;
+//        return resultList;
+        return "";
     }
 
     private static void addImage(@NonNull final LinkedList<@NonNull Node> resultList, @NonNull final MetadataItemsEntity metadataItemsEntity, @Nullable final Hyperlink hyperlink) throws SQLException {
