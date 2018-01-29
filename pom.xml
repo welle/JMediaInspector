@@ -279,4 +279,11 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+	
+	<distributionManagement>
+		<repository>
+			<id>maven-repository</id>
+			<url>${github.maven.repository}</url>
+		</repository>
+	</distributionManagement>
 </project>
