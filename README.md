@@ -1,3 +1,5 @@
+# JMediaInspector [![Build Status](https://travis-ci.org/welle/JMediaInspector.svg?branch=master)](https://travis-ci.org/welle/JMediaInspector) [![Quality Gate](https://sonarcloud.io/api/badges/gate?key=aka.jmediainspector:JMediaInspector)](https://sonarcloud.io/dashboard/index/aka.jmediainspector:JMediaInspector) #
+
 JMediaInspector is a application to manage your movies and series TV library.
 
 Plex part:
